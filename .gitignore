@@ -1,5 +1,7 @@
 .venv
 .idea
+.vscode
 *.html
-__pycahce__/
+__pycache__/
 poetry.lock
+**/*.synctex.gz
