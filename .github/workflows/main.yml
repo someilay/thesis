@@ -17,15 +17,6 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v2
 
-#      - name: Setup SSH Keys and known_hosts
-#        env:
-#          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-#        run: |
-#          mkdir -p ~/.ssh
-#          ssh-keyscan github.com >> ~/.ssh/known_hosts
-#          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-#          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
-
       - name: Compile notes
         uses: xu-cheng/latex-action@v2
         with:
@@ -35,6 +26,7 @@ jobs:
       - name: Update compiled PDFs in git repository
         if: github.event.pull_request.merged == true || github.event_name == 'push'
         run: |
+          git config --global core.autocrlf false
           git config --global user.name 'CI PDF compiler'
           git config --global user.email '<>'
           git add notes/schur_complement/main.pdf
