@@ -53,4 +53,4 @@ COPY z1/visual/ z1/visual/
 RUN cmake -B build -S . -DMUJOCO_DIR=/mujoco && \
     cmake --build build
 
-ENTRYPOINT ["/build/udwadia z1/scene.xml z1/z1.urdf"]
+ENTRYPOINT ["./build/udwadia z1/scene.xml z1/z1.urdf"]
