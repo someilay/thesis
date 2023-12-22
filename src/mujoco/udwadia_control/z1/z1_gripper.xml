@@ -1,0 +1,151 @@
+<mujoco model="z1_description">
+  <compiler angle="radian" autolimits="true" meshdir="visual" />
+  <statistic meansize="0.102505" extent="0.451785" center="-0.165417 0 0.1035" />
+
+  <asset>
+    <mesh name="z1_GripperMover" file="z1_GripperMover.stl" />
+    <mesh name="z1_GripperStator" file="z1_GripperStator.stl" />
+    <mesh name="z1_Link00" file="z1_Link00.stl" />
+    <mesh name="z1_Link01" file="z1_Link01.stl" />
+    <mesh name="z1_Link02" file="z1_Link02.stl" />
+    <mesh name="z1_Link03" file="z1_Link03.stl" />
+    <mesh name="z1_Link04" file="z1_Link04.stl" />
+    <mesh name="z1_Link05" file="z1_Link05.stl" />
+    <mesh name="z1_Link06" file="z1_Link06.stl" />
+  </asset>
+
+  <worldbody>
+    <!-- <geom size="0.0325 0.0255" pos="0 0 0.0255" type="cylinder"/> -->
+    <geom type="mesh" mesh="z1_Link00" />
+    <body name="link01" pos="0 0 0.0585">
+      <inertial
+        pos="2.47e-06 -0.00025198 0.0231717"
+        quat="0.708578 0.705633 0.000281462 -0.000355927"
+        mass="0.673326"
+        diaginertia="0.00128328 0.000839362 0.000719308" />
+      <joint
+        name="joint1"
+        pos="0 0 0"
+        axis="0 0 1"
+        range="-2.61799 2.61799"
+        damping="0"
+        frictionloss="0" />
+      <geom type="mesh" mesh="z1_Link01" />
+      <body name="link02" pos="0 0 0.045">
+        <geom type="mesh" mesh="z1_Link02" />
+        <inertial
+          pos="-0.110126 0.00240029 0.00158266"
+          quat="0.00748058 0.707092 -0.0114473 0.70699"
+          mass="1.19132"
+          diaginertia="0.0246612 0.0243113 0.00100468" />
+        <joint
+          name="joint2"
+          pos="0 0 0"
+          axis="0 1 0"
+          range="0 2.96706"
+          damping="0"
+          frictionloss="0" />
+        <!-- <geom size="0.0325 0.051" quat="0.707107 0.707107 0 0" type="cylinder"/>
+        <geom size="0.0225 0.1175" pos="-0.1625 0 0" quat="0.707107 0 0.707107 0" type="cylinder"/>
+        <geom size="0.0325 0.0255" pos="-0.35 0 0" quat="0.707107 0.707107 0 0" type="cylinder"/> -->
+        <body name="link03" pos="-0.35 0 0">
+          <geom type="mesh" mesh="z1_Link03" />
+          <inertial
+            pos="0.106092 -0.00541815 0.0347638"
+            quat="0.540557 0.443575 0.426319 0.573839"
+            mass="0.839409"
+            diaginertia="0.00954365 0.00938711 0.000558432" />
+          <joint
+            name="joint3"
+            pos="0 0 0"
+            axis="0 1 0"
+            range="-2.87979 0"
+            damping="0"
+            frictionloss="0" />
+          <!-- <geom size="0.02 0.058" pos="0.128 0 0.055" quat="0.707107 0 0.707107 0"
+          type="cylinder"/>
+          <geom size="0.0325 0.0295" pos="0.2205 0 0.055" quat="0.5 -0.5 0.5 0.5" type="cylinder"/> -->
+          <body name="link04" pos="0.218 0 0.057">
+            <geom type="mesh" mesh="z1_Link04" />
+            <inertial
+              pos="0.0436668 0.00364738 -0.00170192"
+              quat="0.0390835 0.726445 -0.0526787 0.684087"
+              mass="0.564046"
+              diaginertia="0.000981656 0.00094053 0.000302655" />
+            <joint
+              name="joint4"
+              pos="0 0 0"
+              axis="0 1 0"
+              range="-1.51844 1.51844"
+              damping="0"
+              frictionloss="0" />
+            <!-- <geom size="0.0325 0.0335" pos="0.072 0 0" type="cylinder"/> -->
+            <body name="link05" pos="0.07 0 0">
+              <geom type="mesh" mesh="z1_Link05" />
+              <inertial
+                pos="0.0312153 0 0.00646316"
+                quat="0.462205 0.535209 0.53785 0.45895"
+                mass="0.389385"
+                diaginertia="0.000558961 0.000547317 0.000167332" />
+              <joint
+                name="joint5"
+                pos="0 0 0"
+                axis="0 0 1"
+                range="-1.3439 1.3439"
+                damping="0"
+                frictionloss="0" />
+              <body name="link06" pos="0.0492 0 0">
+                <geom type="mesh" mesh="z1_Link06" />
+                <inertial
+                  pos="0.0241569 -0.00017355 -0.00143876"
+                  quat="0.998779 0.0457735 -0.00663717 0.0173548"
+                  mass="0.288758"
+                  diaginertia="0.00018333 0.000147464 0.000146786" />
+                <joint
+                  name="joint6"
+                  pos="0 0 0"
+                  axis="1 0 0"
+                  range="-2.79253 2.79253"
+                  damping="0"
+                  frictionloss="0" />
+                <body name="gripperStator" pos="0.051 0 0">
+                  <geom type="mesh" mesh="z1_GripperStator" />
+                  <inertial pos="0.0476443 -0.00035819 -0.00249162"
+                    quat="0.361646 0.6319 0.475432 0.493842" mass="0.526037"
+                    diaginertia="0.000686526 0.000682432 0.000366943" />
+                </body>
+                <body name="gripperMover" pos="0.1 0 0">
+                  <geom type="mesh" mesh="z1_GripperMover" />
+                  <inertial pos="0.0132063 0.00476708 0.00380534"
+                    quat="0.0631093 0.669067 -0.0615783 0.737953" mass="0.276213"
+                    diaginertia="0.000359044 0.000270888 0.000172378" />
+                  <joint 
+                    name="jointGripper" 
+                    pos="0 0 0" 
+                    axis="0 1 0" 
+                    range="-1.5708 0" 
+                    damping="0"
+                    frictionloss="0" />
+                </body>
+                <!-- <geom size="0.0325 0.0255" pos="0.0255 0 0" quat="0.707107 0 0.707107 0"
+                type="cylinder"/> -->
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="motor1" joint="joint1" />
+    <general name="motor2" joint="joint2" />
+    <general name="motor3" joint="joint3" />
+    <general name="motor4" joint="joint4" />
+    <general name="motor5" joint="joint5" />
+    <general name="motor6" joint="joint6" />
+
+    <general name="gripper" joint="jointGripper" />
+  </actuator>
+
+</mujoco>
