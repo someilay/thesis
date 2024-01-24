@@ -11,8 +11,23 @@ on:
 
 
 jobs:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.filter.outputs.workflows }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          notes:
+            - 'notes/**'
+
   build_latex:
     runs-on: ubuntu-latest
+    needs: paths-filter
+    if: needs.paths-filter.outputs.output1 == 'true'
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v2
