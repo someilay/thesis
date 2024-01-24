@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+
+<robot name="example_urdf">
+    <link name="base">
+        <inertial>
+            <origin xyz="0 0 0.25" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.063" ixy="0" ixz="0" iyy="0.063" iyz="0" izz="0.125"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0.25" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.5"/>
+            </geometry>
+            <material name="gray">
+                <color rgba="0.1 0.1 0.1 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name="body_1-base-joint" type="revolute">
+        <origin xyz="0 0 0.5" rpy="0 0 0"/>
+        <parent link="base"/>
+        <child link="body_1"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="30" velocity="1.0" lower="-3.14159" upper="3.14159" />
+    </joint>
+
+    <link name="body_1">
+        <inertial>
+            <origin xyz="0 0.1 0.1" rpy="-0.7853982 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.021" ixy="0" ixz="0" iyy="0.021" iyz="0" izz="0.040"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0.1 0.1" rpy="-0.7853982 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.2828"/>
+            </geometry>
+            <material name="gray"></material>
+        </visual>
+    </link>
+
+    <joint name="body_2-body_1-joint" type="revolute">
+        <origin xyz="0 0.2 0.2" rpy="0.7853982 0 0"/>
+        <parent link="body_1"/>
+        <child link="body_2"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="30" velocity="1.0" lower="-3.14159" upper="3.14159" />
+    </joint>
+
+    <link name="body_2">
+        <inertial>
+            <origin xyz="0 0 0.1" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.021" ixy="0" ixz="0" iyy="0.021" iyz="0" izz="0.040"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0.1" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.2828"/>
+            </geometry>
+            <material name="gray"></material>
+        </visual>
+    </link>
+
+    <joint name="body_3-body_2-joint" type="revolute">
+        <origin xyz="0 0 0.2828" rpy="-1.5707963 0.7853981 -1.5707963"/>
+        <parent link="body_2"/>
+        <child link="body_3"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="30" velocity="1.0" lower="-3.14159" upper="3.14159" />
+    </joint>
+
+    <link name="body_3">
+        <inertial>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.023" ixy="0" ixz="0" iyy="0.023" iyz="0" izz="0.045"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.3"/>
+            </geometry>
+            <material name="gray"></material>
+        </visual>
+    </link>
+
+    <joint name="body_4-body_3-joint" type="revolute">
+        <origin xyz="0 0 0.3" rpy="0 -1.5707963 0"/>
+        <parent link="body_3"/>
+        <child link="body_4"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="30" velocity="1.0" lower="-3.14159" upper="3.14159" />
+    </joint>
+
+    <link name="body_4">
+        <inertial>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.023" ixy="0" ixz="0" iyy="0.023" iyz="0" izz="0.045"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.3"/>
+            </geometry>
+            <material name="gray"></material>
+        </visual>
+    </link>
+
+    <joint name="body_5-body_4-joint" type="revolute">
+        <origin xyz="0 0 0.3" rpy="0 -1.5707963 0"/>
+        <parent link="body_4"/>
+        <child link="body_5"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="30" velocity="1.0" lower="-3.14159" upper="3.14159" />
+    </joint>
+
+    <link name="body_5">
+        <inertial>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.023" ixy="0" ixz="0" iyy="0.023" iyz="0" izz="0.045"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.3"/>
+            </geometry>
+            <material name="gray"></material>
+        </visual>
+    </link>
+
+    <joint name="gripper-body_5-joint" type="revolute">
+        <origin xyz="0 0 0.3" rpy="0 0 0"/>
+        <parent link="body_5"/>
+        <child link="gripper"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="30" velocity="1.0" lower="-3.14159" upper="3.14159" />
+    </joint>
+
+    <link name="gripper">
+        <inertial>
+            <origin xyz="0.15 0 0" rpy="0 1.5707963 0"/>
+            <mass value="0.1"/>
+            <inertia ixx="0.0023" ixy="0" ixz="0" iyy="0.0023" iyz="0" izz="0.0045"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0.15 0 0" rpy="0 1.5707963 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.1"/>
+            </geometry>
+            <material name="gray"></material>
+        </visual>
+    </link>
+</robot>

@@ -3,8 +3,10 @@
 .vscode
 __pycache__/
 notes/test/
+
 src/mujoco/build
 src/mujoco/*/build
+src/mujoco/*/MUJOCO_LOG.TXT
 
 *.html
 poetry.lock

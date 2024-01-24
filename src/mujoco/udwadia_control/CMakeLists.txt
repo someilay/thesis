@@ -19,6 +19,12 @@ if (NOT PINOCCHIO_DIR)
 endif()
 
 
+if (NOT INICPP_DIR)
+    message(WARNING "You should install inicpp! Lib reference https://github.com/SemaiCZE/inicpp/tree/master")
+    set(INICPP_DIR /usr/local)
+endif()
+
+
 if (NOT MUJOCO_DIR)
     message(FATAL_ERROR "Specify MUJOCO_DIR!")
 endif()
@@ -46,6 +52,10 @@ endif()
 find_package(pinocchio 2.6.20 REQUIRED)
 link_directories(${PINOCCHIO_DIR}/lib)
 
+# Connect inicpp
+find_package(inicpp REQUIRED PATHS ${INICPP_DIR})
+# include_directories(${INICPP_DIR}/include)
+
 # Connect mujoco
 include_directories(${MUJOCO_DIR}/include include)
 link_directories(${MUJOCO_DIR}/lib)
@@ -54,7 +64,6 @@ link_directories(${MUJOCO_DIR}/lib)
 pkg_search_module(Eigen3 REQUIRED eigen3 eigen3>=3.4 eigen<3.5)
 link_directories(${Eigen3_INCLUDE_DIRS})
 
-
 # Set standards
 set(CMAKE_CXX_FLAGS "-Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
@@ -62,4 +71,4 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 add_executable(udwadia main.cpp)
 
-target_link_libraries(udwadia glfw mujoco pinocchio::pinocchio)
+target_link_libraries(udwadia glfw mujoco pinocchio::pinocchio inicpp::inicpp)

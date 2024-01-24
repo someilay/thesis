@@ -38,19 +38,24 @@ RUN apt install pkg-config -y
 # Install xauth
 RUN apt install -y xauth
 
+# Install inicpp
+RUN wget https://github.com/SemaiCZE/inicpp/archive/refs/tags/v1.2.2.tar.gz && \
+    tar -xvzf v1.2.2.tar.gz && \
+    mkdir inicpp-build && \
+    cmake -S inicpp-1.2.2 -B inicpp-build -DINICPP_BUILD_SHARED=ON && \
+    make -C inicpp-build && \
+    make -C inicpp-build install
+
 RUN groupadd -r sample && useradd -r -g sample sample
 USER sample
 
 WORKDIR /home/sample
 
 # Copy files
-COPY main.cpp .
-COPY CMakeLists.txt .
-COPY z1/ z1/
-COPY z1/visual/ z1/visual/
+COPY main.cpp CMakeLists.txt scene.xml mjcf_example.xml urdf_example.urdf config.ini ./
 
 # Build project
 RUN cmake -B build -S . -DMUJOCO_DIR=/mujoco && \
-    cmake --build build
+    cmake --build build --config Release --target udwadia
 
-ENTRYPOINT ["./build/udwadia z1/scene.xml z1/z1.urdf"]
+ENTRYPOINT ["./build/udwadia"]
