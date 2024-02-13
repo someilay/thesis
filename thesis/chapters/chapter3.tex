@@ -1,12 +1,13 @@
 \chapter{Methodology}
 \label{chap:met}
 
-This chapter will provide a detailed explanation of the principles that stay
-behind the proposed methodology. In the first half a brief review of Udvadia-Kalaba
-approach would be given. Also, this part contains comprehensive physical reasons
-that are used in the mentioned technique. In the second half, these principles
-will be used to construct the desired methodology. Besides that, the limitations 
-and peculiar properties are discussed in this half.
+This chapter will present a detailed elucidation of the principles underpinning the 
+proposed methodology. The initial section will offer a concise overview of the 
+Udvadia-Kalaba's approach is accompanied by a comprehensive exposition of the physical 
+rationales employed in this technique. Subsequently, these principles will be 
+harnessed in the development of the intended methodology. Furthermore, this section 
+will scrutinize the limitations and distinctive characteristics inherent in the 
+proposed methodology.
 
 \section{Essentials of Udvadia-Kalaba approach}
 
@@ -62,4 +63,38 @@ by differentiation of holonomic constraints twice and non-holonomic once.
 According to Udwadia-Kalaba the constrained force that would satisfy can be 
 written
 
+\begin{equation}
+    \label{eqn:ud_ka_c_forces}
+    Q_c = M^{1 / 2} (A M^{-1/2})^+(b - A M ^ {-1} Q)
+\end{equation}
 
+where $M^{\pm 1 / 2} = W \Lambda^{\pm 1/ 2} W^T$ ($W, \Lambda$ gain by 
+eigendecomposition), $[*]^+$ is the Moore-Penrose inverse. Under these forces, 
+the solution of the forward dynamics takes the form
+
+\begin{equation}
+    \label{eqn:forward_dyn_with_cf}
+    \ddot{\mathbf{q}} = M^{-1}Q + M^{-1 / 2} (A M^{-1/2})^+(b - A M ^ {-1} Q)
+\end{equation}
+
+The equation \ref{eqn:ud_ka_c_forces} according to F. Udvadia and R. Kalaba
+\cite{UdwadiaKalabaApproach} is the analytical solution to the minimization problem
+based on Gauss's principle of least constraint
+
+\begin{equation}
+    \label{eqn:gauss_min_problem}
+    \begin{aligned}
+        \min_{\ddot{\mathbf{q}}} \quad &
+        [\ddot{\mathbf{q}} - a]^T M [\ddot{\mathbf{q}} - a] \\
+        \textrm{s.t.} \quad &
+        A \ddot{\mathbf{q}} - b = 0 \\
+        \quad &
+        a(\mathbf{q}, \dot{\mathbf{q}}, t) = M^{-1} Q
+    \end{aligned}
+\end{equation}
+
+While the solution proposed by F. Udvadia and R. Kalaba demonstrates precision, 
+it is not without its drawbacks. Instability points and computationally intensive 
+operations, such as the computation of matrix roots, present significant challenges. 
+Moreover, a notable deficiency lies in the absence of prioritization within the 
+methodology.
