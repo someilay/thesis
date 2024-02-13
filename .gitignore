@@ -10,5 +10,18 @@ src/mujoco/*/MUJOCO_LOG.TXT
 
 *.html
 poetry.lock
-**/*.synctex.gz
 
+# Ignore tex intermediate files
+**/*.synctex.gz
+**/*.aux
+
+thesis/**/*.aux
+thesis/thesis.bbl
+thesis/thesis.bcf
+thesis/thesis.blg
+thesis/thesis.fdb_latexmk
+thesis/thesis.fls
+thesis/thesis.log
+thesis/thesis.out
+thesis/thesis.run.xml
+thesis/thesis.toc

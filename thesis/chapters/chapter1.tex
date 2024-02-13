@@ -1,0 +1,57 @@
+\chapter{Introduction}
+\label{chap:intro}
+% \chaptermark{Optional running chapter heading}
+
+The advancement of microelectronics and sensor technologies has catalyzed a 
+widespread integration of robotic systems into various domains. Manipulators, 
+delivery robots, and flying drones have become ubiquitous, presenting developers 
+and researchers with novel challenges in terms of robustness, adaptiveness, and 
+synchronization. Among these challenges, synchronization stands out as a critical 
+issue, especially given the proliferation and increasing complexity of such systems. 
+ In real-world applications, synchronization of robotic systems is crucial across 
+various industries. For instance, in manufacturing assembly lines, synchronized 
+robots ensure smooth production flow and maximize throughput. Similarly, in 
+warehouse logistics, coordinated robotic systems optimize order fulfillment times 
+and enhance overall productivity. Furthermore, collaborative robotics scenarios in 
+construction projects benefit from synchronized robotic systems for tasks like 
+concrete pouring and steel beam placement, improving efficiency and minimizing 
+delays. A common challenge in this realm involves effectively controlling robots constrained 
+by a shared object. This paper proposes a straightforward methodology to address 
+such problems through the Udvadia-Kalaba\cite{UdwadiaKalabaApproach} approach.
+
+This proposed methodology gains particular significance within the context of modern 
+physics simulation, derivation, and optimization libraries. These tools offer 
+substantial computational speed, enabling efficient problem-solving. In this article, 
+we leverage MuJoCo\cite{MuJoCo}, Pinocchio\cite{Pinocchio}, and ProxSuite\cite{CvxPy} 
+for simulation, robotic dynamics computation, and optimization, respectively. 
+Pinocchio, in particular, emerges as a key tool for computing the dynamics of robotic 
+systems. However, its limitation to open-loop physics models poses challenges for 
+controlling and synchronizing multiple robots.
+
+Previous solutions have often involved constructing models with pre-existing 
+constraints or employing the KKT (Karush-Kuhn-Tucker) approach. However, these 
+methods suffer from computational complexity and issues with constraint 
+prioritization. The proposed methodology combines the strengths of both approaches, 
+integrating physical grounding from the former and simplicity of application from 
+the latter. Notably, it allows for manual fine-tuning of constraint priorities and 
+boasts superior computational speed through auto code generation. 
+
+The implementation of the proposed methodology demonstrates significant advancements 
+in the control and synchronization of robotic systems constrained by shared objects. 
+Through the integration of robust physics simulation, precise robotic dynamics 
+computation, and efficient optimization techniques, the method achieves remarkable 
+outcomes across various simulation experiments. By leveraging 
+advanced simulation, computation, and optimization techniques, the method has 
+improved levels of efficiency, accuracy, and adaptability in robotic operations, 
+paving the way for further advancements in automation and robotics technology.
+
+In subsequent chapters, we delve deeper into various aspects of the proposed method. 
+Chapter \ref{chap:lr} provides an exhaustive review of recent literature, 
+highlighting the existing landscape of solutions and their limitations. 
+Chapter \ref{chap:met} elucidates the methodology underlying the proposed approach, 
+offering insights into its theoretical underpinnings. Implementation details and 
+code snippets are presented in Chapter \ref{chap:impl}, demonstrating the practical 
+application of the method. Chapter \ref{chap:eval} undertakes a comparative 
+analysis, pitting technique against established methods to gauge its efficacy. 
+Finally, Chapter \ref{chap:conclusion} summarizes findings, discusses 
+implications, and outlines avenues for future research.

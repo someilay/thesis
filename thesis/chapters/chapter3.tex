@@ -1,0 +1,65 @@
+\chapter{Methodology}
+\label{chap:met}
+
+This chapter will provide a detailed explanation of the principles that stay
+behind the proposed methodology. In the first half a brief review of Udvadia-Kalaba
+approach would be given. Also, this part contains comprehensive physical reasons
+that are used in the mentioned technique. In the second half, these principles
+will be used to construct the desired methodology. Besides that, the limitations 
+and peculiar properties are discussed in this half.
+
+\section{Essentials of Udvadia-Kalaba approach}
+
+Let $\mathbf{q}$ be a vector of generalized coordinates of some physical system.
+Also let agree that $\dim \mathbf{q} = n_q$ and 
+$\dim \dot{\mathbf{q}} = \dim \ddot{\mathbf{q}} = n_v$, where $\dot{\mathbf{q}}$ and 
+$\ddot{\mathbf{q}}$ are generalized velocity and acceleration respectevly. Notably, 
+that in the general case $n_q \neq n_v$ because $\dot{\mathbf{q}}$ and $\ddot{\mathbf{q}}$ 
+can be located in different spaces. Thus, the dynamics of the given system can be 
+expressed:
+
+\begin{equation}
+    \label{eqn:cannonical_man_eq}
+    M(\mathbf{q}) \ddot{\mathbf{q}} 
+    + C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} 
+    + g(\mathbf{q}) = \boldsymbol{\tau}
+\end{equation}
+
+where $M(\mathbf{q}) \succeq 0 $ is known as general inertia matrix, 
+$C(\mathbf{q}, \dot{\mathbf{q}})$ is Coriolis-Centrifugal matrix, and 
+$g(\mathbf{q})$ is potential forces impact (usually gravitational impact). 
+For further convenience, I would omit the parameters of matrix functions. 
+In the case of Coriolis-Centrifugal and potential forces, it is common to 
+combine them in one term $\mathbf{Q}(\mathbf{q}, \dot{\mathbf{q}}) = \boldsymbol{\tau}
+- C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} - g(\mathbf{q})$. Hence, I can 
+rewrite \ref{eqn:cannonical_man_eq} in the following manner
+
+\begin{equation}
+    \label{eqn:compact_man_eq}
+    M \ddot{\mathbf{q}} = \mathbf{Q}
+\end{equation}
+
+equation \ref{eqn:compact_man_eq} is compact form of equation 
+\ref{eqn:cannonical_man_eq}. It would be highly utilized in further 
+investigations.
+
+Let's consider the same physical system again with imposed constraints at this time.
+All holonomic constraints would be presented by 
+$\varphi(\mathbf{q}, t): \mathbb{S}_{n_q} \times \mathbb{R} \rightarrow \mathbb{R}^m$, and 
+all non-holonomic by 
+$
+\psi(\mathbf{q}, \dot{\mathbf{q}}, t): \mathbb{S}_{n_q} \times \mathbb{R}^{n_v} 
+\times \mathbb{R} \rightarrow \mathbb{R}^k
+$, where $\mathbb{S}_{n_q}$ generalized coordinates space in the most common case.
+All constraints are satisfied if and only if the above functions are equal to zero.
+
+These constraints can be rewritten in the form 
+$
+A(\mathbf{q}, \dot{\mathbf{q}}, t) \ddot{\mathbf{q}} 
+- b(\mathbf{q}, \dot{\mathbf{q}}, t)
+$
+by differentiation of holonomic constraints twice and non-holonomic once.
+According to Udwadia-Kalaba the constrained force that would satisfy can be 
+written
+
+
