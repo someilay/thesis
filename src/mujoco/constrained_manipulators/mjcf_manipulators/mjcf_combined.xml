@@ -1,0 +1,21 @@
+<mujoco model="example_mjcf">
+    <compiler angle="radian" eulerseq="xyz"/>
+    <!-- <option integrator="RK4" gravity="0 0 -9.81" timestep="0.001"/> -->
+    <option integrator="RK4" gravity="0 0 0" timestep="0.001"/>
+
+    <worldbody>
+        <body name="base_1">
+            <inertial mass="1.0" pos="0 0 0.25" diaginertia="0.063 0.063 0.125"/>
+            <site type="cylinder" pos="0 0 0.25" size="0.1 0.25"/>
+
+            <include file="manipulator_1.xml"/>
+        </body>
+
+        <body name="base_2" pos="0 1 0">
+            <inertial mass="1.0" pos="0 0 0.25" diaginertia="0.063 0.063 0.125"/>
+            <site type="cylinder" pos="0 0 0.25" size="0.1 0.25"/>
+
+            <include file="manipulator_2.xml"/>
+        </body>
+    </worldbody>
+</mujoco>
