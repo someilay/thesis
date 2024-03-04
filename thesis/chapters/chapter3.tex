@@ -31,7 +31,7 @@ $C(\mathbf{q}, \dot{\mathbf{q}})$ is Coriolis-Centrifugal matrix, and
 $g(\mathbf{q})$ is potential forces impact (usually gravitational impact). 
 For further convenience, I would omit the parameters of matrix functions. 
 In the case of Coriolis-Centrifugal and potential forces, it is common to 
-combine them in one term $\mathbf{Q}(\mathbf{q}, \dot{\mathbf{q}}) = \boldsymbol{\tau}
+combine them in one term (bias force) $\mathbf{Q}(\mathbf{q}, \dot{\mathbf{q}}) = \boldsymbol{\tau}
 - C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} - g(\mathbf{q})$. Hence, I can 
 rewrite \ref{eqn:cannonical_man_eq} in the following manner
 
@@ -55,10 +55,12 @@ $, where $\mathbb{S}_{n_q}$ generalized coordinates space in the most common cas
 All constraints are satisfied if and only if the above functions are equal to zero.
 
 These constraints can be rewritten in the form 
-$
-A(\mathbf{q}, \dot{\mathbf{q}}, t) \ddot{\mathbf{q}} 
-- b(\mathbf{q}, \dot{\mathbf{q}}, t)
-$
+\begin{equation}
+    \label{eqn:udwadia_const_form}
+    A(\mathbf{q}, \dot{\mathbf{q}}, t) \ddot{\mathbf{q}} 
+    - b(\mathbf{q}, \dot{\mathbf{q}}, t)
+\end{equation}
+
 by differentiation of holonomic constraints twice and non-holonomic once.
 According to Udwadia-Kalaba the constrained force that would satisfy can be 
 written
@@ -98,3 +100,260 @@ it is not without its drawbacks. Instability points and computationally intensiv
 operations, such as the computation of matrix roots, present significant challenges. 
 Moreover, a notable deficiency lies in the absence of prioritization within the 
 methodology.
+
+\section{Brief Lie theory}
+
+The Lie group, a mathematical concept dating back to the 19th century, was first 
+proposed by Sophus Lie, laying the foundation for continuous transformation groups. 
+Although it was initially abstract, over time its influence has spread to various 
+scientific and technological fields. Before proceeding further, it is necessary to 
+consider the basics of Lie theory. The mathematical tools discussed in this section 
+are crucial for the research discussed here.
+
+Let $\mathcal{G}$ is smooth manifold that satisfies the group axioms. For any 
+$\mathcal{X}$, $\mathcal{Y}$ and $\mathcal{Z}$ from $\mathcal{G}$ the following 
+statements are true:
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:g_axi}
+        & \mathcal{X} \circ \mathcal{Y} \in \mathcal{G} \quad && \text{(I)} \\
+        & \exists \mathcal{E}:\ \mathcal{E} \circ \mathcal{X} 
+        = \mathcal{X} \circ \mathcal{E} = \mathcal{X} \quad && \text{(II)} \\
+        & \exists \mathcal{X}^{-1}:\ \mathcal{X}^{-1} \circ \mathcal{X}
+        = \mathcal{X} \circ \mathcal{X}^{-1} = \mathcal{E} \quad && \text{(III)} \\ 
+        & (\mathcal{X} \circ \mathcal{Y}) \circ \mathcal{Z} = 
+        \mathcal{X} \circ (\mathcal{Y} \circ \mathcal{Z}) \quad && \text{(IV)}
+    \end{aligned}
+\end{equation}
+
+For such group $T_{\mathcal{E}} \mathcal{G}$ is the Lia Algebra defined at 
+$\mathcal{E}$ element. The geometric interpretation of algebra is tangent plane 
+that touchs the smooth manifold (group). $\mathfrak{m} \equiv 
+T_{\mathcal{E}} \mathcal{G}$ is always a vector space.
+
+The next crucial defenition is a group action
+
+\begin{equation}
+    f: \mathcal{G} \times \mathcal{V} \to \mathcal{V}
+\end{equation}
+
+where $\mathcal{V}$ is some set. The operation defined above should satisfy 
+the axioms ($v \in \mathcal{V}$; $\mathcal{X}, \mathcal{Y} \in \mathcal{G}$),
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:act_axi}
+        & \mathcal{E} \cdot v = v \quad && \text{(I)} \\
+        & (\mathcal{X} \circ \mathcal{Y}) \cdot v = 
+        \mathcal{X} \cdot (\mathcal{Y} \cdot v) \quad && \text{(II)}
+    \end{aligned}
+\end{equation}
+
+For instance, if the $\text{SO}(n)$ rotations is considered as Lie group, than the 
+transformation $R \cdot x \equiv R x$ ($x \in \mathbb{R}^n$) is a group action.
+
+The exponential map $\exp:\ \mathfrak{m} \to \mathcal{G}$ converts elements of 
+Lie algebra to corresponding group. The log map do inverse operation. 
+However, it is neccesary to remember that 
+this map applicable only for "identity" algebra. However, there is a linear
+transformation between $T_{\mathcal{X}} \mathcal{G}$ and $T_{\mathcal{E}} 
+\mathcal{G}$. It is called adjoin.
+
+It is known that $\mathfrak{m}$ is isomorphic to the vector space $\mathbb{R}^m$. 
+One can write it as $\mathfrak{m} \cong \mathbb{R}^m$. Due to convinience this 
+isomorphism would be highly utilized. Moreover, in the bellow sections only 
+algebras constructed on $\mathbb{R}^m$ are considered. Thus, a maping between 
+sets can be defined in the following manner (hat-vee notation)
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:hat_vee_not}
+        & [*]^\wedge: \ \mathbb{R}^m \to \mathfrak{m} \quad &&
+        \boldsymbol{\tau}^\wedge = \sum_{i=1}^{m} \tau_i E_i \\
+        & [*]^\vee: \mathfrak{m} \to \mathbb{R}^m \quad && 
+        \boldsymbol{\tau} = \sum_{i=1}^{m} \tau_i \mathbf{e}_i
+    \end{aligned}
+\end{equation}
+
+where $\mathbf{e}_i$ are a base of $\mathbb{R}^m$ and $E_i$ are base vectors 
+of $\mathfrak{m}$. Obviously, $\mathbf{e}_i^\wedge = E_i$. Using this mapping, the
+exponential / log map can be modified 
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:exp_log_for_r_m}
+        & \exp : \quad && \mathcal{X} = \exp(\boldsymbol{\tau}^\wedge) \\
+        & \log : \quad && \boldsymbol{\tau} = \log(\mathcal{X})^\vee
+    \end{aligned}
+\end{equation}
+
+Or, in the most convinient form
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:big_exp_log_for_r_m}
+        & \text{Exp} : \quad && \mathcal{X} 
+        = \exp(\boldsymbol{\tau}^\wedge) 
+        = \text{Exp}(\boldsymbol{\tau})\\
+        & \text{Log} : \quad && \boldsymbol{\tau} 
+        = \log(\mathcal{X})^\vee
+        = \text{Log}(\mathcal{X})
+    \end{aligned}
+\end{equation}
+
+Through this definitions it easy to introduce plus and minus operations
+
+\begin{equation}
+    \begin{aligned}
+        & \text{right-} \oplus: 
+        \mathcal{X} \oplus \prescript{\mathcal{X}}{}{\boldsymbol{\tau}} 
+        \equiv \mathcal{X} \circ 
+        \text{Exp}(\prescript{\mathcal{X}}{}{\boldsymbol{\tau}}) \in \mathcal{G} \\
+        & \text{right-} \ominus:
+        \mathcal{Y} \ominus \mathcal{X} 
+        \equiv \text{Log}(\mathcal{X}^{-1} \circ \mathcal{Y}) 
+        \in T_{\mathcal{X}}\mathcal{G}
+    \end{aligned}
+\end{equation}
+
+$\mathbf{TODO}$: continue section
+
+\section{Defying constraints over multiple systems}
+
+This section introduces a common holonomic constraint, which serves as a foundation 
+for further investigations. This constraint delineates a rigid body's behavior, 
+applicable to multiple manipulators.
+
+Let $M_1, M_2, \dots, M_p$ are $p$ iinertia matrices for $p$ independent systems. 
+The $i$-th system has $n_q^i$ generalized coordinates, $n_v^i$ generalized velocity 
+components and $Q_i$ bias force. Thus, the common unconstrained dynamics is
+
+\begin{equation}
+    \label{eqn:common_dynamics}
+    \begin{bmatrix}
+        M_1 & 0   & \dots & 0 \\
+        0   & M_2 & \dots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0   & 0   & \dots & M_p
+    \end{bmatrix}
+    \begin{bmatrix}
+        \ddot{\mathbf{q}}_1 \\ \ddot{\mathbf{q}}_2 \\ \vdots \\ \ddot{\mathbf{q}}_p
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+        Q_1 \\ Q_2 \\ \vdots \\ Q_p
+    \end{bmatrix}
+\end{equation}
+
+The equation \ref{eqn:common_dynamics} can be rewriten in the manner of
+\ref{eqn:compact_man_eq}. In such compact form it is convinient for futher analysis. 
+Hense, let
+
+\begin{equation}
+    \label{eqn:common_mass}
+    M_s = 
+    \begin{bmatrix}
+        M_1 & 0   & \dots & 0 \\
+        0   & M_2 & \dots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0   & 0   & \dots & M_p
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    \label{eqn:common_q}
+    q_s = 
+    \begin{bmatrix}
+        \mathbf{q}_1 & \mathbf{q}_2 & \dots & \mathbf{q}_p
+    \end{bmatrix}^T
+\end{equation}
+
+\begin{equation}
+    \label{eqn:common_bias}
+    Q_s = 
+    \begin{bmatrix}
+        Q_1 & Q_2 & \dots & Q_p
+    \end{bmatrix}^T
+\end{equation}
+
+It implies to the following dynamics equation that describes motion of $p$ independent 
+systems
+
+\begin{equation}
+    \label{eqn:common_eq}
+    M_s \ddot{\mathbf{q}}_s = \mathbf{Q}_s
+\end{equation}
+
+Let $R_{ij}$ and $\mathbf{p}_{ij}$ are rotation and position of $j$-th frame attached to some 
+link of the $i$-th system respectevly. The rigid body connection between two frames 
+now can be defined as
+
+\begin{numcases}{}
+    R_{ij}R_d = R_{\alpha \beta} & \label{eqn:rot_const}
+    \\
+    (\mathbf{p}_{ij} - \mathbf{p}_{\alpha \beta})^T
+    (\mathbf{p}_{ij} - \mathbf{p}_{\alpha \beta}) = l & \label{eqn:position_const}
+\end{numcases}
+
+where $R_d$ is a fixed rotation matrix and $l$ a distence between connection points 
+inside a rigid body.
+
+Substituting 
+$\prescript{\alpha \beta}{ij}{\mathbf{d}} = \mathbf{p}_{ij} - \mathbf{p}_{\alpha \beta}$ 
+and differencing respect to time twice the equation \ref{eqn:position_const}
+transforms to 
+
+\begin{equation}
+    \label{eqn:pos_const_transform_1}
+    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
+    \prescript{\alpha \beta}{ij}{\mathbf{d}} - l = 0
+    \Rightarrow
+    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
+    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}} = 0
+    \Rightarrow
+    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
+    \prescript{\alpha \beta}{ij}{\ddot{\mathbf{d}}} + 
+    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}}^T 
+    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}} = 0
+\end{equation}
+
+The equation \ref{eqn:pos_const_transform_1} can be expresed via generalized coordinates
+
+\begin{equation}
+    \label{eqn:pos_const_transform_2}
+    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
+    \prescript{\alpha \beta}{ij}{\ddot{\mathbf{d}}} + 
+    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}}^T 
+    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}} = 0
+    \Rightarrow
+    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
+    (
+        \prescript{v}{ij}{J} \ddot{\mathbf{q}}_s + 
+        \prescript{v}{ij}{\dot{J}} \dot{\mathbf{q}}_s
+    ) + 
+    \dot{\mathbf{q}}_s^T \prescript{v}{ij}{J}^T 
+    \prescript{v}{ij}{J} \dot{\mathbf{q}}_s = 0
+\end{equation}
+
+where $\prescript{v}{ij}{J} \equiv \prescript{v}{ij}{J}(\mathbf{q}_s)$ is the 
+$j$-th frame velocity Jacobian of the $i$-th system. Now, it is possible to 
+convert \ref{eqn:position_const} constraint to \ref{eqn:udwadia_const_form} form
+
+\begin{equation}
+    \label{eqn:pos_const_a_matrix}
+    A_p(\mathbf{q}_s, \dot{\mathbf{q}}_s) = 
+    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T \prescript{v}{ij}{J}
+\end{equation}
+
+\begin{equation}
+    \label{eqn:pos_const_b_vector}
+    b_p(\mathbf{q}_s, \dot{\mathbf{q}}_s) = 
+    - \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
+    \prescript{v}{ij}{\dot{J}} \dot{\mathbf{q}}_s
+    - \dot{\mathbf{q}}_s^T \prescript{v}{ij}{J}^T
+    \prescript{v}{ij}{J} \dot{\mathbf{q}}_s
+\end{equation}
+
+Now, let suppose that $\gamma_1, \gamma_2, \dots, \gamma_w$ system connected by rigid 
+body. Here $\gamma_i$ is an index of the system, and $w \leq p$. 
