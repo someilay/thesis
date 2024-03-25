@@ -1,3 +1,113 @@
 \chapter{Literature Review}
 \label{chap:lr}
 % \chaptermark{Second Chapter Heading}
+
+The control of the interacting physical systems is a challenging 
+task. There are few problems that should be solved to achieve the 
+high efficiency and precision in the aforementioned problem. They 
+are the following: the right mathematical model selection, the 
+unified methodology for defining the interaction, and the well-defined 
+control error. The first point is necessary to cover a wide range 
+of physical systems. The second one is crucial to work with 
+different mechanical connections. Finally, the last one is needed 
+to stability and robustness analysis. 
+
+This literature review covers all these subproblems and explores them
+from the point of view of the work of Firdaus Udwadia and Robert Kalaba 
+\cite{UdwadiaKalabaApproach}. The section \ref{sec:math_model} considers 
+a mathematical models that utilized in the recent studies. The 
+\ref{sec:interaction_def} part reviews a rigorous methodology to define 
+how physical systems can affect each other. The section \ref{sec:control_error} 
+explores the previous research in control error defining and analysis 
+on different manifolds.
+
+The articles were selected to demonstrate a solid ground why some methods 
+had been preferred in this study. Some of the papers were chosen 
+to reference for theoretical background that was not included in this 
+paper. Other articles had been reviewed for shown an existing techniques.
+
+\section{The mathematical model} \label{sec:math_model}
+
+This section contains review of existing mathematical models for physical 
+systems. Moreover, this piece has a comparison of them in terms of numerical 
+integration convenience and simplicity of defining the initial conditions. 
+It is necessary to clarify that from now this study considers only systems 
+of rigid body with only inner stiffness. The detailed explanation of 
+such choice will be conduct later in the Chapter \ref{chap:met}.
+
+Firstly, lets consider the most popular model. The articles 
+\cite{UdwadiaKalabaApproach}, \cite{AppOfUdwadiaKalabaApproach} and 
+\cite{UnifiedFrameworkOfRobotControl} relies on it. Usually it is 
+called the canonical manipulator equation. The model can be formulated 
+as 
+
+\begin{equation} \label{eqn:can_man_equation}
+    M(\mathbf{q})\ddot{\mathbf{q}} + 
+    C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + 
+    g(\mathbf{q}) = 
+    \boldsymbol{\tau}
+\end{equation}
+
+where $M(\mathbf{q})$ is known as inertia matrix, $C(\mathbf{q}, \dot{\mathbf{q}})$ 
+is Centrifugal-Coriolis matrix, $g(\mathbf{q})$ is a gradient
+of potential forces, and $\mathbf{q}$, $\boldsymbol{\tau}$ are generalized 
+coordinates and torques respectively. This equation will be explored in details 
+in the next Chapter \ref{chap:met}.
+
+Conversely, Udwadia \cite{ConstHamiltonSys} utilized a Hamiltonian view of the 
+problem. The equations are following, 
+
+\begin{equation}
+    \label{eqn:ham_eqns}
+    \begin{cases}
+        \dot{\mathbf{q}} = \frac{\partial \mathcal{H}}{\partial \mathbf{p}} \\
+        \dot{\mathbf{p}} = -\frac{\partial \mathcal{H}}{\partial \mathbf{q}}
+    \end{cases}
+\end{equation}
+
+where $\mathbf{q}$, $\mathbf{p}$, and $\mathcal{H}$ are generalized coordinates,
+generalized momentum, and Hamiltonian respectively.
+
+The aforementioned equations are proven to be equivalent. Thus, both models 
+can be utilized for achieving the main goal. However, the crucial difference 
+lies in the another plane. 
+
+In the vast majority of cases the both differential equations can be solved 
+analytically. Therefore, it is necessary to use the numerical methods. The 
+equation (\ref{eqn:can_man_equation}) has second time derivative. It forces 
+to construct proper state variable for numerical integration. In the opposite 
+the Hamiltonian equations (\ref{eqn:ham_eqns}) has only first derivative. Hence, 
+the usage of it is simpler. However, the definition of initial conditions is harder.
+Nevertheless, the mentioned problem are already solved. So, choice of model 
+fully lies on the specific of discussed task. 
+
+The most of reviewed papers relies on the canonical model 
+(\ref{eqn:can_man_equation}). Therefore, this research will utilize this equation 
+too.
+
+\section{The methodology to defining interaction} \label{sec:interaction_def}
+
+The second crucial point in this paper is a definition of interaction between 
+systems. This piece considers how it can be achieved, and which methodology 
+is better in the context of discussed question. The important remark of this 
+section that only interaction via rigid bodies will be consider below.
+
+The first discussed approach is demonstrated by Scott Kuindersma and et al. in
+\cite{OptimizationBasedLocomotionPlanning}. This research propose to use a 
+a force cone to define an contact between a physical system (Atlas in their case) 
+and solid surface. The actuation force is formulated as 
+
+\begin{equation}
+    \label{eqn:force_cone}
+    \pmb{\lambda} = \sum_{i=1}^{N_d} \beta_i (\mathbf{n} + \mu \mathbf{d}_i), 
+    \: \beta_i \ge 0
+\end{equation}
+
+where $\mathbf{n}$ is a normal force, $\mathbf{d}_i$ is a tangent to contact 
+vector, $\mu$ is the Coulomb friction coefficient, and $N_d$ is a amount
+of used tangent vectors. This contact force later can be translated to 
+joint space via respective jacobian - $J^T(\mathbf{q})$.
+
+\textcolor{red}{TO BE CONTINUED}
+
+\section{Control error} \label{sec:control_error}
