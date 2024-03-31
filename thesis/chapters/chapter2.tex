@@ -92,10 +92,10 @@ systems. This piece considers how it can be achieved, and which methodology
 is better in the context of discussed question. The important remark of this 
 section that only interaction via rigid bodies will be consider below.
 
-The first discussed approach is demonstrated by Scott Kuindersma and et al. in
-\cite{OptimizationBasedLocomotionPlanning}. This research propose to use a 
-a force cone to define an contact between a physical system (Atlas in their case) 
-and solid surface. The actuation force is formulated as 
+The first discussed approach is analyzed in \cite{OptimizationBasedLocomotionPlanning} 
+and \cite{WholeBodyControlForm}. These articles propose to use a 
+a force cone to define an contact between a physical system 
+and solid surface. The actuation force can be formulated as 
 
 \begin{equation}
     \label{eqn:force_cone}
@@ -108,6 +108,39 @@ vector, $\mu$ is the Coulomb friction coefficient, and $N_d$ is a amount
 of used tangent vectors. This contact force later can be translated to 
 joint space via respective jacobian - $J^T(\mathbf{q})$.
 
-\textcolor{red}{TO BE CONTINUED}
+Using this approach it is possible to emulate an interaction between 
+physical systems via rigid body. It can be achieved by defining the motion 
+of connection body through force acting on it. However, this method cannot 
+guaranty a stability. Moreover, constructing a feedback loop in this case is 
+not trivial task. 
+
+The next straight forward solution is initially impose an interaction inside 
+to mathematical model. In the discussed case it can be achieved by writing 
+the $M(\mathbf{q})$, $C(\mathbf{q}, \dot{\mathbf{q}})$, and $g(\mathbf{q})$ 
+in equation (\ref{eqn:can_man_equation}) as formulation of closed-loop system. 
+Thus, the advantage of this method is unnecessary of stabilization, because 
+it is guaranteed by a model itself. Futhermore, this formulation can be 
+used with a great range of control techniques. However, \cite{BodyDynWithClosedLoop} 
+demonstrates a lower computation speed with comparison to 
+open-loop algorithms \cite{Pinocchio}. Moreover, proposed closed-loop 
+version requires a predefined description of a whole system. Thus, it cannot 
+be used in the realtime in the dynamic environment.
+
+Finally, the third approach is defining a right constraint. In this study the action 
+of the rigid body on connected systems can be described by holonomic constraint. 
+It can be formulated as 
+
+\begin{equation}
+    \label{eqn:holonom_const}
+    \varphi (\mathbf{q}, t) = 0
+\end{equation}
+
+Further this equation can be used in KKT (Karush-Kuhn-Tucker) technique to 
+rigorous define system with imposed constraints. Moreover, using the equation
+(\ref{eqn:holonom_const}) it is straight forward to construct a stabilization 
+mechanism. As instance, the Baumgarte's approach can be used with KKT method 
+to achieve this goal. Nevertheless, this study does not rely on aforementioned 
+technique (KKT), instead it utilized the Udwadia-Kalaba approach. Details are 
+shown in the Chapter \ref{chap:met}.
 
 \section{Control error} \label{sec:control_error}
