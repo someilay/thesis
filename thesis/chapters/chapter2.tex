@@ -144,3 +144,39 @@ technique (KKT), instead it utilized the Udwadia-Kalaba approach. Details are
 shown in the Chapter \ref{chap:met}.
 
 \section{Control error} \label{sec:control_error}
+
+The last crucial subproblem is rigorous defining of control error for ensure 
+stabilization. Especially, it is important in the context of chosen type of 
+interaction. Therefore, this section reviews how to calculate the discrepancy 
+between the current system state and desired one in the form of the equation 
+(\ref{eqn:holonom_const}). 
+
+The previous studies \cite{SlidingOnManifoldsQuat,GeomControlQuadSE3,
+RigidBodyAttCon,OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose} 
+concentrates on computing pose difference in space. The majority 
+\cite{GeomControlQuadSE3,RigidBodyAttCon,OutFeedbackStabForOrbRob,
+ANonlinearObserverUsingPose} of source explores problem through utilizing 
+rotations matrices. On the other hand \cite{SlidingOnManifoldsQuat} uses 
+a quaternions for achieving the goal. Let's compare these solutions.
+
+The \cite{SlidingOnManifoldsQuat} states the advantage of quaternions on 
+the rotations matrix. This research shows that proposed method achieves 
+the \emph{exponential asymptotic stability} against \emph{almost global 
+stability} of techniques from \cite{GeomControlQuadSE3,RigidBodyAttCon}.
+Futhermore, the quaternion-based method in discussed study presents the 
+superiority on the analogous ones. The authors proves that their technique 
+avoids the unwinding phenomenon, i.e. error converges to zero by shortest 
+path in $\mathbb{S}^3$.
+
+The solution via utilizing the rotations matrices is presented in 
+\cite{GeomControlQuadSE3,RigidBodyAttCon,OutFeedbackStabForOrbRob,
+ANonlinearObserverUsingPose}. However, in aforementioned quaternion-based 
+approach shows that basing on such structure methods has disadvantage. 
+The naive error computation via matrices is calculation of dot product 
+between base vectors of current and desired orientation. As mentioned 
+above this approach can achieve only \emph{almost global stability}. 
+Nevertheless, studies \cite{OutFeedbackStabForOrbRob, ANonlinearObserverUsingPose} 
+relies on deep topology analysis of $SE(3)$ group. These research uses 
+a Lie theory to construct a right discrepancy between attitudes. In 
+the Chapter \ref{chap:met} the \emph{exponential convergence} of method 
+based on articles above is presented.
