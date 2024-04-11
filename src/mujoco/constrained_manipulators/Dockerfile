@@ -1,6 +1,6 @@
 # Build
 FROM ubuntu:latest as build_and_run
-LABEL authors="ilia-milioshin", name="build udwadia control"
+LABEL authors="ilia-milioshin", name="build constarained manipulators"
 
 ARG MUJOCO_VERSION=3.1.0
 
@@ -52,10 +52,11 @@ USER sample
 WORKDIR /home/sample
 
 # Copy files
-COPY main.cpp CMakeLists.txt scene.xml mjcf_example.xml urdf_example.urdf config.ini ./
+COPY main.cpp CMakeLists.txt config.ini urdf_manipulators.urdf ./
+COPY mjcf_manipulators/ ./mjcf_manipulators/
 
 # Build project
 RUN cmake -B build -S . -DMUJOCO_DIR=/mujoco && \
-    cmake --build build --config Release --target udwadia
+    cmake --build build --config Release --target constrained_manipulators
 
-ENTRYPOINT ["./build/udwadia"]
+ENTRYPOINT ["./build/constrained_manipulators"]

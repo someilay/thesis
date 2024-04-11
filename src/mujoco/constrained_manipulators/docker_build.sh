@@ -1,2 +1,2 @@
 # /bin/bash
-docker image build -t udwadia .
+docker image build -t constarained_manipulators .
