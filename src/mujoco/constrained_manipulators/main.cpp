@@ -60,15 +60,17 @@ struct _config {
     double kD = 0;
 
     vector<double> q0;
-    bool controlOri = true;
     bool bodyFrameEnabled = true;
+
+    Mat3d rotDiff = Mat3d::Identity();
+    vector<double> p = {0, 1, 0}; 
 } typedef Config;
 
 struct _indices {
     int mjcfStartIdx;
     int mjcfEndIdx;
-    int urdfStartIdx;
-    int urdfEndIdx;
+    pin::JointIndex urdfStartIdx;
+    pin::JointIndex urdfEndIdx;
 } typedef Indices;
 
 void printVector(double *arr, int len, bool newLine = true) {
@@ -164,7 +166,6 @@ void initConfig(int argc, char **argv, Config &config) {
 
     config.kP = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "KP", config.kP);
     config.kD = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "KD", config.kD);
-    config.controlOri = tryToReadField<inicpp::boolean_ini_t>(iniFile, "Control", "control_ori", config.controlOri);
 
     config.bodyFrameEnabled = tryToReadField<inicpp::boolean_ini_t>(iniFile, "Simulation", "body_frame_enabled", config.bodyFrameEnabled);
     config.timesSlower = tryToReadField<inicpp::float_ini_t>(iniFile, "Simulation", "times_slower", config.timesSlower);
@@ -177,6 +178,16 @@ void initConfig(int argc, char **argv, Config &config) {
     config.camAzimuth = tryToReadField<inicpp::float_ini_t>(iniFile, "Simulation", "cam_azimuth", config.camAzimuth);
 
     config.q0 = tryToReadList<inicpp::float_ini_t>(iniFile, "Control", "q0", config.q0);
+
+    double roll = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "d_roll", 0);
+    double pitch = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "d_pitch", 0);
+    double yaw = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "d_yaw", 0);
+    auto transform = Eigen::AngleAxisd(M_PI * roll / 180, Vec3d::UnitX()) *
+                     Eigen::AngleAxisd(M_PI * pitch / 180, Vec3d::UnitY()) *
+                     Eigen::AngleAxisd(M_PI * yaw / 180, Vec3d::UnitZ());
+
+    config.rotDiff = transform * config.rotDiff;
+    config.p = tryToReadList<inicpp::float_ini_t>(iniFile, "Control", "p", config.p);
 }
 
 void loadMjcfModel(mjModel **m, mjData **d, string mjcfModelPath) {
@@ -259,15 +270,15 @@ pair<int, int> getMjcfIndices(mjModel *m, string mjcfStartObj, string mjcfEndObj
     return std::make_pair(startIdx, endIdx);
 }
 
-pair<int, int> getUrdfIndices(pin::Model &m, string urdfStartObj, string urdfEndObj) {
-    int startIdx = (int)m.getJointId(urdfStartObj);
-    int endIdx = (int)m.getJointId(urdfEndObj);
+pair<pin::JointIndex, pin::JointIndex> getUrdfIndices(pin::Model &m, string urdfStartObj, string urdfEndObj) {
+    auto startIdx = m.getJointId(urdfStartObj);
+    auto endIdx = m.getJointId(urdfEndObj);
 
-    if (startIdx == m.njoints) {
+    if (startIdx == (pin::JointIndex) m.njoints) {
         printf("%s not found in urdf description!\n", urdfStartObj.c_str());
         exit(1);
     }
-    if (endIdx == m.njoints) {
+    if (endIdx == (pin::JointIndex) m.njoints) {
         printf("%s not found in urdf description!\n", urdfEndObj.c_str());
         exit(1);
     }
@@ -285,45 +296,32 @@ Indices getIndices(Config &config, mjModel *muj_m, pin::Model &pin_m) {
         urdfEndIdx};
 }
 
-Vec3d se3error(Mat3d rot_1, Mat3d rot_2) {
-    Mat3d errorRot = rot_2.transpose() * rot_1;
-    Mat3d errorLog = errorRot.log();
-    return {errorLog(2, 1), errorLog(0, 2), errorLog(1, 0)};
+Vec6d errorInSE3(const pin::SE3 &t, const pin::SE3 &t_des) {
+    Vec6d error = Vec6d::Zero();
+    error.segment(0, 3) = t_des.translation() - t.translation();
+    error.segment(3, 3) = pin::log3(t.rotation().transpose() * t_des.rotation());
+    return error;
 }
 
-VecXd posError(Vec3d posStart,
-               Vec3d posEnd,
-               Mat3d rotStart,
-               Mat3d rotEnd,
-               Mat3d rotDiff,
-               double l,
-               bool controlOri = true) {
-    VecXd totalError = VecXd::Zero(controlOri ? 4 : 1);
-    Vec3d d = posStart - posEnd;
-    totalError(0) = d.dot(d) - l * l;
-    if (controlOri)
-        totalError.segment(1, 3) = se3error(rotStart * rotDiff, rotEnd);
-    return totalError;
-}
-
-VecXd computePosError(pin::Model &m,
+Vec6d computeSE3Error(pin::Model &m,
                       pin::Data &d,
                       Indices &indices,
                       VecXd &q,
-                      Mat3d rotDiff,
-                      double l,
-                      bool forwardKinematicsWasComputed = false,
-                      bool controlOri = true) {
+                      Mat3d &rotDiff,
+                      Vec3d &p,
+                      bool forwardKinematicsWasComputed = false) {
     if (!forwardKinematicsWasComputed)
         pin::forwardKinematics(m, d, q);
-    return posError(
-        d.oMi[indices.urdfStartIdx].translation(),
-        d.oMi[indices.urdfEndIdx].translation(),
-        d.oMi[indices.urdfStartIdx].rotation(),
-        d.oMi[indices.urdfEndIdx].rotation(),
-        rotDiff,
-        l,
-        controlOri);
+
+    pin::SE3 t_start = d.oMi[indices.urdfStartIdx];
+    pin::SE3 t_end = d.oMi[indices.urdfEndIdx];
+    pin::SE3 t_diff;
+
+    t_diff.setIdentity();
+    t_diff.rotation(rotDiff);
+    t_diff.translation(p);
+
+    return errorInSE3(t_start * t_diff, t_end);
 }
 
 MatXd getMassMatrix(pin::Model &m, pin::Data &d, VecXd &q) {
@@ -332,24 +330,20 @@ MatXd getMassMatrix(pin::Model &m, pin::Data &d, VecXd &q) {
     return massMatrix;
 }
 
-MatXd getDiffJacobian(pin::Model &m, pin::Data &d, VecXd &q, Indices &indices, bool recomputeJacs = true) {
+MatXd getJacobian(pin::Model &m, pin::Data &d, VecXd &q, pin::JointIndex jIdx, bool recomputeJacs = true) {
     if (recomputeJacs)
         pin::computeJointJacobians(m, d, q);
-    MatXd jacStart = MatXd::Zero(6, m.nv);
-    MatXd jacEnd = MatXd::Zero(6, m.nv);
-    pin::getJointJacobian(m, d, (pin::JointIndex)indices.urdfStartIdx, pin::LOCAL_WORLD_ALIGNED, jacStart);
-    pin::getJointJacobian(m, d, (pin::JointIndex)indices.urdfEndIdx, pin::LOCAL_WORLD_ALIGNED, jacEnd);
-    return jacStart - jacEnd;
+    MatXd jac = MatXd::Zero(6, m.nv);
+    pin::getJointJacobian(m, d, jIdx, pin::LOCAL_WORLD_ALIGNED, jac);
+    return jac;
 }
 
-MatXd getDiffJacobianTimeVariation(pin::Model &m, pin::Data &d, VecXd &q, VecXd &dq, Indices &indices, bool recomputeJacs = true) {
+MatXd getJacobianTimeVariation(pin::Model &m, pin::Data &d, VecXd &q, VecXd &dq, pin::JointIndex jIdx, bool recomputeJacs = true) {
     if (recomputeJacs)
         pin::computeJointJacobiansTimeVariation(m, d, q, dq);
-    MatXd dJacStart = MatXd::Zero(6, m.nv);
-    MatXd dJacEnd = MatXd::Zero(6, m.nv);
-    pin::getJointJacobianTimeVariation(m, d, (pin::JointIndex)indices.urdfStartIdx, pin::LOCAL_WORLD_ALIGNED, dJacStart);
-    pin::getJointJacobianTimeVariation(m, d, (pin::JointIndex)indices.urdfEndIdx, pin::LOCAL_WORLD_ALIGNED, dJacEnd);
-    return dJacStart - dJacEnd;
+    MatXd dJac = MatXd::Zero(6, m.nv);
+    pin::getJointJacobianTimeVariation(m, d, jIdx, pin::LOCAL_WORLD_ALIGNED, dJac);
+    return dJac;
 }
 
 void setState(mjModel *m, mjData *d, VecXd &q, VecXd &dq) {
@@ -363,80 +357,83 @@ VecXd getConstraintForces(pin::Model &m,
                           VecXd &dq,
                           VecXd &f,
                           Mat3d &rotDiff,
-                          double l,
+                          Vec3d &p,
                           Indices &indices,
                           Config &config) {
     // Get mass matrix
     MatXd massMatrix = getMassMatrix(m, d, q);
 
     // Get jacobians
-    MatXd jac = getDiffJacobian(m, d, q, indices);
-    MatXd dJac = getDiffJacobianTimeVariation(m, d, q, dq, indices);
+    MatXd jacStart = getJacobian(m, d, q, indices.urdfStartIdx);
+    MatXd jacEnd = getJacobian(m, d, q, indices.urdfEndIdx, false);
+    MatXd dJacStart = getJacobianTimeVariation(m, d, q, dq, indices.urdfStartIdx);
+    MatXd dJacEnd = getJacobianTimeVariation(m, d, q, dq, indices.urdfEndIdx, false);
 
-    MatXd jacV = jac.block(0, 0, 3, m.nv);
-    MatXd jacR = jac.block(3, 0, 3, m.nv);
+    // Get useful blocks
+    MatXd jacVelDiff = (jacEnd - jacStart).block(0, 0, 3, m.nv);
+    MatXd jacRotDiff = (jacEnd - jacStart).block(3, 0, 3, m.nv);
+    MatXd dJacVelDiff = (dJacEnd - dJacStart).block(0, 0, 3, m.nv);
+    MatXd dJacRotDiff = (dJacEnd - dJacStart).block(3, 0, 3, m.nv);
+    MatXd jacRotStart = jacStart.block(3, 0, 3, m.nv); 
+    MatXd dJacRotStart = dJacStart.block(3, 0, 3, m.nv); 
 
-    MatXd dJacV = dJac.block(0, 0, 3, m.nv);
-    MatXd dJacR = dJac.block(3, 0, 3, m.nv);
+    // Compute current orientation
+    Mat3d rotStart = d.oMi[indices.urdfStartIdx].rotation();
+    Mat3d rotEnd = d.oMi[indices.urdfEndIdx].rotation();
+
+    // Compute spatial velocities
+    Vec6d vSpatialStart = jacStart * dq;
+    Vec6d vSpatialEnd = jacEnd * dq;
+
+    // Get spatial angular velocities' skews
+    Vec3d omegaStart = vSpatialStart.segment(3, 3);
+    Vec3d omegaEnd = vSpatialEnd.segment(3, 3);
+    Mat3d skOmegaStart = pin::skew(omegaStart);
+    Mat3d skOmegaEnd = pin::skew(omegaEnd);
+
+    // Compute angular velocities in the end frame
+    Vec3d omegaStartEnd = rotEnd.transpose() * omegaStart;
+    Vec3d omegaEndEnd = rotEnd.transpose() * omegaEnd;
+
+    // Other useful blocks
+    Vec3d pSpatial = rotStart * p;
+    Mat3d skPS = pin::skew(pSpatial);
+    MatXd dP = rotEnd.transpose() * (dJacRotDiff - skOmegaEnd * jacRotDiff);
+
+    // Compute linear velocities of linking body and end frame
+    Vec3d velStart = vSpatialStart.segment(0, 3);
+    Vec3d velBody = omegaStart.cross(pSpatial) + velStart;
+    Vec3d velEnd = vSpatialEnd.segment(0, 3);
 
     // Compute M^-1, M^(1 / 2) and M^(-1 / 2)
     MatXd invM = massMatrix.inverse();
     MatXd sqrtM = massMatrix.sqrt();
     MatXd invSqrtM = sqrtM.inverse();
 
-    // Compute current position & orientation
-    Vec3d posStart = d.oMi[indices.urdfStartIdx].translation();
-    Vec3d posEnd = d.oMi[indices.urdfEndIdx].translation();
-    Vec3d posDiff = posStart - posEnd;
-    Mat3d rotStart = d.oMi[indices.urdfStartIdx].rotation();
-    Mat3d rotEnd = d.oMi[indices.urdfEndIdx].rotation();
+    // Compute A
+    MatXd a = MatXd::Zero(6, m.nv);
+    a.block(0, 0, 3, m.nv) = jacVelDiff + skPS * jacRotStart;
+    a.block(3, 0, 3, m.nv) = rotEnd.transpose() * jacRotDiff; // P
 
-    // Compute A, AM^-1 and [AM^(-1 / 2)]^+
-    MatXd a = MatXd::Zero(config.controlOri ? 4 : 1, m.nv);
-    a.block(0, 0, 1, m.nv) = 2 * posDiff.transpose() * jacV;
-    if (config.controlOri)
-        a.block(1, 0, 3, m.nv) = jacR;
+    // Compute AM^-1 and [AM^(-1 / 2)]^+
     MatXd aM = a * invM;
     MatXd pAiSqrtM = (a * invSqrtM).completeOrthogonalDecomposition().pseudoInverse();
 
     // Compute error
-    VecXd pE = posError(posStart, posEnd, rotStart, rotEnd, rotDiff, l, config.controlOri);
-    VecXd dpE = VecXd::Zero(config.controlOri ? 4 : 1);
-    dpE(0) = 2 * posDiff.transpose() * jacV * dq;
-    if (config.controlOri)
-        dpE.segment(1, 3) = jacR * dq;
+    Vec6d pE = computeSE3Error(m, d, indices, q, rotDiff, p, true);
+    Vec6d dpE = Vec6d::Zero();
+    dpE.segment(0, 3) = velEnd - velBody;
+    dpE.segment(3, 3) = omegaEndEnd - omegaStartEnd;
 
     // Compute b
-    VecXd b = VecXd::Zero(config.controlOri ? 4 : 1);
-    b(0) = -2 * dq.transpose() * jacV.transpose() * jacV * dq;
-    b(0) += -2 * posDiff.transpose() * dJacV * dq;
-    if (config.controlOri)
-        b.segment(1, 3) = -dJacR * dq;
-    b -= config.kD * dpE + config.kP * pE;
+    Vec3d bLinDrift = -dJacVelDiff * dq - skPS * dJacRotStart * dq + skOmegaStart * skOmegaStart * pSpatial;
+    Vec3d bAngDrift = -dP * dq;
+    Vec6d b = -config.kP * pE - config.kD * dpE;
+    b.segment(0, 3) += bLinDrift;
+    b.segment(3, 3) += bAngDrift;
 
     // Compute Q_c
     VecXd fC = sqrtM * pAiSqrtM * (b - aM * f);
-
-    // cout << jacV << "\n";
-    // printf("q: ");
-    // printVector(q);
-    // printf("dq: ");
-    // printVector(dq);
-    // printf("f: ");
-    // printVector(f);
-    // printf("posStart: ");
-    // printVector(posStart.data(), posStart.size());
-    // printf("posEnd: ");
-    // printVector(posEnd.data(), posEnd.size());
-    // printf("pE: ");
-    // printVector(pE.data(), pE.size());
-    // printf("dpE: ");
-    // printVector(dpE.data(), dpE.size());
-    // printf("b: ");
-    // printVector(b.data(), b.size());
-    // printf("fC: ");
-    // printVector(fC);
-    // printf("\n");
 
     return fC;
 }
@@ -456,13 +453,14 @@ void mainLoop(Config &config,
     VecXd q(pin_m.nq);
     VecXd dq(pin_m.nv);
     // bias forces
-    VecXd qbias(pin_m.nv);
+    VecXd q_bias(pin_m.nv);
     // constraints force
     VecXd qc(pin_m.nv);
 
-    double l = 1;
-    Mat3d rotDiff = Mat3d::Identity();
-    pin_m.gravity = pin::Motion::Zero();
+    Vec3d p = Vec3d::Zero();
+    for (size_t i = 0; i < 3; i++) {
+        p[i] = config.p[i];
+    }
 
     // init mujoco simulation
     mj_checkPos(muj_m, muj_d);
@@ -477,9 +475,9 @@ void mainLoop(Config &config,
         mjtNum sim_start = muj_d->time;
         while (muj_d->time - sim_start < 1.0 / (60.0 * config.timesSlower) && !config.simPaused) {
             setState(muj_m, muj_d, q, dq);
-            qbias = -pin::rnea(pin_m, pin_d, q, dq, VecXd::Zero(pin_m.nv));
+            q_bias = -pin::rnea(pin_m, pin_d, q, dq, VecXd::Zero(pin_m.nv));
 
-            qc = getConstraintForces(pin_m, pin_d, q, dq, qbias, rotDiff, l, indices, config);
+            qc = getConstraintForces(pin_m, pin_d, q, dq, q_bias, config.rotDiff, p, indices, config);
             memcpy(muj_d->ctrl, qc.data(), pin_m.nv * sizeof(mjtNum));
 
             mj_step(muj_m, muj_d);
@@ -491,7 +489,7 @@ void mainLoop(Config &config,
 
         // print telemetry
         if (muj_d->time - prevStump > config.telemetryTimeDelta) {
-            VecXd pE = computePosError(pin_m, pin_d, indices, q, rotDiff, l, false, config.controlOri);
+            VecXd pE = computeSE3Error(pin_m, pin_d, indices, q, config.rotDiff, p, false);
 
             printf("Time: %.3f", muj_d->time);
             printf(", pE: ");
