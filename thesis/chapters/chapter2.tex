@@ -2,251 +2,289 @@
 \label{chap:lr}
 % \chaptermark{Second Chapter Heading}
 
-The control of the interacting physical systems is a challenging 
-task. There are few problems that should be solved to achieve the 
-high efficiency and precision in the aforementioned problem. They 
-are the following: the right mathematical model selection, the 
-unified methodology for defining the interaction, and the well-defined 
-virtual constraint. The first point is necessary to cover a wide range 
-of physical systems. The second one is crucial to work with 
-different mechanical connections. Finally, the last one is needed 
-to stability and robustness analysis. 
+
+The control of the interacting physical systems is a challenging
+task. Three problems should be solved to achieve 
+high efficiency and precision in the aforementioned problem. They
+are the following: the right mathematical model selection, the
+unified methodology for defining the interaction, and the well-defined
+virtual constraint. The first point is necessary to cover a wide range
+of physical systems. The second one is crucial to work with
+different mechanical connections. Finally, the last one is needed
+for stability and robustness analysis.
+
 
 This literature review covers all these subproblems and explores them
-from the point of view of the work of Firdaus Udwadia and Robert Kalaba 
-\cite{UdwadiaKalabaApproach}. The Section \ref{sec:math_model} considers 
-a mathematical models that utilized in the recent studies. The 
-\ref{sec:interaction_def} part reviews a rigorous methodology to define 
-how physical systems can affect each other. The Section \ref{sec:virtual_constraint} 
-explores the previous research in virtual constraint defining and analysis 
-on different manifolds. Finally, the last subsection \ref{sec:lr_conclusion} 
-contains concluding words about reviewed techniques that is utilized in this 
+from the point of view of the work of Firdaus Udwadia and Robert Kalaba
+\cite{UdwadiaKalabaApproach}. The Section \ref{sec:math_model} considers
+a mathematical model that utilized in the recent studies. The
+\ref{sec:interaction_def} part reviews a rigorous methodology to define
+how physical systems can affect each other. The Section \ref{sec:virtual_constraint}
+explores the previous research in virtual constraint defining and analysis
+on different manifolds. Finally, the last subsection \ref{sec:lr_conclusion}
+contains concluding words about reviewed techniques that are utilized in this
 study.
 
-The selection of the papers for this review aims to provide solid grounds for 
-the choice of the methods in this study. Some of the papers were chosen as a 
-reference for theoretical background. Other papers were reviewed to study the 
+
+The selection of the papers for this review aims to provide solid grounds for
+the choice of the methods in this study. Some of the papers were chosen as a
+reference for theoretical background. Other papers were reviewed to study the
 existing techniques.
+
 
 \section{The mathematical model} \label{sec:math_model}
 
-This section contains review of existing mathematical models for physical 
-systems. Moreover, this piece has a comparison of them in terms of numerical 
-integration convenience and simplicity of defining the initial conditions. 
-It is necessary to clarify that from now this study considers only systems 
-of rigid body with only inner stiffness. The detailed explanation of 
-such choice will be conduct later in the Chapter \ref{chap:met}.
 
-Firstly, lets consider the most popular model. The articles 
-\cite{UdwadiaKalabaApproach}, \cite{AppOfUdwadiaKalabaApproach} and 
-\cite{UnifiedFrameworkOfRobotControl} relies on it. Usually it is 
-called the canonical manipulator equation. The model can be formulated 
-as 
+This section contains a review of existing mathematical models for physical
+systems. Moreover, this piece has a comparison of them in terms of numerical
+integration convenience and simplicity of defining the initial conditions.
+It is necessary to clarify that from now this study considers only systems
+of rigid bodies with only inner stiffness. The detailed explanation of
+such a choice will be conducted later in Chapter \ref{chap:met}.
+
+
+Firstly, let's consider the most popular model. The articles
+\cite{UdwadiaKalabaApproach}, \cite{AppOfUdwadiaKalabaApproach}, and
+\cite{UnifiedFrameworkOfRobotControl} rely on it. Usually, it is
+called the canonical manipulator equation. The model can be formulated
+as
+
 
 \begin{equation} \label{eqn:can_man_equation}
-    M(\mathbf{q})\ddot{\mathbf{q}} + 
-    C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + 
-    g(\mathbf{q}) = 
-    \boldsymbol{\tau}
+   M(\mathbf{q})\ddot{\mathbf{q}} +
+   C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} +
+   g(\mathbf{q}) =
+   \boldsymbol{\tau}
 \end{equation}
 
-where $M(\mathbf{q})$ is known as inertia matrix, $C(\mathbf{q}, \dot{\mathbf{q}})$ 
+
+where $M(\mathbf{q})$ is known as inertia matrix, $C(\mathbf{q}, \dot{\mathbf{q}})$
 is Centrifugal-Coriolis matrix, $g(\mathbf{q})$ is a gradient
-of potential forces, and $\mathbf{q}$, $\boldsymbol{\tau}$ are generalized 
-coordinates and torques respectively. This equation will be explored in details 
+of potential forces, and $\mathbf{q}$, $\boldsymbol{\tau}$ are generalized
+coordinates and torques respectively. This equation will be explored in detail
 in the next Chapter \ref{chap:met}.
 
-Conversely, Udwadia \cite{ConstHamiltonSys} utilized a Hamiltonian view of the 
-problem. This equation also manipulates with generalized coordinates but 
-additionally introduces generalized momentum, and Hamiltonian. The choice of 
-such variables makes this approach more convenient in terms of numerical 
+
+Conversely, Udwadia \cite{ConstHamiltonSys} utilized a Hamiltonian view of the
+problem. This equation also manipulates with generalized coordinates but
+additionally introduces generalized momentum and Hamiltonian. The choice of
+such variables makes this approach more convenient in terms of numerical
 integration.
 
-The aforementioned equations are proven to be equivalent. Thus, both models 
-can be utilized for achieving the main goal. However, the crucial difference 
-lies in the another plane. 
 
-In the vast majority of cases the both differential equations can be solved 
-analytically. Therefore, it is necessary to use the numerical methods. The 
-equation (\ref{eqn:can_man_equation}) has second time derivative. It forces 
-to construct proper state variable for numerical integration. In the opposite 
-the Hamiltonian equations has only first derivative. Hence, the usage of it is 
+The aforementioned equations are proven to be equivalent. Thus, both models
+can be utilized to achieve the main goal. However, the crucial difference
+lies in the other plane.
+
+
+In the vast majority of cases, both differential equations can be solved
+analytically. Therefore, it is necessary to use the numerical methods. The
+equation (\ref{eqn:can_man_equation}) has a second-time derivative. It forces
+to construction of proper state variables for numerical integration. On the opposite,
+the Hamiltonian equations have only the first derivative. Hence, the usage of it is
 simpler. However, the definition of initial conditions is harder.
-Nevertheless, the mentioned problem are already solved. So, choice of model 
-fully lies on the specific of discussed task. 
+Nevertheless, the mentioned problem is already solved. So, choice of model
+fully lies on the specific discussed task.
 
-The most of reviewed papers relies on the canonical model 
-(\ref{eqn:can_man_equation}). Therefore, this research will utilize this equation 
+
+Most reviewed papers rely on the canonical model
+(\ref{eqn:can_man_equation}). Therefore, this research will utilize this equation
 too.
+
 
 \section{The methodology to defining coupling} \label{sec:interaction_def}
 
-The second crucial point in this paper is a definition of coupling between 
-systems. This piece considers how it can be achieved, and which methodology 
-is better in the context of discussed question. The important remark of this 
-section that only interaction via rigid bodies will be consider below. 
-The schematic representation of such coupling is shown in the Figure 
+
+The second crucial point in this paper is the definition of coupling between
+systems. This piece considers how it can be achieved, and which methodology
+is better in the context of the discussed question. The important remark of this
+section is that only interaction via rigid bodies will be considered below.
+The schematic representation of such coupling is shown in the Figure
 \ref{fig:rigid_coupling}
 
+
 \begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[
-        media/.style={font={\footnotesize\sffamily}},
-        interface/.style={
-            % The border decoration is a path replacing decorator. 
-            % For the interface style we want to draw the original path.
-            % The postaction option is therefore used to ensure that the
-            % border decoration is drawn *after* the original path.
-            postaction={draw,decorate,decoration={border,angle=-45,
-                        amplitude=0.3cm,segment length=2mm}}},
-        ]
-        % Draw first manipulator
-        \draw[black, ultra thick](0, 0) -- (0.5, 1.8);
-        \draw[black, ultra thick](0.5, 1.8) -- (2.5, 2.2);
-        % Gripper
-        \gripper{2.5}{2.2}{3.3}{2.36}
-        % Draw second point mass
-        \drawpointmasssimple{0.5}{1.8}
-        \base{0}{0}
+   \centering
+   \begin{tikzpicture}[
+       media/.style={font={\footnotesize\sffamily}},
+       interface/.style={
+           % The border decoration is a path replacing decorator.
+           % For the interface style we want to draw the original path.
+           % The postaction option is therefore used to ensure that the
+           % border decoration is drawn *after* the original path.
+           postaction={draw,decorate,decoration={border,angle=-45,
+                       amplitude=0.3cm,segment length=2mm}}},
+       ]
+       % Draw first manipulator
+       \draw[black, ultra thick](0, 0) -- (0.5, 1.8);
+       \draw[black, ultra thick](0.5, 1.8) -- (2.5, 2.2);
+       % Gripper
+       \gripper{2.5}{2.2}{3.3}{2.36}
+       % Draw second point mass
+       \drawpointmasssimple{0.5}{1.8}
+       \base{0}{0}
 
-        % Draw body
-        \rectangle{2.737}{2.035}{2.655}{2.446}{4.851}{2.882}
 
-        % Draw second manipulator
-        \draw[black, ultra thick](8.5, 0.8) -- (7.088, 3.117);
-        \draw[black, ultra thick](7.088, 3.117) -- (5.088, 2.717);
-        % Gripper
-        \gripper{5.088}{2.717}{4.288}{2.557}
-        % Draw second point mass
-        \drawpointmasssimple{7.088}{3.117}
-        \base{8.5}{0.8}
-    \end{tikzpicture}
-    \caption{Rigid body coupling}
-    \label{fig:rigid_coupling}
+       % Draw body
+       \rectangle{2.737}{2.035}{2.655}{2.446}{4.851}{2.882}
+
+
+       % Draw the second manipulator
+       \draw[black, ultra thick](8.5, 0.8) -- (7.088, 3.117);
+       \draw[black, ultra thick](7.088, 3.117) -- (5.088, 2.717);
+       % Gripper
+       \gripper{5.088}{2.717}{4.288}{2.557}
+       % Draw second point mass
+       \drawpointmasssimple{7.088}{3.117}
+       \base{8.5}{0.8}
+   \end{tikzpicture}
+   \caption{Rigid body coupling}
+   \label{fig:rigid_coupling}
 \end{figure}
 
-The first straight forward solution is initially impose an interaction inside 
-to mathematical model. In the discussed case it can be achieved by writing 
-the $M(\mathbf{q})$, $C(\mathbf{q}, \dot{\mathbf{q}})$, and $g(\mathbf{q})$ 
-in equation (\ref{eqn:can_man_equation}) as formulation of closed-loop system. 
-It can be achieved, if it is possible to formulate and analytically solve the 
-following equation,
+
+The first straightforward solution is to initially impose an interaction inside
+to the mathematical model. In the discussed case it can be achieved by writing
+the $M(\mathbf{q})$, $C(\mathbf{q}, \dot{\mathbf{q}})$, and $g(\mathbf{q})$
+in equation (\ref{eqn:can_man_equation}) as formulation of closed-loop system.
+It can be achieved, if it is possible to formulate and analytically solve the
+the following equation,
+
 
 \begin{equation}
-    \label{eqn:holonom_const}
-    \varphi (\mathbf{q}, t) = 0
+   \label{eqn:holonom_const}
+   \varphi (\mathbf{q}, t) = 0
 \end{equation}
 
 
-From it, the minimal set of generalized coordinates can be constructed in that 
+
+
+From it, the minimal set of generalized coordinates can be constructed which
 implies rewriting the aforementioned parts of the canonical manipulator equation.
-Thus, the advantage of this method is unnecessary of stabilization, because 
-it is guaranteed by a model itself. Futhermore, this formulation can be 
-used with a great range of control techniques. However, \cite{BodyDynWithClosedLoop} 
-demonstrates a lower computation speed with comparison to 
-open-loop algorithms \cite{Pinocchio}. Moreover, proposed closed-loop 
-version requires a predefined description of a whole system, and works well 
-only with systems that have a small number of DoFs. Thus, it cannot 
-be used in the realtime in the dynamic environment.
+Thus, the advantage of this method is unnecessary of stabilization, because
+it is guaranteed by a model itself. Furthermore, this formulation can be
+used with a great range of control techniques. However, \cite{BodyDynWithClosedLoop}
+demonstrates a lower computation speed in comparison to
+open-loop algorithms \cite{Pinocchio}. Moreover, proposed closed-loop
+version requires a predefined description of a whole system, and works well
+only with systems that have a small number of DoFs. Thus, it cannot
+be used in real time in a dynamic environment.
 
-The second discussed approach is analyzed in \cite{OptimizationBasedLocomotionPlanning} 
-and \cite{WholeBodyControlForm}. These articles propose to use a 
-a force cone to define an contact between a physical system 
-and solid surface. The actuation force can be formulated as 
+
+The second discussed approach is analyzed in \cite{OptimizationBasedLocomotionPlanning}
+and \cite{WholeBodyControlForm}. These articles propose to use a
+force cone to define a contact between a physical system
+and a solid surface. The actuation force can be formulated as
+
 
 \begin{equation}
-    \label{eqn:force_cone}
-    \pmb{\lambda} = \sum_{i=1}^{N_d} \beta_i (\mathbf{n} + \mu \mathbf{d}_i), 
-    \: \beta_i \ge 0
+   \label{eqn:force_cone}
+   \pmb{\lambda} = \sum_{i=1}^{N_d} \beta_i (\mathbf{n} + \mu \mathbf{d}_i),
+   \: \beta_i \ge 0
 \end{equation}
 
-where $\mathbf{n}$ is a normal force, $\mathbf{d}_i$ is a tangent to contact 
+
+where $\mathbf{n}$ is a normal force, $\mathbf{d}_i$ is a tangent to contact
 vector, $\mu$ is the Coulomb friction coefficient, and $N_d$ is a amount
-of used tangent vectors. This contact force later can be translated to 
-joint space via respective jacobian - $J^T(\mathbf{q})$.
+of used tangent vectors. This contact force later can be translated to
+joint space via respective Jacobian - $J^T(\mathbf{q})$.
 
-Using this approach it is possible to emulate an interaction between 
-physical systems via rigid body. It can be achieved by defining the motion 
-of connection body through force acting on it. However, this method cannot 
-guaranty a stability. Moreover, constructing a feedback loop in this case is 
-not trivial task. 
 
-Finally, the third approach is defining a right constraint. In this study the action 
-of the rigid body on connected systems can be described by holonomic constraint. 
+Using this approach it is possible to emulate an interaction between
+physical systems via a rigid body. It can be achieved by defining the motion
+of the connection body through force acting on it. However, this method cannot
+guarantee stability. Moreover, constructing a feedback loop in this case is
+not a trivial task.
+
+
+Finally, the third approach is defining the right constraint. In this study the action
+of the rigid body on connected systems can be described by holonomic constraint.
 It is described by the equation (\ref{eqn:holonom_const}).
-Further this equation can be used in KKT (Karush-Kuhn-Tucker) technique to 
-rigorous define system with imposed constraints. Moreover, using the equation
-(\ref{eqn:holonom_const}) it is straight forward to construct a stabilization 
-mechanism. As instance, the Baumgarte's approach can be used with KKT method 
-to achieve this goal. Nevertheless, this study does not rely on aforementioned 
-technique (KKT), instead it utilized the Udwadia-Kalaba approach, that 
-rewrite generalized accelerations obtained from the equation 
-(\ref{eqn:holonom_const}) as affine transform. Details are shown in the 
+Further, this equation can be used in the KKT (Karush-Kuhn-Tucker) technique to
+define a system with imposed constraints. Moreover, using the equation
+(\ref{eqn:holonom_const}) it is straightforward to construct a stabilization
+mechanism. For instance, Baumgarte's approach can be used with the KKT method
+to achieve this goal. Nevertheless, this study does not rely on the aforementioned
+technique (KKT), instead, it utilized the Udwadia-Kalaba approach, which
+rewrites generalized accelerations obtained from the equation
+(\ref{eqn:holonom_const}) as affine transform. Details are shown in the
 Chapter \ref{chap:met}.
+
 
 \section{Virtual constraint} \label{sec:virtual_constraint}
 
-The last crucial subproblem is rigorous defining of virtual constraint for ensure 
-stabilization. Especially, it is important in the context of chosen type of 
-interaction. Therefore, this section reviews how to calculate the discrepancy 
-between the current system state and desired one in the form of the equation 
-(\ref{eqn:holonom_const}) and how to guaranty its' convergence in the 
-context of the form proposed by Udwadia-Kalaba approach.
 
-In the initial \cite{UdwadiaKalabaApproach} study Ferdaus Udwadia and Robert 
-Kalaba states that the straightforward differentiation of the holonomic 
-constraint (\ref{eqn:holonom_const}) produces instability during numerical 
-integration (constraint drift). Thus the authors recommend to use 
-Baumgarte's stabilization \cite{BaumgarteStab} via rewriting the linear second 
+The last crucial subproblem is the rigorous defining of virtual constraints to ensure
+stabilization. Especially, it is important in the context of the chosen type of
+interaction. Therefore, this section reviews how to calculate the discrepancy
+between the current system state and the desired one in the form of an equation
+(\ref{eqn:holonom_const}) and how to guarantee its' convergence in the
+context of the form proposed by the Udwadia-Kalaba approach.
+
+
+In the initial \cite{UdwadiaKalabaApproach} study Ferdaus Udwadia and Robert
+Kalaba states that the straightforward differentiation of the holonomic
+constraint (\ref{eqn:holonom_const}) produces instability during numerical
+integration (constraint drift). Thus the authors recommend to use
+Baumgarte's stabilization \cite{BaumgarteStab} via rewriting the linear second
 order differential equation with $\varphi$ to proposed matrix form.
 
-Nevertheless, below in this study will show that it is hard to use 
-this technique in case of attitudes tracking. The problem mostly 
-is caused by the fact that the linear differential equations cannot 
-capture the topology of the $\text{SE}(3)$. Therefore, I was enforced 
-to use non-linear ones with utilizing right pose difference formulation. 
+
+Nevertheless, below in this study will show that it is hard to use
+this technique in the case of attitude tracking. The problem mostly
+is caused by the fact that the linear differential equations cannot
+capture the topology of the $\text{SE}(3)$. Therefore, I was forced
+to use non-linear ones by utilizing the right pose difference formulation.
 The studies \cite{SlidingOnManifoldsQuat,GeomControlQuadSE3,
-RigidBodyAttCon,OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose} 
-describe methods achieving it. The majority \cite{GeomControlQuadSE3,
-RigidBodyAttCon,OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose} of 
-source explores problem through utilizing rotations matrices. On the other hand 
-\cite{SlidingOnManifoldsQuat} uses a quaternions for achieving the goal. 
+RigidBodyAttCon,OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose}
+describe methods for achieving it. The majority \cite{GeomControlQuadSE3,
+RigidBodyAttCon,OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose} of
+source explores the problem through utilizing rotations matrices. On the other hand
+\cite{SlidingOnManifoldsQuat} uses quaternions for achieving the goal.
 Let's compare these solutions.
 
-The \cite{SlidingOnManifoldsQuat} states the advantage of quaternions on 
-the rotations matrix. This research shows that proposed method achieves 
-the \emph{exponential asymptotic stability} against \emph{almost global 
+
+The \cite{SlidingOnManifoldsQuat} states the advantage of quaternions on
+the rotations matrix. This research shows that the proposed method achieves
+the \emph{exponential asymptotic stability} against \emph{almost global
 stability} of techniques from \cite{GeomControlQuadSE3,RigidBodyAttCon}.
-Futhermore, the quaternion-based method in discussed study presents the 
-superiority on the analogous ones. The authors proves that their technique 
-avoids the unwinding phenomenon, i.e. error converges to zero by shortest 
+Furthermore, the quaternion-based method in the discussed study presents the
+superiority of the analogous ones. The authors prove that their technique
+avoids the unwinding phenomenon, i.e. error converges to zero by shortest
 path in $\mathbb{S}^3$.
 
-The solution via utilizing the rotations matrices is presented in 
-\cite{GeomControlQuadSE3,RigidBodyAttCon,OutFeedbackStabForOrbRob,
-ANonlinearObserverUsingPose}. However, in aforementioned quaternion-based 
-approach shows that basing on such structure methods has disadvantage. 
-The naive error computation via matrices is calculation of dot product 
-between base vectors of current and desired orientation. As mentioned 
-above this approach can achieve only \emph{almost global stability}. 
-Nevertheless, studies \cite{OutFeedbackStabForOrbRob, ANonlinearObserverUsingPose} 
-relies on deep topology analysis of $SE(3)$ group. These research use 
-a Lie theory to construct a right discrepancy between attitudes. In 
-the Chapter \ref{chap:met} the \emph{exponential convergence} of method 
-based on articles above is proven.
 
-To conclude, in this study the rotation matrices are chosen to define a 
-attitudes error. As starting point of investigations articles 
-\cite{OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose} are chosen. 
-The main reason of such choice is convenience of work in context of 
-framework \cite{Pinocchio} that utilized for numerical experiments.
+The solution via utilizing the rotations matrices is presented in
+\cite{GeomControlQuadSE3,RigidBodyAttCon,OutFeedbackStabForOrbRob,
+ANonlinearObserverUsingPose}. However, in the aforementioned quaternion-based
+the approach shows that basing on such structure methods has disadvantages.
+The naive error computation via matrices is a calculation of dot product
+between base vectors of current and desired orientation. As mentioned
+above this approach can achieve only \emph{almost global stability}.
+Nevertheless, studies \cite{OutFeedbackStabForOrbRob, ANonlinearObserverUsingPose}
+relies on deep topology analysis of $SE(3)$ group. These research use
+a Lie theory to construct a right discrepancy between attitudes. In
+Chapter \ref{chap:met} the \emph{exponential convergence} of the method
+based on the articles above is proven.
+
+
+To conclude, in this study the rotation matrices are chosen to define an
+attitude error. As starting point of investigations articles
+\cite{OutFeedbackStabForOrbRob,ANonlinearObserverUsingPose} are chosen.
+The main reason for such a choice is the convenience of work in the context of
+framework \cite{Pinocchio} that is utilized for numerical experiments.
+
 
 \section{Conclusion} \label{sec:lr_conclusion}
 
-In this chapter the solutions of necessary aforementioned subproblems 
-were reviewed. The canonical manipulator equation (\ref{eqn:cannonical_man_eq}) 
-was chosen as the base for investigations because it is most widely spread 
-among other studies. To define a coupling between systems I decided to 
-utilize an Udwadia-Kalaba approach and proposed by it form of coupling. 
-Finally, for building a stable virtual constraint the discrepancy based 
+
+In this chapter, the solutions to the necessary aforementioned subproblems
+were reviewed. The canonical manipulator equation (\ref{eqn:cannonical_man_eq})
+was chosen as the base for investigations because it is most widely spread
+among other studies. To define a coupling between systems I decided to
+utilize an Udwadia-Kalaba approach and proposed by it form of coupling.
+Finally, for building a stable virtual constraint the discrepancy based
 on Lie theory was taken.
+
+
+
