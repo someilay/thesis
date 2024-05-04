@@ -1,6 +1,118 @@
 \appendix
-\chapter{Extra Stuff}
-\blindtext
+\chapter{Brief Lie theory}
 
-\chapter{Even More Extra Stuff}
-\blindtext
+The Lie group, a mathematical concept dating back to the 19th century, was first 
+proposed by Sophus Lie, laying the foundation for continuous transformation groups. 
+Although it was initially abstract, over time its influence has spread to various 
+scientific and technological fields. Before proceeding further, it is necessary to 
+consider the basics of Lie theory. The mathematical tools discussed in this section 
+are crucial for the research discussed here.
+
+Let $\mathcal{G}$ is smooth manifold that satisfies the group axioms. For any 
+$\mathcal{X}$, $\mathcal{Y}$ and $\mathcal{Z}$ from $\mathcal{G}$ the following 
+statements are true:
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:g_axi}
+        & \mathcal{X} \circ \mathcal{Y} \in \mathcal{G} \quad && \text{(I)} \\
+        & \exists \mathcal{E}:\ \mathcal{E} \circ \mathcal{X} 
+        = \mathcal{X} \circ \mathcal{E} = \mathcal{X} \quad && \text{(II)} \\
+        & \exists \mathcal{X}^{-1}:\ \mathcal{X}^{-1} \circ \mathcal{X}
+        = \mathcal{X} \circ \mathcal{X}^{-1} = \mathcal{E} \quad && \text{(III)} \\ 
+        & (\mathcal{X} \circ \mathcal{Y}) \circ \mathcal{Z} = 
+        \mathcal{X} \circ (\mathcal{Y} \circ \mathcal{Z}) \quad && \text{(IV)}
+    \end{aligned}
+\end{equation}
+
+For such group $T_{\mathcal{E}} \mathcal{G}$ is the Lia Algebra defined at 
+$\mathcal{E}$ element. The geometric interpretation of algebra is tangent plane 
+that touchs the smooth manifold (group). $\mathfrak{m} \equiv 
+T_{\mathcal{E}} \mathcal{G}$ is always a vector space.
+
+The next crucial defenition is a group action
+
+\begin{equation}
+    f: \mathcal{G} \times \mathcal{V} \to \mathcal{V}
+\end{equation}
+
+where $\mathcal{V}$ is some set. The operation defined above should satisfy 
+the axioms ($v \in \mathcal{V}$; $\mathcal{X}, \mathcal{Y} \in \mathcal{G}$),
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:act_axi}
+        & \mathcal{E} \cdot v = v \quad && \text{(I)} \\
+        & (\mathcal{X} \circ \mathcal{Y}) \cdot v = 
+        \mathcal{X} \cdot (\mathcal{Y} \cdot v) \quad && \text{(II)}
+    \end{aligned}
+\end{equation}
+
+For instance, if the $\text{SO}(n)$ rotations is considered as Lie group, than the 
+transformation $R \cdot x \equiv R x$ ($x \in \mathbb{R}^n$) is a group action.
+
+The exponential map $\exp:\ \mathfrak{m} \to \mathcal{G}$ converts elements of 
+Lie algebra to corresponding group. The log map do inverse operation. 
+However, it is neccesary to remember that 
+this map applicable only for "identity" algebra. However, there is a linear
+transformation between $T_{\mathcal{X}} \mathcal{G}$ and $T_{\mathcal{E}} 
+\mathcal{G}$. It is called adjoin.
+
+It is known that $\mathfrak{m}$ is isomorphic to the vector space $\mathbb{R}^m$. 
+One can write it as $\mathfrak{m} \cong \mathbb{R}^m$. Due to convinience this 
+isomorphism would be highly utilized. Moreover, in the bellow sections only 
+algebras constructed on $\mathbb{R}^m$ are considered. Thus, a maping between 
+sets can be defined in the following manner (hat-vee notation)
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:hat_vee_not}
+        & [*]^\wedge: \ \mathbb{R}^m \to \mathfrak{m} \quad &&
+        \boldsymbol{\tau}^\wedge = \sum_{i=1}^{m} \tau_i E_i \\
+        & [*]^\vee: \mathfrak{m} \to \mathbb{R}^m \quad && 
+        \boldsymbol{\tau} = \sum_{i=1}^{m} \tau_i \mathbf{e}_i
+    \end{aligned}
+\end{equation}
+
+where $\mathbf{e}_i$ are a base of $\mathbb{R}^m$ and $E_i$ are base vectors 
+of $\mathfrak{m}$. Obviously, $\mathbf{e}_i^\wedge = E_i$. Using this mapping, the
+exponential / log map can be modified 
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:exp_log_for_r_m}
+        & \exp : \quad && \mathcal{X} = \exp(\boldsymbol{\tau}^\wedge) \\
+        & \log : \quad && \boldsymbol{\tau} = \log(\mathcal{X})^\vee
+    \end{aligned}
+\end{equation}
+
+Or, in the most convinient form
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:big_exp_log_for_r_m}
+        & \text{Exp} : \quad && \mathcal{X} 
+        = \exp(\boldsymbol{\tau}^\wedge) 
+        = \text{Exp}(\boldsymbol{\tau})\\
+        & \text{Log} : \quad && \boldsymbol{\tau} 
+        = \log(\mathcal{X})^\vee
+        = \text{Log}(\mathcal{X})
+    \end{aligned}
+\end{equation}
+
+Through this definitions it easy to introduce plus and minus operations
+
+\begin{equation}
+    \begin{aligned}
+        & \text{right-} \oplus: 
+        \mathcal{X} \oplus \prescript{\mathcal{X}}{}{\boldsymbol{\tau}} 
+        \equiv \mathcal{X} \circ 
+        \text{Exp}(\prescript{\mathcal{X}}{}{\boldsymbol{\tau}}) \in \mathcal{G} \\
+        & \text{right-} \ominus:
+        \mathcal{Y} \ominus \mathcal{X} 
+        \equiv \text{Log}(\mathcal{X}^{-1} \circ \mathcal{Y}) 
+        \in T_{\mathcal{X}}\mathcal{G}
+    \end{aligned}
+\end{equation}
+
+$\mathbf{TODO}$: continue section

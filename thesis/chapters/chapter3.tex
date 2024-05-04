@@ -1,223 +1,180 @@
 \chapter{Methodology}
 \label{chap:met}
 
-This chapter will present a detailed elucidation of the principles underpinning the 
-proposed methodology. The initial section will offer a concise overview of the 
-Udvadia-Kalaba's approach is accompanied by a comprehensive exposition of the physical 
-rationales employed in this technique. Subsequently, these principles will be 
-harnessed in the development of the intended methodology. Furthermore, this section 
-will scrutinize the limitations and distinctive characteristics inherent in the 
-proposed methodology.
+This chapter will present a detailed explanation of the principles underlying the 
+proposed methodology. The section \ref{sec:rigid_body_and_const} offers a concise 
+overview of rigid-body systems and constraints that can be imposed on them.
+The next section \ref{sec:udwadia_kalaba_app} introduces the Udwadia-Kalaba 
+approach and physical principles that stays behind it.
 
-\section{Essentials of Udvadia-Kalaba approach}
+\section{Rigid-body systems and constraints} 
+\label{sec:rigid_body_and_const}
 
-Let $\mathbf{q}$ be a vector of generalized coordinates of some physical system.
-Also let agree that $\dim \mathbf{q} = n_q$ and 
-$\dim \dot{\mathbf{q}} = \dim \ddot{\mathbf{q}} = n_v$, where $\dot{\mathbf{q}}$ and 
-$\ddot{\mathbf{q}}$ are generalized velocity and acceleration respectevly. Notably, 
-that in the general case $n_q \neq n_v$ because $\dot{\mathbf{q}}$ and $\ddot{\mathbf{q}}$ 
-can be located in different spaces. Thus, the dynamics of the given system can be 
-expressed:
+The most common class of physical systems that can be observed in the real life 
+cases is the rigid-body one. Some examples of such systems are demonstrated in 
+Figure \ref{fig:examples_of_rig_sys}. The key feature of rigid-body systems 
+is non-deformable parts that forms it. With these limitations only an 
+inner stiffness can be described.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{figs/rigid_body_systems.png}
+    \caption{Examples of rigid-body systems}
+    \label{fig:examples_of_rig_sys}
+\end{figure}
+
+
+Nevertheless, the mathematical tools to work with rigid-body systems was introduced 
+in \RNum{18}-th century by Newton and Euler works. Using this approach it is easy 
+to formulate a set f deferential equations that describes the system behavior.
+However, in this study the another (more convenient) technique is utilized. It is 
+called the least action principle. The formulation is the following equation
 
 \begin{equation}
-    \label{eqn:cannonical_man_eq}
-    M(\mathbf{q}) \ddot{\mathbf{q}} 
-    + C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} 
-    + g(\mathbf{q}) = \boldsymbol{\tau}
+    \min_{\mathbf{q}} \quad 
+    \int_{t_1}^{t_2} L(\mathbf{q}(t), \mathbf{v}(t), t) dt
+    \label{eqn:least_act_principle}
 \end{equation}
 
-where $M(\mathbf{q}) \succeq 0 $ is known as general inertia matrix, 
-$C(\mathbf{q}, \dot{\mathbf{q}})$ is Coriolis-Centrifugal matrix, and 
-$g(\mathbf{q})$ is potential forces impact (usually gravitational impact). 
-For further convenience, I would omit the parameters of matrix functions. 
-In the case of Coriolis-Centrifugal and potential forces, it is common to 
-combine them in one term (bias force) $\mathbf{Q}(\mathbf{q}, \dot{\mathbf{q}}) = \boldsymbol{\tau}
-- C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} - g(\mathbf{q})$. Hence, I can 
-rewrite \ref{eqn:cannonical_man_eq} in the following manner
+where $L$ is Lagrangian of the system, and $\mathbf{q}$, $\mathbf{v}$ are 
+functions of the generalized coordinates and velocities respectively. The solution 
+of the variational problem (\ref{eqn:least_act_principle}) is the Euler-Lagrange 
+differential equations. The solution through utilizing the Lagrangian can be 
+easily generalized to all rigid-body systems. This generalization is aforementioned 
+the canonical manipulator equation (\ref{eqn:can_man_equation}). 
+
+In this chapter the convenient representation of this equation is used. The main 
+idea of rewriting is combination of the inertial forces with non-inertial ones.
 
 \begin{equation}
-    \label{eqn:compact_man_eq}
-    M \ddot{\mathbf{q}} = \mathbf{Q}
+    M \dot{\mathbf{v}} = \mathbf{Q}
+    \label{eqn:can_man_eqn_simple}
 \end{equation}
 
-equation \ref{eqn:compact_man_eq} is compact form of equation 
-\ref{eqn:cannonical_man_eq}. It would be highly utilized in further 
-investigations.
+In the above equation $\mathbf{Q} = 
+-C(\mathbf{q}, \mathbf{v}) \dot{\mathbf{q}} - g(\mathbf{q}) + 
+\boldsymbol{\tau}$, $M \succcurlyeq 0$ is inertia matrix, $C$ is Centrifugal-Coriolis 
+matrix, $g$ is gradient of conservative forces. The dependency from coordinates and 
+velocities is amended for convenience. In the most generalized case 
+$\dim{\mathbf{q}} = n_q \neq n_v = \dim{\mathbf{v}}$.
 
-Let's consider the same physical system again with imposed constraints at this time.
-All holonomic constraints would be presented by 
-$\varphi(\mathbf{q}, t): \mathbb{S}_{n_q} \times \mathbb{R} \rightarrow \mathbb{R}^m$, and 
-all non-holonomic by 
-$
-\psi(\mathbf{q}, \dot{\mathbf{q}}, t): \mathbb{S}_{n_q} \times \mathbb{R}^{n_v} 
-\times \mathbb{R} \rightarrow \mathbb{R}^k
-$, where $\mathbb{S}_{n_q}$ generalized coordinates space in the most common case.
-All constraints are satisfied if and only if the above functions are equal to zero.
+The aforementioned description is applicable for open and closed loop systems. 
+The closed one is described in Figure \ref{fig:rigid_coupling}. However, 
+as mentioned above utilizing only equation \ref{eqn:can_man_eqn_simple} to handle 
+such system is not efficient. Thus, the approach via constraints described
+by equation (\ref{eqn:holonom_const}) is more preferable. It can be inserted in 
+(\ref{eqn:least_act_principle}), which leads to the following variational problem, 
 
-These constraints can be rewritten in the form 
 \begin{equation}
-    \label{eqn:udwadia_const_form}
-    A(\mathbf{q}, \dot{\mathbf{q}}, t) \ddot{\mathbf{q}} 
-    - b(\mathbf{q}, \dot{\mathbf{q}}, t)
+    \min_{\mathbf{q}} \quad 
+    \int_{t_1}^{t_2} [L(\mathbf{q}(t), \mathbf{v}(t), t) - 
+    \pmb{\lambda}^T \varphi(\mathbf{q}(t), t)]dt
+    \label{eqn:least_act_principle_const}
 \end{equation}
 
-by differentiation of holonomic constraints twice and non-holonomic once.
-According to Udwadia-Kalaba the constrained force that would satisfy can be 
-written
+The solution the above equation can be expressed in terms of the KKT matrix in 
+the following way, 
 
 \begin{equation}
-    \label{eqn:ud_ka_c_forces}
-    Q_c = M^{1 / 2} (A M^{-1/2})^+(b - A M ^ {-1} Q)
+    \begin{bmatrix}
+        M & J^T \\
+        J & 0 \\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \dot{\mathbf{v}} \\
+        -\pmb{\lambda}
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        \mathbf{Q} \\
+        -\dot{J} \mathbf{v}
+    \end{bmatrix}, \:
+    J = \frac{\partial \boldsymbol{\varphi}}{\partial \mathbf{q}}
+    \label{eqn:kkt_solution}
 \end{equation}
 
-where $M^{\pm 1 / 2} = W \Lambda^{\pm 1/ 2} W^T$ ($W, \Lambda$ gain by 
-eigendecomposition), $[*]^+$ is the Moore-Penrose inverse. Under these forces, 
-the solution of the forward dynamics takes the form
+The downside of the equation (\ref{eqn:kkt_solution}) is that it does not support 
+non-holonomic constraints generally. This type of constraints can be defined as 
 
 \begin{equation}
-    \label{eqn:forward_dyn_with_cf}
-    \ddot{\mathbf{q}} = M^{-1}Q + M^{-1 / 2} (A M^{-1/2})^+(b - A M ^ {-1} Q)
+    \varphi(\mathbf{q}, \mathbf{v}, t) = 0
+    \label{eqn:non_holonomic_const}
 \end{equation}
 
-The equation \ref{eqn:ud_ka_c_forces} according to F. Udvadia and R. Kalaba
-\cite{UdwadiaKalabaApproach} is the analytical solution to the minimization problem
-based on Gauss's principle of least constraint
+Therefore, the dependency from generalized velocity makes the KKT approach not 
+applicable. The handle of such constraints is crucial for defining a control. 
+Hence, it is necessary to use another technique.
+
+\section{The Udwadia-Kalaba approach} \label{sec:udwadia_kalaba_app}
+
+The main differences of the Udwadia-Kalaba approach from the method mentioned 
+above are the another view on constraints, and utilizing different physical 
+principle.
+
+Let's start from reviewing the constraints form in the discussed technique. It 
+can be derived from holonomic and non-holonomic type by differentiating over time, 
+and transforming to an affine form. The general equation is the following 
 
 \begin{equation}
-    \label{eqn:gauss_min_problem}
+    A(\mathbf{q}, \mathbf{v}, t) \dot{\mathbf{v}} = 
+    \mathbf{b}(\mathbf{q}, \mathbf{v}, t)
+    \label{eqn:affine_const}
+\end{equation}
+
+The above equation can be used in the Gauss least constraint principle. For further 
+convenience the arguments of matrix functions is amended. It leads to the 
+following optimization problem:
+
+\begin{equation}
     \begin{aligned}
-        \min_{\ddot{\mathbf{q}}} \quad &
-        [\ddot{\mathbf{q}} - a]^T M [\ddot{\mathbf{q}} - a] \\
+        \min_{\dot{\mathbf{v}}} \quad &
+        [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] \\
         \textrm{s.t.} \quad &
-        A \ddot{\mathbf{q}} - b = 0 \\
-        \quad &
-        a(\mathbf{q}, \dot{\mathbf{q}}, t) = M^{-1} Q
+        A \dot{\mathbf{v}} = \mathbf{b} \\
+        &
+        \mathbf{a} = M^{-1} \mathbf{Q}
     \end{aligned}
+    \label{eqn:gauss_least_const}
 \end{equation}
 
-While the solution proposed by F. Udvadia and R. Kalaba demonstrates precision, 
-it is not without its drawbacks. Instability points and computationally intensive 
-operations, such as the computation of matrix roots, present significant challenges. 
-Moreover, a notable deficiency lies in the absence of prioritization within the 
-methodology.
+This optimization can be solved analytically as Ferdaus Udwadia and Robert Kalaba 
+demonstrated \cite{UdwadiaKalabaApproach}. This solution is shown below.
 
-\section{Brief Lie theory}
+\begin{equation}
+    \dot{\mathbf{v}} = 
+    \mathbf{a} + M^{-1 / 2}(A M^{-1 / 2})^+ (\mathbf{b} - AM^{-1} \mathbf{Q})
+    \label{eqn:udwadia_kalaba_sol}
+\end{equation}
 
-The Lie group, a mathematical concept dating back to the 19th century, was first 
-proposed by Sophus Lie, laying the foundation for continuous transformation groups. 
-Although it was initially abstract, over time its influence has spread to various 
-scientific and technological fields. Before proceeding further, it is necessary to 
-consider the basics of Lie theory. The mathematical tools discussed in this section 
-are crucial for the research discussed here.
+where $[\cdot]^+$ is the Moore-Penrose inverse, and 
+$M^{\pm 1 / 2} = W \Lambda^{\pm 1 / 2} W^T$, $W$ is the orthogonal matrix 
+of eigen vectors. 
 
-Let $\mathcal{G}$ is smooth manifold that satisfies the group axioms. For any 
-$\mathcal{X}$, $\mathcal{Y}$ and $\mathcal{Z}$ from $\mathcal{G}$ the following 
-statements are true:
+In case of positive semi-definiteness of $M$ the equation 
+(\ref{eqn:udwadia_kalaba_sol}) is not applicable because $M^{-1}$, 
+$M^{-1 / 2}$ cannot exist. The Firdaus Udwadia and Aaron Schutte demonstrates 
+\cite{EquationsOfMotionConst} a methodology to bypass this problem by 
+replacing $M$, and $\mathbf{a}$ by the following quantities respectively
 
 \begin{equation}
     \begin{aligned}
-        \label{eqn:g_axi}
-        & \mathcal{X} \circ \mathcal{Y} \in \mathcal{G} \quad && \text{(I)} \\
-        & \exists \mathcal{E}:\ \mathcal{E} \circ \mathcal{X} 
-        = \mathcal{X} \circ \mathcal{E} = \mathcal{X} \quad && \text{(II)} \\
-        & \exists \mathcal{X}^{-1}:\ \mathcal{X}^{-1} \circ \mathcal{X}
-        = \mathcal{X} \circ \mathcal{X}^{-1} = \mathcal{E} \quad && \text{(III)} \\ 
-        & (\mathcal{X} \circ \mathcal{Y}) \circ \mathcal{Z} = 
-        \mathcal{X} \circ (\mathcal{Y} \circ \mathcal{Z}) \quad && \text{(IV)}
+        M_A = M + A^+ A \succ 0 \\
+        \mathbf{a}_A = M_A^{-1} \mathbf{Q}
     \end{aligned}
+    \label{eqn:another_mass_matrix}
 \end{equation}
 
-For such group $T_{\mathcal{E}} \mathcal{G}$ is the Lia Algebra defined at 
-$\mathcal{E}$ element. The geometric interpretation of algebra is tangent plane 
-that touchs the smooth manifold (group). $\mathfrak{m} \equiv 
-T_{\mathcal{E}} \mathcal{G}$ is always a vector space.
-
-The next crucial defenition is a group action
+Utilizing the mentioned quantities it is possible to define constraints 
+force over the wide range of rigid-body systems. These forces can be 
+expressed in the following manner 
 
 \begin{equation}
-    f: \mathcal{G} \times \mathcal{V} \to \mathcal{V}
+    \mathbf{Q}_C = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})
+    \label{eqn:constraint_forces}
 \end{equation}
 
-where $\mathcal{V}$ is some set. The operation defined above should satisfy 
-the axioms ($v \in \mathcal{V}$; $\mathcal{X}, \mathcal{Y} \in \mathcal{G}$),
-
-\begin{equation}
-    \begin{aligned}
-        \label{eqn:act_axi}
-        & \mathcal{E} \cdot v = v \quad && \text{(I)} \\
-        & (\mathcal{X} \circ \mathcal{Y}) \cdot v = 
-        \mathcal{X} \cdot (\mathcal{Y} \cdot v) \quad && \text{(II)}
-    \end{aligned}
-\end{equation}
-
-For instance, if the $\text{SO}(n)$ rotations is considered as Lie group, than the 
-transformation $R \cdot x \equiv R x$ ($x \in \mathbb{R}^n$) is a group action.
-
-The exponential map $\exp:\ \mathfrak{m} \to \mathcal{G}$ converts elements of 
-Lie algebra to corresponding group. The log map do inverse operation. 
-However, it is neccesary to remember that 
-this map applicable only for "identity" algebra. However, there is a linear
-transformation between $T_{\mathcal{X}} \mathcal{G}$ and $T_{\mathcal{E}} 
-\mathcal{G}$. It is called adjoin.
-
-It is known that $\mathfrak{m}$ is isomorphic to the vector space $\mathbb{R}^m$. 
-One can write it as $\mathfrak{m} \cong \mathbb{R}^m$. Due to convinience this 
-isomorphism would be highly utilized. Moreover, in the bellow sections only 
-algebras constructed on $\mathbb{R}^m$ are considered. Thus, a maping between 
-sets can be defined in the following manner (hat-vee notation)
-
-\begin{equation}
-    \begin{aligned}
-        \label{eqn:hat_vee_not}
-        & [*]^\wedge: \ \mathbb{R}^m \to \mathfrak{m} \quad &&
-        \boldsymbol{\tau}^\wedge = \sum_{i=1}^{m} \tau_i E_i \\
-        & [*]^\vee: \mathfrak{m} \to \mathbb{R}^m \quad && 
-        \boldsymbol{\tau} = \sum_{i=1}^{m} \tau_i \mathbf{e}_i
-    \end{aligned}
-\end{equation}
-
-where $\mathbf{e}_i$ are a base of $\mathbb{R}^m$ and $E_i$ are base vectors 
-of $\mathfrak{m}$. Obviously, $\mathbf{e}_i^\wedge = E_i$. Using this mapping, the
-exponential / log map can be modified 
-
-\begin{equation}
-    \begin{aligned}
-        \label{eqn:exp_log_for_r_m}
-        & \exp : \quad && \mathcal{X} = \exp(\boldsymbol{\tau}^\wedge) \\
-        & \log : \quad && \boldsymbol{\tau} = \log(\mathcal{X})^\vee
-    \end{aligned}
-\end{equation}
-
-Or, in the most convinient form
-
-\begin{equation}
-    \begin{aligned}
-        \label{eqn:big_exp_log_for_r_m}
-        & \text{Exp} : \quad && \mathcal{X} 
-        = \exp(\boldsymbol{\tau}^\wedge) 
-        = \text{Exp}(\boldsymbol{\tau})\\
-        & \text{Log} : \quad && \boldsymbol{\tau} 
-        = \log(\mathcal{X})^\vee
-        = \text{Log}(\mathcal{X})
-    \end{aligned}
-\end{equation}
-
-Through this definitions it easy to introduce plus and minus operations
-
-\begin{equation}
-    \begin{aligned}
-        & \text{right-} \oplus: 
-        \mathcal{X} \oplus \prescript{\mathcal{X}}{}{\boldsymbol{\tau}} 
-        \equiv \mathcal{X} \circ 
-        \text{Exp}(\prescript{\mathcal{X}}{}{\boldsymbol{\tau}}) \in \mathcal{G} \\
-        & \text{right-} \ominus:
-        \mathcal{Y} \ominus \mathcal{X} 
-        \equiv \text{Log}(\mathcal{X}^{-1} \circ \mathcal{Y}) 
-        \in T_{\mathcal{X}}\mathcal{G}
-    \end{aligned}
-\end{equation}
-
-$\mathbf{TODO}$: continue section
+Hence, the Udwadia-Kalaba approach is applicable for emulation a of 
+rigid body constraint in computation easily. Only the problem with rigorous 
+defining $A$ and $\mathbf{b}$ remains.
 
 \section{Defying constraints over multiple systems}
 
