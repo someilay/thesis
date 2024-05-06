@@ -176,7 +176,120 @@ Hence, the Udwadia-Kalaba approach is applicable for emulation a of
 rigid body constraint in computation easily. Only the problem with rigorous 
 defining $A$ and $\mathbf{b}$ remains.
 
-\section{Defying constraints over multiple systems}
+\section{Defying rigid body constraint}
+
+As mentioned above the discussed coupling between physical systems is created 
+by some rigid body. This type of mathematical object can be described by the 
+following identity for any two points
+
+\begin{equation}
+    \| \mathbf{r}_A(t) - \mathbf{r}_B(t) \| \equiv \text{const}
+    \label{eqn:rigid_body_axiom}
+\end{equation}
+
+From the above equation kinematic laws can be directly derived. For further 
+investigations it is necessary to introduce a point velocity of the rigid body
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        media/.style={font={\footnotesize\sffamily}},
+        interface/.style={
+            % The border decoration is a path replacing decorator.
+            % For the interface style we want to draw the original path.
+            % The postaction option is therefore used to ensure that the
+            % border decoration is drawn *after* the original path.
+            postaction={draw,decorate,decoration={border,angle=-45,
+            amplitude=0.3cm,segment length=2mm}}},
+        ]
+        % Object
+        \draw [black, thick] plot [smooth cycle] coordinates {
+            (2.7, 2.2) (3.5, 3.4) (4.3, 3.8) (4.1, 2.6) (6.0, 2.0) (6.0, 1.3) (3.5, 1.0)
+        };
+        \draw[media] (4.6, 3.7) node {\Large $\boldsymbol \Sigma$};
+
+        % p_A
+        \draw[black, ->, dashed](4.000, -1.167) -- (2.800 + 0.02, 2.033 - 0.07);
+        \draw[media] (3.1, 0.40) node {\large $\mathbf{r}_A$}; 
+        % p_B
+        \draw[black, ->, dashed](4.000, -1.167) -- (6.000 - 0.05, 1.833 - 0.06);
+        \draw[media] (5.3, 0.2) node {\large $\mathbf{r}_B$}; 
+        % p_AB
+        \draw[black, ->, dashed](2.800, 2.033) -- (6.000 - 0.1, 1.833 + 0.05);
+        \draw[media] (4.4, 2.2) node {\large $\mathbf{r}_{AB}$};
+
+        % world frame
+        \draw[black, ->](4.000, -1.167) -- (5.102, -1.273);
+        \draw[black, ->](4.000, -1.167) -- (4.000, 0.000);
+        \draw[black, ->](4.000, -1.167) -- (3.318, -1.363);
+        \drawdot{4.000}{-1.167}
+        \draw[media] (4.400, -0.867) node {\Large $\mathcal{W}$}; 
+        \draw[media] (5.260, -1.288) node {\large $y$}; 
+        \draw[media] (4.000, 0.200) node {\large $z$}; 
+        \draw[media] (3.172, -1.406) node {\large $x$}; 
+
+        % A frame
+        \draw[black, ->](2.800, 2.033) -- (3.889, 1.628);
+        \draw[black, ->](2.800, 2.033) -- (2.800, 3.029);
+        \draw[black, ->](2.800, 2.033) -- (2.133, 1.289);
+        \drawdot{2.800}{2.033}
+        \draw[media] (3.100, 2.433) node {\Large $\mathcal{A}$}; 
+        \draw[media] (4.045, 1.570) node {\large $y$}; 
+        \draw[media] (2.800, 3.230) node {\large $z$}; 
+        \draw[media] (1.990, 1.130) node {\large $x$}; 
+
+        % B frame
+        \draw[black, ->](6.000, 1.833) -- (6.943, 2.371);
+        \draw[black, ->](6.000, 1.833) -- (5.515, 2.850);
+        \draw[black, ->](6.000, 1.833) -- (5.318, 1.637);
+        \drawdot{6.000}{1.833}
+        \draw[media] (5.600, 1.433) node {\Large $\mathcal{B}$};
+        \draw[media] (7.078, 2.448) node {\large $y$};
+        \draw[media] (5.446, 3.100) node {\large $z$};
+        \draw[media] (5.172, 1.594) node {\large $x$};
+
+        % Draw first manipulator
+        \draw[black, ultra thick](0, 0) -- (0.5, 1.8);
+        \draw[black, ultra thick](0.5, 1.8) -- (2.5, 2.2);
+        % Gripper
+        \gripper{2.5}{2.2}{3.3}{2.36}
+        % Draw second point mass
+        \drawpointmasssimple{0.5}{1.8}
+        \base{0}{0}
+        \draw[media] (-0.3, 0.6) node {\Large $\mathbf{S}_1$};
+        
+        % % Draw the second manipulator
+        \draw[black, ultra thick](8, 1) -- (7.577, 3.577);
+        \draw[black, ultra thick](7.577, 3.577) -- (6.177, 2.177);
+        % % Gripper
+        \gripper{6.177}{2.177}{5.6}{1.6}
+        % % Draw second point mass
+        \drawpointmasssimple{7.577}{3.577}
+        \base{8}{1}
+        \draw[media] (8 + 0.4, 1 + 0.5) node {\Large $\mathbf{S}_2$};
+    \end{tikzpicture}
+    \caption{Rigid body coupling with frames}
+    \label{fig:coupling_rigid_body}
+\end{figure}
+
+\begin{equation}
+    \begin{aligned}
+        \mathbf{v}_B = \mathbf{v}_A + 
+        \boldsymbol{\omega}_A \times \mathbf{r} \\
+        \boldsymbol{\omega}_A = \boldsymbol{\omega}_B 
+        = \boldsymbol{\omega}_{\Sigma}
+    \end{aligned}
+    \label{eqn:motion_of_rig_body}
+\end{equation}
+
+The equation (\ref{eqn:motion_of_rig_body}) describes motion of points, which 
+shown in the Figure {\ref{fig:coupling_rigid_body}}. $\boldsymbol{\omega}_X$ 
+denotes the angular velocity of some \emph{fixed frame} with the origin at $X$.
+
+Now it is possible to define a holonomic constraint that emulates a coupling 
+through a rigid body.
+
+\noindent\rule{\textwidth}{1pt}
 
 This section introduces a common holonomic constraint, which serves as a foundation 
 for further investigations. This constraint delineates a rigid body's behavior, 

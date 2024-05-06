@@ -156,6 +156,11 @@
   \draw [black, thick, fill=white] (#2, #3) circle [radius=#1];
 }
 
+\newcommand{\drawdot}[3][0.05]{
+  % circle
+  \draw [black, thick, fill=black] (#2, #3) circle [radius=#1];
+}
+
 \newcommand{\gripper}[4]{
   % Adjoint lines
   \draw[black, ultra thick](#1, #2) -- (#1 - #4 / 2 + #2 / 2, #2 + #3 / 2 - #1 / 2);
