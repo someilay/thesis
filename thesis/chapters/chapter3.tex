@@ -282,12 +282,269 @@ investigations it is necessary to introduce a point velocity of the rigid body
     \label{eqn:motion_of_rig_body}
 \end{equation}
 
-The equation (\ref{eqn:motion_of_rig_body}) describes motion of points, which 
-shown in the Figure {\ref{fig:coupling_rigid_body}}. $\boldsymbol{\omega}_X$ 
+Equation (\ref{eqn:motion_of_rig_body}) describes motion of points, which 
+shown in the Fig. {\ref{fig:coupling_rigid_body}}. $\boldsymbol{\omega}_X$ 
 denotes the angular velocity of some \emph{fixed frame} with the origin at $X$.
+Further in this chapter the below notation is used for for attitude (member of $\SE$) 
+description:
+
+\begin{equation}
+    T_{\mathcal{W}}^{\mathcal{A}} = 
+    \begin{bmatrix}
+        R^{\mathcal{A}}_{\mathcal{W}} & \mathbf{p}_{\mathcal{A}} \\
+        \mathbf{0} & 1
+    \end{bmatrix}
+    \in \SE
+    \label{eqn:se_3_element}
+\end{equation}
+
+where $R^{\mathcal{A}}_{\mathcal{W}} \in \SO$ represents basis of $\mathcal{A}$ 
+in $\mathcal{W}$, and $\mathbf{p}_{\mathcal{A}}$ is origin of $\mathcal{A}$ in 
+terms of $\mathcal{W}$.
 
 Now it is possible to define a holonomic constraint that emulates a coupling 
-through a rigid body.
+through a rigid body. Let $E_1$, $E_2$ are some \emph{fixed frames} of 
+$S_1$, $S_2$ respectively, see Fig. \ref{fig:coupling_rigid_body}; $A$, $B$ are 
+some points of the rigid body $\Sigma$. Also, let's suppose that for any $t \geq 0$, 
+$A$ and $E_1$ correspond. Thus, 
+
+\begin{equation}
+    \varphi(\mathbf{q}) = \text{se3error}(
+        T_{\mathcal{W}}^{\mathcal{E}_1} \cdot
+        T_{A}^{B},
+        T_{\mathcal{W}}^{\mathcal{E}_2}
+    ) = \mathbf{0}
+    \label{eqn:initial_phi}
+\end{equation}
+
+where $\text{se3error}: \SE \times \SE \rightarrow \mathbb{R}^6$ is defined as
+
+\begin{equation}
+    \text{se3error}(T_1, T_2) = 
+    \begin{bmatrix}
+        \mathbf{p}_2 - \mathbf{p}_1 \\
+        \log (R_1^T R_2)
+    \end{bmatrix}
+    \label{eqn:se3error}
+\end{equation}
+
+$\log$ in \ref{eqn:se3error} is a matrix logarithm defined in 
+\textcolor{red}{APPENDIX REF TODO}. The choice of such non trivial function is 
+inspired by \cite{OutFeedbackStabForOrbRob} and \cite{ANonlinearObserverUsingPose}. 
+
+Equation (\ref{eqn:initial_phi}) should be differentiated twice to obtain $A$ and 
+$\mathbf{b}$. However, even if matrix logarithm had a simple second derivative. 
+the Udwadia-Kalaba approach cannot guarantee a stability. As Ferdaus Udwadia and 
+Robert Kalaba showed \cite{udwadia1996analytical} the straightforward application 
+of technique suffers from constraint drift during numerical integration. Hence, 
+some stabilization method should be used. The study \cite{udwadia1996analytical} 
+offers the Baumgarte's technique. For holonomic constraint it looks as
+
+\begin{equation}
+    A \dot{\mathbf{v}} = \mathbf{b} - K_d \dot{\varphi} - K_p \varphi; \:
+    K_p, K_d \in \mathbb{R}
+    \label{eqn:baumgrate_stab}
+\end{equation}
+
+Although the Baumgarte's stabilization is relatively simple it is also not applicable 
+in the context of equation (\ref{eqn:initial_phi}). Therefore, the more advance 
+method should be used. 
+
+Udwadia \textcolor{red}{REF} demonstrated that if some stable differential 
+equation can be converted to (\ref{eqn:affine_const}) form, then the Udwadia-Kalaba 
+approach with such constraint is stable. Thus, it is enough to find some stable 
+kinematic differential equation. Let's consider the following equation 
+
+\begin{equation}
+    \begin{bmatrix}
+        \dot{\mathbf{v}}_{E_2} - \dot{\mathbf{v}}_B \\
+        \dot{\boldsymbol{\omega}}_{E_2}^{\mathcal{E}_2} - 
+        \dot{\boldsymbol{\omega}}_B^{\mathcal{E}_2}
+    \end{bmatrix} 
+    + K_d 
+    \begin{bmatrix}
+        \mathbf{v}_{E_2} - \mathbf{v}_B \\
+        \boldsymbol{\omega}_{E_2}^{\mathcal{E}_2} - 
+        \boldsymbol{\omega}_B^{\mathcal{E}_2}
+    \end{bmatrix}
+    + K_p \cdot
+    \text{se3error}(
+        T_{\mathcal{W}}^{\mathcal{E}_1} \cdot
+        T_{A}^{B},
+        T_{\mathcal{W}}^{\mathcal{E}_2}
+    ) = 0, \quad 
+    K_p, K_d \in \mathbb{R}
+    \label{eqn:kinematic_dif_eqn}
+\end{equation}
+
+where $\boldsymbol{\omega}_X^{\mathcal{Y}}$ states the angular velocity of some 
+\emph{fixed frame} at origin $X$ expressed in the frame $\mathcal{Y}$ coordinates.  
+For simplicity let $\boldsymbol{\omega}_{E_2}^{\mathcal{E}_2} - 
+\boldsymbol{\omega}_B^{\mathcal{E}_2} = \boldsymbol{\omega}_d^{\mathcal{E}_2}$, 
+$\mathbf{v}_{E_2} - \mathbf{v}_B = \mathbf{v}_d$, $R_{\mathcal{X}}^{\mathcal{Y}} 
+\equiv R_X$ represents basis of $\mathcal{Y}$ in frame $\mathcal{X}$ at origin $X$.
+Hence, equation (\ref{eqn:kinematic_dif_eqn}) transforms to 
+
+\begin{equation}
+    \begin{bmatrix}
+        \dot{\mathbf{v}}_d \\
+        \dot{\boldsymbol{\omega}}_d^{\mathcal{E}_2}
+    \end{bmatrix}
+    + K_d
+    \begin{bmatrix}
+        \mathbf{v}_d \\
+        \boldsymbol{\omega}_d^{\mathcal{E}_2}
+    \end{bmatrix}
+    + K_p
+    \begin{bmatrix}
+        \mathbf{r}_d \\
+        \log (R_B^T R_{E_2})
+    \end{bmatrix}
+    = 0
+    \label{eqn:kinematic_dif_eqn_simple}
+\end{equation}
+
+\begin{theorem}
+    Let $\boldsymbol{\omega}^{\mathcal{D}}$ is an angular velocity of 
+    some frame ($\mathcal{X}$) represented in desired frame $\mathcal{D}$, 
+    $\boldsymbol{\omega}_D^{\mathcal{D}}$ is an angular velocity of 
+    desired frame $\mathcal{D}$, $R$ is orientation of frame $\mathcal{X}$, and 
+    $R_d$ is orientation of frame $\mathcal{D}$. $R$ and $R_d$ are described in 
+    the world frame $\mathcal{W}$. Therefore, 
+
+    \begin{equation}
+        (
+            \dot{\boldsymbol{\omega}}_D^{\mathcal{D}} - 
+            \dot{\boldsymbol{\omega}}^{\mathcal{D}}
+        )
+        + K_d 
+        (
+            \boldsymbol{\omega}_D^{\mathcal{D}} - 
+            \boldsymbol{\omega}^{\mathcal{D}}
+        )
+        + K_p 
+        \log (R^T R_d) = 0, \quad
+        K_p, K_d > 0
+        \label{eqn:stab_theorem_dif_eqn}
+    \end{equation}
+
+    is asymptotic stable. $\log X$ is a matrix logarithm.
+
+    \label{th:stability_theorem}
+\end{theorem}
+
+\begin{proof}
+    Let $\tilde{\boldsymbol{\omega}} = \boldsymbol{\omega}_D^{\mathcal{D}} - 
+    \boldsymbol{\omega}^{\mathcal{D}}$, $\mathbf{e} = \log \tilde{R}$, 
+    and $\tilde{R} = R^T R_d$. Hence, equation 
+    \ref{eqn:stab_theorem_dif_eqn} can be rewritten in 
+
+    \begin{equation}
+        \dot{\tilde{\boldsymbol{\omega}}}
+        + K_d 
+        \tilde{\boldsymbol{\omega}}
+        + K_p 
+        \mathbf{e} = 0
+        \label{eqn:stab_theorem_dif_eqn_simple}
+    \end{equation}
+
+    From \textcolor{red}{REF TO APPENDIX}
+
+    \begin{equation}
+        \frac{d}{dt} \log \tilde{R} 
+        = J_r^{-1}(\mathbf{e}) [\tilde{R}^T \dot{\tilde{R}}]^{\vee}
+        \label{eqn:mat_log_derivative}
+    \end{equation}
+
+    where $J_r^{-1}(\mathbf{e})$ and $[.]^{\vee}$ are defined in 
+    \textcolor{red}{REF TO APPENDIX}. Proof of (\ref{eqn:mat_log_derivative}) 
+    can be found in Lemma 2 of \cite{ANonlinearObserverUsingPose}.
+
+    Let's simplify equation (\ref{eqn:mat_log_derivative}) 
+
+    \begin{equation}
+        \begin{aligned}
+            \dot{\mathbf{e}} & = 
+            J_r^{-1}(\mathbf{e}) 
+            [(R^T R_d)^T (\dot{R}^T R_d + R^T \dot{R}_d)]^{\vee} = \\
+            & = J_r^{-1}(\mathbf{e}) 
+            [R_d^T R \dot{R}^T R_d + R_d^T \dot{R}_d]^{\vee} = \\
+            & = J_r^{-1}(\mathbf{e}) 
+            [
+                R_d^T \hat{\boldsymbol{\omega}}^T R_d + 
+                \hat{\boldsymbol{\omega}}_D^{\mathcal{D}}
+            ]^{\vee} = \\ 
+            & = J_r^{-1}(\mathbf{e})
+            [
+                \hat{\boldsymbol{\omega}}_D^{\mathcal{D}} - 
+                \hat{\boldsymbol{\omega}}^{\mathcal{D}}
+            ]^{\vee} = \\
+            & = J_r^{-1}(\mathbf{e}) \tilde{\boldsymbol{\omega}}
+        \end{aligned}
+        \label{eqn:mat_log_der_simple}
+    \end{equation}
+
+    where $\hat{[.]}$ is described in \textcolor{red}{REF TO APPENDIX}.
+
+    Let the Lyapunov candidate is $V = \frac{1}{2} 
+    \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + 
+    \frac{K_p}{2} \mathbf{e}^T \mathbf{e}
+    $. Therefore, 
+
+    \begin{equation}
+        \begin{aligned}
+            \dot{V} & = 
+            \tilde{\boldsymbol{\omega}}^T \dot{\tilde{\boldsymbol{\omega}}}
+            + K_p 
+            \mathbf{e}^T \dot{\mathbf{e}} = \\
+            & = \tilde{\boldsymbol{\omega}}^T [
+                -K_d \tilde{\boldsymbol{\omega}} - K_p \mathbf{e}
+            ] + K_p \mathbf{e}^T J_r^{-1}(\mathbf{e}) \tilde{\boldsymbol{\omega}} =\\
+            & = -K_D \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} 
+            - K_p \tilde{\boldsymbol{\omega}}^T \mathbf{e} 
+            + K_p \mathbf{e}^T \tilde{\boldsymbol{\omega}} = \\
+            & = -K_D \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} 
+            < 0 
+        \end{aligned}
+        \label{eqn:laypunov_der}
+    \end{equation}
+
+    The transition to the third line of (\ref{eqn:laypunov_der}) is conditioned 
+    by corollary of Lemma 3 from \cite{ANonlinearObserverUsingPose}. It states that 
+    $\mathbf{e}^T J_r^{-1}(\mathbf{e}) = \mathbf{e}^T$.
+
+    Let $\mathcal{I} = \{ \begin{bmatrix} \tilde{\boldsymbol{\omega}}^T & 
+    \mathbf{e}^T \end{bmatrix}^T : \dot{V} = 0 \}$. If $\tilde{\boldsymbol{\omega}} 
+    = \mathbf{0}$ and $\mathbf{e} \neq \mathbf{0}$, then 
+    $\dot{\tilde{\boldsymbol{\omega}}} \neq \mathbf{0}$ by equation 
+    (\ref{eqn:stab_theorem_dif_eqn_simple}). Hence, $\mathcal{I}$ does not contain 
+    non-trivial system trajectories. By applying LaSalle's Invariance Theorem 
+    differential equation (\ref{eqn:stab_theorem_dif_eqn}) is asymptotic stable.
+
+    \label{pr:stability_theorem_proof}
+\end{proof}
+
+Equation (\ref{eqn:kinematic_dif_eqn_simple}) can be decomposed to two independent 
+differential equations. The linear part is
+
+\begin{equation}
+    \dot{\mathbf{v}}_d + K_d \mathbf{v}_d + K_p \mathbf{r}_d = 0
+    \label{eqn:kinematic_dif_eqn_lin}
+\end{equation}
+
+The above equation (\ref{eqn:kinematic_dif_eqn_lin}) is asymptotic stable for any 
+$K_p$ and $K_d$ such that the characteristics equation has a negative roots 
+(real part). The best convergence can be achieved if $K_p = \omega^2$ and 
+$K_d = 2 \omega$. The angular part is 
+
+\begin{equation}
+    \dot{\boldsymbol{\omega}}_d^{\mathcal{D}} + 
+    K_d \boldsymbol{\omega}_d^{\mathcal{D}} + 
+    K_p \log (R_B^T R_{E_2}) = 0
+    \label{eqn:kinematic_dif_eqn_ang}
+\end{equation}
+
+It is asymptotic stable due to Th. \ref{th:stability_theorem}.
 
 \noindent\rule{\textwidth}{1pt}
 
