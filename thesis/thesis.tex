@@ -16,6 +16,7 @@
 
 \usepackage{atbegshi,picture}
 \usepackage[T1,T2A]{fontenc}
+\usepackage{newtxtext}
 \usepackage[utf8]{inputenc}
 
 \usepackage[english]{babel}
@@ -98,6 +99,8 @@
 \usepackage{cases}
 \usepackage{mathtools}
 \usepackage{xcolor}
+\usepackage[section]{algorithm}
+\usepackage{algpseudocode}
 \usepackage{tikz}
 \usetikzlibrary{%
     decorations.pathreplacing,%
@@ -127,9 +130,6 @@
    \begin{flushleft}\raggedleft #1\end{flushleft}
 }
 
-\title{Feedback control over constrained robotic systems through the Udvadia-Kalaba approach}
-
-\begin{document}
 % Taken from https://cremeronline.com/LaTeX/minimaltikz.pdf
 \newcommand{\base}[2]{
   % triangle below circle
@@ -187,6 +187,10 @@
 
 \newcommand{\SO}[1][3]{\text{SO}(#1)}
 
+\title{Feedback control over constrained robotic systems through the Udvadia-Kalaba approach}
+\author{Ilia Milioshin}
+
+\begin{document}
 % \includepdf[pages=-]{title.pdf}
 \maketitle
 \tableofcontents

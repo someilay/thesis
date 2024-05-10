@@ -274,7 +274,7 @@ investigations it is necessary to introduce a point velocity of the rigid body
 
 \begin{equation}
     \begin{aligned}
-        \mathbf{v}_B = \mathbf{v}_A + 
+        \boldsymbol{\upsilon}_B = \boldsymbol{\upsilon}_A + 
         \boldsymbol{\omega}_A \times \mathbf{r} \\
         \boldsymbol{\omega}_A = \boldsymbol{\omega}_B 
         = \boldsymbol{\omega}_{\Sigma}
@@ -309,7 +309,7 @@ some points of the rigid body $\Sigma$. Also, let's suppose that for any $t \geq
 $A$ and $E_1$ correspond. Thus, 
 
 \begin{equation}
-    \varphi(\mathbf{q}) = \text{se3error}(
+    \varphi(\mathbf{q}) = \mathbf{e}_{\SE}(
         T_{\mathcal{W}}^{\mathcal{E}_1} \cdot
         T_{A}^{B},
         T_{\mathcal{W}}^{\mathcal{E}_2}
@@ -317,10 +317,10 @@ $A$ and $E_1$ correspond. Thus,
     \label{eqn:initial_phi}
 \end{equation}
 
-where $\text{se3error}: \SE \times \SE \rightarrow \mathbb{R}^6$ is defined as
+where $\mathbf{e}_{\SE}: \SE \times \SE \rightarrow \mathbb{R}^6$ is defined as
 
 \begin{equation}
-    \text{se3error}(T_1, T_2) = 
+    \mathbf{e}_{\SE}(T_1, T_2) = 
     \begin{bmatrix}
         \mathbf{p}_2 - \mathbf{p}_1 \\
         \log (R_1^T R_2)
@@ -357,18 +357,18 @@ kinematic differential equation. Let's consider the following equation
 
 \begin{equation}
     \begin{bmatrix}
-        \dot{\mathbf{v}}_{E_2} - \dot{\mathbf{v}}_B \\
+        \dot{\boldsymbol{\upsilon}}_{E_2} - \dot{\boldsymbol{\upsilon}}_B \\
         \dot{\boldsymbol{\omega}}_{E_2}^{\mathcal{E}_2} - 
         \dot{\boldsymbol{\omega}}_B^{\mathcal{E}_2}
     \end{bmatrix} 
     + K_d 
     \begin{bmatrix}
-        \mathbf{v}_{E_2} - \mathbf{v}_B \\
+        \boldsymbol{\upsilon}_{E_2} - \boldsymbol{\upsilon}_B \\
         \boldsymbol{\omega}_{E_2}^{\mathcal{E}_2} - 
         \boldsymbol{\omega}_B^{\mathcal{E}_2}
     \end{bmatrix}
     + K_p \cdot
-    \text{se3error}(
+    \mathbf{e}_{\SE}(
         T_{\mathcal{W}}^{\mathcal{E}_1} \cdot
         T_{A}^{B},
         T_{\mathcal{W}}^{\mathcal{E}_2}
@@ -381,18 +381,19 @@ where $\boldsymbol{\omega}_X^{\mathcal{Y}}$ states the angular velocity of some
 \emph{fixed frame} at origin $X$ expressed in the frame $\mathcal{Y}$ coordinates.  
 For simplicity let $\boldsymbol{\omega}_{E_2}^{\mathcal{E}_2} - 
 \boldsymbol{\omega}_B^{\mathcal{E}_2} = \boldsymbol{\omega}_d^{\mathcal{E}_2}$, 
-$\mathbf{v}_{E_2} - \mathbf{v}_B = \mathbf{v}_d$, $R_{\mathcal{X}}^{\mathcal{Y}} 
-\equiv R_X$ represents basis of $\mathcal{Y}$ in frame $\mathcal{X}$ at origin $X$.
-Hence, equation (\ref{eqn:kinematic_dif_eqn}) transforms to 
+$\boldsymbol{\upsilon}_{E_2} - \boldsymbol{\upsilon}_B = \boldsymbol{\upsilon}_d$, 
+$R_{\mathcal{X}}^{\mathcal{Y}} \equiv R_X$ represents basis of $\mathcal{Y}$ in 
+frame $\mathcal{X}$ at origin $X$. Hence, equation (\ref{eqn:kinematic_dif_eqn}) 
+transforms to 
 
 \begin{equation}
     \begin{bmatrix}
-        \dot{\mathbf{v}}_d \\
+        \dot{\boldsymbol{\upsilon}}_d \\
         \dot{\boldsymbol{\omega}}_d^{\mathcal{E}_2}
     \end{bmatrix}
     + K_d
     \begin{bmatrix}
-        \mathbf{v}_d \\
+        \boldsymbol{\upsilon}_d \\
         \boldsymbol{\omega}_d^{\mathcal{E}_2}
     \end{bmatrix}
     + K_p
@@ -484,7 +485,8 @@ Hence, equation (\ref{eqn:kinematic_dif_eqn}) transforms to
         \label{eqn:mat_log_der_simple}
     \end{equation}
 
-    where $\hat{[.]}$ is described in \textcolor{red}{REF TO APPENDIX}.
+    where $\hat{[.]}$ (or $[.]^{\wedge}$) is described in 
+    \textcolor{red}{REF TO APPENDIX}.
 
     Let the Lyapunov candidate is $V = \frac{1}{2} 
     \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + 
@@ -528,7 +530,7 @@ Equation (\ref{eqn:kinematic_dif_eqn_simple}) can be decomposed to two independe
 differential equations. The linear part is
 
 \begin{equation}
-    \dot{\mathbf{v}}_d + K_d \mathbf{v}_d + K_p \mathbf{r}_d = 0
+    \dot{\boldsymbol{\upsilon}}_d + K_d \boldsymbol{\upsilon}_d + K_p \mathbf{r}_d = 0
     \label{eqn:kinematic_dif_eqn_lin}
 \end{equation}
 
@@ -546,141 +548,182 @@ $K_d = 2 \omega$. The angular part is
 
 It is asymptotic stable due to Th. \ref{th:stability_theorem}.
 
-\noindent\rule{\textwidth}{1pt}
-
-This section introduces a common holonomic constraint, which serves as a foundation 
-for further investigations. This constraint delineates a rigid body's behavior, 
-applicable to multiple manipulators.
-
-Let $M_1, M_2, \dots, M_p$ are $p$ iinertia matrices for $p$ independent systems. 
-The $i$-th system has $n_q^i$ generalized coordinates, $n_v^i$ generalized velocity 
-components and $Q_i$ bias force. Thus, the common unconstrained dynamics is
+Now I can formulate $A$ and $\mathbf{b}$ from equation (\ref{eqn:kinematic_dif_eqn}). 
+Firstly, let's define a velocities
 
 \begin{equation}
-    \label{eqn:common_dynamics}
+    \begin{aligned}
+        \begin{bmatrix}
+            \boldsymbol{\upsilon}_{E_2} \\
+            \boldsymbol{\omega}_{E_2}^{\mathcal{E}_2}
+        \end{bmatrix} & = 
+        \begin{bmatrix}
+            J_{E_2, v} \\
+            R_{E_2}^T J_{E_2, \omega}
+        \end{bmatrix}
+        \mathbf{v} \\
+        \begin{bmatrix}
+            \boldsymbol{\upsilon}_B \\
+            \boldsymbol{\omega}_{B}^{\mathcal{E}_2} 
+        \end{bmatrix} & = 
+        \begin{bmatrix}
+            J_{E_1, v} \\
+            R_{E_2}^T J_{E_1, \omega}
+        \end{bmatrix}
+        \mathbf{v} +
+        \begin{bmatrix}
+            \boldsymbol{\omega}_{E_1} \times \mathbf{r}_{AB} \\
+            \mathbf{0}
+        \end{bmatrix}
+    \end{aligned}
+    \label{eqn:velocities_from_q}
+\end{equation}
+
+where $J_{X,v}$, $J_{X,\omega}$ are linear and angular velocity of frame 
+$\mathcal{X}$ with origin at $X$ respectively. The equation above can be simplified  
+to 
+
+\begin{equation}
     \begin{bmatrix}
-        M_1 & 0   & \dots & 0 \\
-        0   & M_2 & \dots & 0 \\
-        \vdots & \vdots & \ddots & \vdots \\
-        0   & 0   & \dots & M_p
+        \boldsymbol{\upsilon}_d \\
+        \boldsymbol{\omega}_d^{\mathcal{E}_2}
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        J_{d, v} + [R_{E_1} \mathbf{r}_{AB}^{\mathcal{A}}]^{\wedge}
+        J_{E_1, \omega}\\
+        R_{E_2}^T J_{d, \omega}
+    \end{bmatrix} \mathbf{v} = 
+    \begin{bmatrix}
+        \tilde{J}_{d,v} \\
+        \tilde{J}_{d, \omega}
+    \end{bmatrix}
+    \mathbf{v}, \:
+    J_{d, *} = J_{E_2, *} - J_{E_1, *}
+    \label{eqn:velocities_from_q_simple}
+\end{equation}
+
+Now it is easy to express $A$ and $b$ by differencing equation 
+(\ref{eqn:velocities_from_q_simple}) and adding PD part:
+
+\begin{equation}
+    \begin{aligned}
+        A & = 
+        \begin{bmatrix}
+            \tilde{J}_{d,v} \\
+            \tilde{J}_{d,\omega}
+        \end{bmatrix} \\
+        b & = 
+        - 
+        \begin{bmatrix}
+            \dot{\tilde{J}}_{d,v} \\
+            \dot{\tilde{J}}_{d,\omega}
+        \end{bmatrix}
+        \mathbf{v}
+        -K_d
+        \begin{bmatrix}
+            \boldsymbol{\upsilon}_d \\
+            \boldsymbol{\omega}_d^{\mathcal{E}_2}
+        \end{bmatrix} 
+        -K_p
+        \mathbf{e}_{\SE}(
+            T_{\mathcal{W}}^{\mathcal{E}_1} \cdot 
+            T_{\mathcal{A}}^{\mathcal{B}},
+            T_{\mathcal{W}}^{\mathcal{E}_2}
+        )
+    \end{aligned}
+    \label{eqn:a_and_b}
+\end{equation}
+
+where $\dot{\tilde{J}}_{d,v}$ is 
+
+\begin{equation}
+    \begin{aligned}
+        \dot{\tilde{J}}_{d,v} & = \dot{J}_{d,v} + 
+        \left( \frac{d}{dt} [R_{E_1} \mathbf{r}_{AB}^{\mathcal{A}}]^\wedge \right)
+        J_{E_1, \omega} + 
+        [R_{E_1} \mathbf{r}_{AB}^{\mathcal{A}}]^\wedge \dot{J}_{E_1, \omega} = \\
+        & = \dot{J}_{d,v} + 
+        \hat{\boldsymbol{\omega}}_{E_1} \hat{\mathbf{r}}_{AB} J_{E_1, \omega}
+        + \hat{\mathbf{r}}_{AB} \dot{J}_{E_1, \omega}
+    \end{aligned}
+    \label{eqn:jac_lin_derivatives}
+\end{equation}
+
+and $\dot{\tilde{J}}_{d,\omega}$ is
+
+\begin{equation}
+    \begin{aligned}
+        \dot{\tilde{J}}_{d,\omega} 
+        & = 
+        \dot{R}_{E_2}^T J_{d, \omega} + 
+        R_{E_2}^T \dot{J}_{d, \omega}
+        = \\
+        & = 
+        [\hat{\boldsymbol{\omega}}_{E_2} R_{E_2}]^T J_{d, \omega} + 
+        R_{E_2}^T \dot{J}_{d, \omega} = \\
+        & = R_{E_2}^T
+        [\dot{J}_{d, \omega} - \hat{\boldsymbol{\omega}}_{E_2} J_{d, \omega}]
+    \end{aligned}
+    \label{eqn:jac_ang_derivatives}
+\end{equation}
+
+Now it is possible to define full algorithm. Let $\mathbf{S}_c$ is combined 
+physical system. It's union of two rigid-body systems, namely: $\mathbf{S}_1$ and 
+$\mathbf{S}_2$. For reference, see Fig. \ref{fig:coupling_rigid_body}. The dynamics 
+of $\mathbf{S}_c$ is 
+
+\begin{equation}
+    \begin{bmatrix}
+        M_1 & \mathbf{0} \\
+        \mathbf{0} & M_2 \\ 
     \end{bmatrix}
     \begin{bmatrix}
-        \ddot{\mathbf{q}}_1 \\ \ddot{\mathbf{q}}_2 \\ \vdots \\ \ddot{\mathbf{q}}_p
+        \dot{\mathbf{v}}_1 \\
+        \dot{\mathbf{v}}_2
     \end{bmatrix}
     = 
     \begin{bmatrix}
-        Q_1 \\ Q_2 \\ \vdots \\ Q_p
+        \mathbf{Q}_1 \\
+        \mathbf{Q}_2 \\
     \end{bmatrix}
+    \label{eqn:comb_system}
 \end{equation}
 
-The equation \ref{eqn:common_dynamics} can be rewriten in the manner of
-\ref{eqn:compact_man_eq}. In such compact form it is convinient for futher analysis. 
-Hense, let
+If $\mathbf{q} = \begin{bmatrix} \mathbf{q}_1^T & \mathbf{q}_2^T \end{bmatrix}^T$ 
+and $\mathbf{v} = \begin{bmatrix} \mathbf{v}_1^T & \mathbf{v}_2^T \end{bmatrix}^T$ 
+than $A$ and $\mathbf{b}$ can be found by the following algorithm
 
-\begin{equation}
-    \label{eqn:common_mass}
-    M_s = 
-    \begin{bmatrix}
-        M_1 & 0   & \dots & 0 \\
-        0   & M_2 & \dots & 0 \\
-        \vdots & \vdots & \ddots & \vdots \\
-        0   & 0   & \dots & M_p
-    \end{bmatrix}
-\end{equation}
+\begin{algorithm}[H]
+    \caption{Computing $A$ and $\mathbf{b}$ for rigid body constraint}
 
-\begin{equation}
-    \label{eqn:common_q}
-    q_s = 
-    \begin{bmatrix}
-        \mathbf{q}_1 & \mathbf{q}_2 & \dots & \mathbf{q}_p
-    \end{bmatrix}^T
-\end{equation}
+    \begin{algorithmic}[1]
+        \Function{getRigidBodyConstraint}{
+            combined system $\mathbf{S}_c$,
+            $\mathbf{q}$, $\mathbf{v}$, 
+            $E_1$, $E_2$, $T_{\mathcal{A}}^{\mathcal{B}}$
+        } : 
+        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}_1}$ and 
+        $T_{\mathcal{W}}^{\mathcal{E}_2}$ for $\mathbf{S}_c$ at state $\mathbf{q}$
+        \State Compute velocities $\mathbf{v}_{E_1}$, $\mathbf{v}_{E_2}$, 
+        $\boldsymbol{\omega}_{E_1}$, and $\boldsymbol{\omega}_{E_2}$
+        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Compute Jacobians $J_{E_1, v}$, $J_{E_1, \omega}$, $J_{E_2, v}$, and 
+        $J_{E_2, \omega}$ for $\mathbf{S}_c$ at state $\mathbf{q}$
+        \State Compute Jacobians time derivatives $\dot{J}_{E_1, v}$, 
+        $\dot{J}_{E_1, \omega}$, $\dot{J}_{E_2, v}$, and $\dot{J}_{E_2, \omega}$ 
+        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Obtain $J_{d, *} = J_{E_2, *} - J_{E_1, *}$ and 
+        $\dot{J}_{d, *} = \dot{J}_{E_2, *} - \dot{J}_{E_1, *}$, where $*$ is 
+        $v$ or $\omega$
+        \State Calculate $\tilde{J}_{d,v}$ and $\tilde{J}_{d, \omega}$ by equation 
+        (\ref{eqn:velocities_from_q_simple})
+        \State Calculate $\dot{\tilde{J}}_{d,v}$ and $\dot{\tilde{J}}_{d, \omega}$ by 
+        equation (\ref{eqn:jac_lin_derivatives}) and (\ref{eqn:jac_ang_derivatives}) 
+        respectively
+        \State Compute $A$ and $\mathbf{b}$ by equation (\ref{eqn:a_and_b})
+        \State \Return $A$, $\mathbf{b}$
+        \EndFunction
+    \end{algorithmic}
 
-\begin{equation}
-    \label{eqn:common_bias}
-    Q_s = 
-    \begin{bmatrix}
-        Q_1 & Q_2 & \dots & Q_p
-    \end{bmatrix}^T
-\end{equation}
-
-It implies to the following dynamics equation that describes motion of $p$ independent 
-systems
-
-\begin{equation}
-    \label{eqn:common_eq}
-    M_s \ddot{\mathbf{q}}_s = \mathbf{Q}_s
-\end{equation}
-
-Let $R_{ij}$ and $\mathbf{p}_{ij}$ are rotation and position of $j$-th frame attached to some 
-link of the $i$-th system respectevly. The rigid body connection between two frames 
-now can be defined as
-
-\begin{numcases}{}
-    R_{ij}R_d = R_{\alpha \beta} & \label{eqn:rot_const}
-    \\
-    (\mathbf{p}_{ij} - \mathbf{p}_{\alpha \beta})^T
-    (\mathbf{p}_{ij} - \mathbf{p}_{\alpha \beta}) = l & \label{eqn:position_const}
-\end{numcases}
-
-where $R_d$ is a fixed rotation matrix and $l$ a distence between connection points 
-inside a rigid body.
-
-Substituting 
-$\prescript{\alpha \beta}{ij}{\mathbf{d}} = \mathbf{p}_{ij} - \mathbf{p}_{\alpha \beta}$ 
-and differencing respect to time twice the equation \ref{eqn:position_const}
-transforms to 
-
-\begin{equation}
-    \label{eqn:pos_const_transform_1}
-    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
-    \prescript{\alpha \beta}{ij}{\mathbf{d}} - l = 0
-    \Rightarrow
-    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
-    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}} = 0
-    \Rightarrow
-    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
-    \prescript{\alpha \beta}{ij}{\ddot{\mathbf{d}}} + 
-    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}}^T 
-    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}} = 0
-\end{equation}
-
-The equation \ref{eqn:pos_const_transform_1} can be expresed via generalized coordinates
-
-\begin{equation}
-    \label{eqn:pos_const_transform_2}
-    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
-    \prescript{\alpha \beta}{ij}{\ddot{\mathbf{d}}} + 
-    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}}^T 
-    \prescript{\alpha \beta}{ij}{\dot{\mathbf{d}}} = 0
-    \Rightarrow
-    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
-    (
-        \prescript{v}{ij}{J} \ddot{\mathbf{q}}_s + 
-        \prescript{v}{ij}{\dot{J}} \dot{\mathbf{q}}_s
-    ) + 
-    \dot{\mathbf{q}}_s^T \prescript{v}{ij}{J}^T 
-    \prescript{v}{ij}{J} \dot{\mathbf{q}}_s = 0
-\end{equation}
-
-where $\prescript{v}{ij}{J} \equiv \prescript{v}{ij}{J}(\mathbf{q}_s)$ is the 
-$j$-th frame velocity Jacobian of the $i$-th system. Now, it is possible to 
-convert \ref{eqn:position_const} constraint to \ref{eqn:udwadia_const_form} form
-
-\begin{equation}
-    \label{eqn:pos_const_a_matrix}
-    A_p(\mathbf{q}_s, \dot{\mathbf{q}}_s) = 
-    \prescript{\alpha \beta}{ij}{\mathbf{d}}^T \prescript{v}{ij}{J}
-\end{equation}
-
-\begin{equation}
-    \label{eqn:pos_const_b_vector}
-    b_p(\mathbf{q}_s, \dot{\mathbf{q}}_s) = 
-    - \prescript{\alpha \beta}{ij}{\mathbf{d}}^T 
-    \prescript{v}{ij}{\dot{J}} \dot{\mathbf{q}}_s
-    - \dot{\mathbf{q}}_s^T \prescript{v}{ij}{J}^T
-    \prescript{v}{ij}{J} \dot{\mathbf{q}}_s
-\end{equation}
-
-Now, let suppose that $\gamma_1, \gamma_2, \dots, \gamma_w$ system connected by rigid 
-body. Here $\gamma_i$ is an index of the system, and $w \leq p$. 
+    \label{alg:get_a_and_b}
+\end{algorithm}
