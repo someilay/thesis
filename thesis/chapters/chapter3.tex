@@ -275,7 +275,7 @@ investigations it is necessary to introduce a point velocity of the rigid body
 \begin{equation}
     \begin{aligned}
         \boldsymbol{\upsilon}_B = \boldsymbol{\upsilon}_A + 
-        \boldsymbol{\omega}_A \times \mathbf{r} \\
+        \boldsymbol{\omega}_A \times \mathbf{r}_{AB} \\
         \boldsymbol{\omega}_A = \boldsymbol{\omega}_B 
         = \boldsymbol{\omega}_{\Sigma}
     \end{aligned}
@@ -704,9 +704,10 @@ than $A$ and $\mathbf{b}$ can be found by the following algorithm
         } : 
         \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}_1}$ and 
         $T_{\mathcal{W}}^{\mathcal{E}_2}$ for $\mathbf{S}_c$ at state $\mathbf{q}$
-        \State Compute velocities $\mathbf{v}_{E_1}$, $\mathbf{v}_{E_2}$, 
-        $\boldsymbol{\omega}_{E_1}$, and $\boldsymbol{\omega}_{E_2}$
-        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Compute velocities $\boldsymbol{\upsilon}_{E_1}$, 
+        $\boldsymbol{\upsilon}_{E_2}$, $\boldsymbol{\omega}_{E_1}$, and 
+        $\boldsymbol{\omega}_{E_2}$ for $\mathbf{S}_c$ at state $\mathbf{q}$, 
+        $\mathbf{v}$
         \State Compute Jacobians $J_{E_1, v}$, $J_{E_1, \omega}$, $J_{E_2, v}$, and 
         $J_{E_2, \omega}$ for $\mathbf{S}_c$ at state $\mathbf{q}$
         \State Compute Jacobians time derivatives $\dot{J}_{E_1, v}$, 
@@ -727,3 +728,142 @@ than $A$ and $\mathbf{b}$ can be found by the following algorithm
 
     \label{alg:get_a_and_b}
 \end{algorithm}
+
+\section{Control through the Udwadia-Kalaba approach}
+
+As shown above, the Udwadia-Kalaba approach can be used to impose both holonomic and 
+non-holonomic constraints. Therefore, it can be applied for constructing controls. 
+Let's consider two possible scenarios: controlling a system frame, or controlling the 
+fixed frame of a rigid body connecting systems.
+
+For both cases the desired law of motion described by the following quantities: 
+$T_{\mathcal{W}}^{\mathcal{D}}$, $\begin{bmatrix} \boldsymbol{\upsilon}_D^T & 
+[\boldsymbol{\omega}_D^{\mathcal{D}}]^T \end{bmatrix}^T$, $\begin{bmatrix} 
+\mathbf{a}_D^T & [\boldsymbol{\epsilon}_D^{\mathcal{D}}]^T \end{bmatrix}^T$ are 
+desired attitude, velocity and acceleration respectively. These values should not be 
+a contradictory for sure. 
+
+Now it is possible to define control for some fixed frame $\mathcal{E}$ of system. 
+The holonomic is 
+
+\begin{equation}
+    \begin{bmatrix}
+        \mathbf{a}_D^{\mathcal{D}} - \dot{\boldsymbol{\upsilon}}_E \\
+        \boldsymbol{\epsilon}_D^{\mathcal{D}} - 
+        \dot{\boldsymbol{\omega}}_E^{\mathcal{D}}
+    \end{bmatrix}
+    + K_d
+    \begin{bmatrix}
+        \boldsymbol{\upsilon}_D  - \boldsymbol{\upsilon}_E \\
+        \boldsymbol{\omega}_D^{\mathcal{D}} - 
+        \boldsymbol{\omega}_E^{\mathcal{D}}
+    \end{bmatrix}
+    + K_p
+    \mathbf{e}_{\SE}(T_{\mathcal{W}}^{\mathcal{E}}, T_{\mathcal{W}}^{\mathcal{D}})
+    = \mathbf{0}
+    \label{eqn:control_e_const}
+\end{equation}
+
+It can be simplified by substitution $\boldsymbol{\upsilon}_d = 
+\boldsymbol{\upsilon}_D  - \boldsymbol{\upsilon}_E$ and 
+$\boldsymbol{\omega}_d^{\mathcal{D}} = \boldsymbol{\omega}_D^{\mathcal{D}} - 
+\boldsymbol{\omega}_E^{\mathcal{D}}$ to 
+
+\begin{equation}
+    \begin{aligned}
+        \begin{bmatrix}
+            - J_{E, v} \\
+            - R_D^T J_{E, \omega}
+        \end{bmatrix}
+        \dot{\mathbf{v}} + 
+        \begin{bmatrix}
+            - \dot{J}_{E, v} \\
+            - R_D^T [
+                \dot{J}_{E, \omega} 
+                -
+                \hat{\boldsymbol{\omega}}_D J_{E, \omega}
+            ]
+        \end{bmatrix}
+        \mathbf{v}
+        + \\ +
+        \begin{bmatrix}
+            \mathbf{a}_D^{\mathcal{D}} \\
+            \boldsymbol{\epsilon}_D^{\mathcal{D}}
+        \end{bmatrix}
+        + K_d
+        \begin{bmatrix}
+            \boldsymbol{\upsilon}_d\\
+            \boldsymbol{\omega}_d^{\mathcal{D}}
+        \end{bmatrix}
+        + K_p
+        \mathbf{e}_{\SE}(T_{\mathcal{W}}^{\mathcal{E}}, T_{\mathcal{W}}^{\mathcal{D}})
+        = \mathbf{0}
+    \end{aligned}
+    \label{eqn:control_e_const_simple}
+\end{equation}
+
+Hence, the $A$ and $\mathbf{b}$ are following
+
+\begin{equation}
+    \begin{aligned}
+        A & = 
+        \begin{bmatrix}
+            - J_{E, v} \\
+            - R_D^T J_{E, \omega}
+        \end{bmatrix} \\
+        \mathbf{b} & = 
+        \begin{bmatrix}
+            \dot{J}_{E, v} \\
+            R_D^T [
+                \dot{J}_{E, \omega} 
+                -
+                \hat{\boldsymbol{\omega}}_D J_{E, \omega}
+            ]
+        \end{bmatrix}
+        \mathbf{v}
+        - 
+        \begin{bmatrix}
+            \mathbf{a}_D^{\mathcal{D}} \\
+            \boldsymbol{\epsilon}_D^{\mathcal{D}}
+        \end{bmatrix}
+        - K_d
+        \begin{bmatrix}
+            \boldsymbol{\upsilon}_d\\
+            \boldsymbol{\omega}_d^{\mathcal{D}}
+        \end{bmatrix}
+        - K_p
+        \mathbf{e}_{\SE}(T_{\mathcal{W}}^{\mathcal{E}}, T_{\mathcal{W}}^{\mathcal{D}})
+    \end{aligned}
+    \label{eqn:a_and_b_control}
+\end{equation}
+
+Thus, the common algorithm is
+
+\begin{breakablealgorithm}
+    \caption{Computing $A$ and $\mathbf{b}$ for control of fixed point}
+
+    \begin{algorithmic}[1]
+        \Function{getFixedControlConstraint}{
+            combined system $\mathbf{S}_c$,
+            $\mathbf{q}$, $\mathbf{v}$, 
+            $E$, $T_{\mathcal{W}}^{\mathcal{D}}$, 
+            $\begin{bmatrix} \boldsymbol{\upsilon}_D^T & 
+            [\boldsymbol{\omega}_D^{\mathcal{D}}]^T \end{bmatrix}^T$, 
+            $\begin{bmatrix} \mathbf{a}_D^T & 
+            [\boldsymbol{\epsilon}_D^{\mathcal{D}}]^T \end{bmatrix}^T$
+        } : 
+        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}}$ for $\mathbf{S}_c$ 
+        at state $\mathbf{q}$
+        \State Compute velocities $\boldsymbol{\upsilon}_E$ and 
+        $\boldsymbol{\omega}_E$ for $\mathbf{S}_c$ at state $\mathbf{q}$, 
+        $\mathbf{v}$
+        \State Compute Jacobians $J_{E,v}$ and $J_{E, \omega}$ for $\mathbf{S}_c$ 
+        at state $\mathbf{q}$
+        \State Compute Jacobians time derivatives $\dot{J}_{E,v}$ and 
+        $\dot{J}_{E, \omega}$ for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Compute $A$ and $\mathbf{b}$ by equation (\ref{eqn:a_and_b_control})
+        \State \Return $A$, $\mathbf{b}$
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:get_a_and_b_control_fixed}
+\end{breakablealgorithm}
