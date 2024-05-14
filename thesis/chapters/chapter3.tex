@@ -268,7 +268,7 @@ investigations it is necessary to introduce a point velocity of the rigid body
         \base{8}{1}
         \draw[media] (8 + 0.4, 1 + 0.5) node {\Large $\mathbf{S}_2$};
     \end{tikzpicture}
-    \caption{Rigid body coupling with frames}
+    \caption{Rigid body ($\boldsymbol{\Sigma}$) coupling with frames}
     \label{fig:coupling_rigid_body}
 \end{figure}
 
@@ -867,3 +867,159 @@ Thus, the common algorithm is
     \end{algorithmic}
     \label{alg:get_a_and_b_control_fixed}
 \end{breakablealgorithm}
+
+Now let's consider the case of controlling point fixed on rigid body that couples 
+systems. The schematic representation of it is demonstrated on Fig. 
+\ref{fig:rigid_body_with_fixed_frame}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        media/.style={font={\footnotesize\sffamily}},
+        interface/.style={
+            % The border decoration is a path replacing decorator.
+            % For the interface style we want to draw the original path.
+            % The postaction option is therefore used to ensure that the
+            % border decoration is drawn *after* the original path.
+            postaction={draw,decorate,decoration={border,angle=-45,
+            amplitude=0.3cm,segment length=2mm}}},
+        ]
+        % Object
+        \draw [black, thick] plot [smooth cycle] coordinates {
+            (2.7, 2.2) (3.5, 3.4) (4.3, 3.8) 
+            (7.1, 2.6) (8.0, 2.0) (8.0, 1.3) 
+            (3.5, 1.0)
+        };
+        \draw[media] (5.0, 0.7) node {\Large $\boldsymbol \Sigma$};
+
+        % p_A
+        \draw[black, ->, dashed](4.000, -1.167) -- (2.800 + 0.02, 2.033 - 0.07);
+        \draw[media] (3.1, 0.40) node {\large $\mathbf{r}_A$}; 
+        % p_B
+        \draw[black, ->, dashed](4.000, -1.167) -- (8.000 - 0.05, 1.833 - 0.06);
+        \draw[media] (6.3, 0.1) node {\large $\mathbf{r}_B$}; 
+        % p_AB
+        \draw[black, ->, dashed](2.800, 2.033) -- (8.000 - 0.1, 1.833 + 0.05);
+        \draw[media] (5.4, 2.2) node {\large $\mathbf{r}_{AB}$};
+        % p_AC
+        \draw[black, ->, dashed](2.800, 2.033) -- (5.000 - 0.1,  3.333);
+        \draw[media] (3.8, 3.1) node {\large $\mathbf{r}_{AC}$};
+
+        % world frame
+        \draw[black, ->](4.000, -1.167) -- (5.102, -1.273);
+        \draw[black, ->](4.000, -1.167) -- (4.000, 0.000);
+        \draw[black, ->](4.000, -1.167) -- (3.318, -1.363);
+        \drawdot{4.000}{-1.167}
+        \draw[media] (4.400, -0.867) node {\Large $\mathcal{W}$}; 
+        \draw[media] (5.260, -1.288) node {\large $y$}; 
+        \draw[media] (4.000, 0.200) node {\large $z$}; 
+        \draw[media] (3.172, -1.406) node {\large $x$}; 
+
+        % A frame
+        \draw[black, ->](2.800, 2.033) -- (3.889, 1.628);
+        \draw[black, ->](2.800, 2.033) -- (2.800, 3.029);
+        \draw[black, ->](2.800, 2.033) -- (2.133, 1.289);
+        \drawdot{2.800}{2.033}
+        \draw[media] (2.100, 1.833) node {\Large $\mathcal{A}$}; 
+        \draw[media] (4.045, 1.570) node {\large $y$}; 
+        \draw[media] (2.800, 3.230) node {\large $z$}; 
+        \draw[media] (1.990, 1.130) node {\large $x$}; 
+
+        % B frame
+        \draw[black, ->](8.000, 1.833) -- (8.943, 2.371);
+        \draw[black, ->](8.000, 1.833) -- (7.515, 2.850);
+        \draw[black, ->](8.000, 1.833) -- (7.318, 1.637);
+        \drawdot{8.000}{1.833}
+        \draw[media] (8.700, 1.733) node {\Large $\mathcal{B}$};
+        \draw[media] (9.078, 2.448) node {\large $y$};
+        \draw[media] (7.446, 3.100) node {\large $z$};
+        \draw[media] (7.172, 1.594) node {\large $x$};
+
+        % C frame
+        \draw[black, ->](5.000, 3.333) -- (5.977, 3.480);
+        \draw[black, ->](5.000, 3.333) -- (4.476, 4.349);
+        \draw[black, ->](5.000, 3.333) -- (4.333, 2.589);
+        \drawdot{5.000}{3.333}
+        \draw[media] (5.400, 3.733) node {\Large $\mathcal{C}$}; 
+        \draw[media] (6.116, 3.501) node {\large $y$}; 
+        \draw[media] (4.364, 4.566) node {\large $z$}; 
+        \draw[media] (4.190, 2.430) node {\large $x$}; 
+
+        % Draw first manipulator
+        \draw[black, ultra thick](0, 0) -- (0.5, 1.8);
+        \draw[black, ultra thick](0.5, 1.8) -- (2.5, 2.2);
+        % Gripper
+        \gripper{2.5}{2.2}{3.3}{2.36}
+        % Draw second point mass
+        \drawpointmasssimple{0.5}{1.8}
+        \base{0}{0}
+        \draw[media] (-0.3, 0.6) node {\Large $\mathbf{S}_1$};
+        
+        % % Draw the second manipulator
+        \draw[black, ultra thick](10, 1) -- (9.577, 3.577);
+        \draw[black, ultra thick](9.577, 3.577) -- (8.177, 2.177);
+        % % Gripper
+        \gripper{8.177}{2.177}{7.6}{1.6}
+        % % Draw second point mass
+        \drawpointmasssimple{9.577}{3.577}
+        \base{10}{1}
+        \draw[media] (10 + 0.4, 1 + 0.5) node {\Large $\mathbf{S}_2$};
+    \end{tikzpicture}
+    \caption{Rigid body ($\boldsymbol{\Sigma}$) coupling with fixed frame on it}
+    \label{fig:rigid_body_with_fixed_frame}
+\end{figure}
+
+It is easy to see that control law in this case is similar to equation 
+(\ref{eqn:kinematic_dif_eqn_simple}). The key difference is that target frame has 
+no Jacobians to represent frame velocities. Also it is necessary to add acceleration 
+part to $\mathbf{b}$. It leads to 
+
+\begin{equation}
+    \begin{aligned}
+        A & =
+        \begin{bmatrix}
+            \tilde{J}_v \\
+            \tilde{J}_{\omega}
+        \end{bmatrix} \\
+        \mathbf{b} & = 
+        -\begin{bmatrix}
+            \dot{\tilde{J}}_v \\
+            \dot{\tilde{J}}_{\omega}
+        \end{bmatrix}
+        \mathbf{v}
+        - \begin{bmatrix}
+          \mathbf{a}_D \\
+          \boldsymbol{\epsilon}_D^{\mathcal{D}}  
+        \end{bmatrix}
+        - K_d
+        \begin{bmatrix}
+            \boldsymbol{\upsilon}_d \\
+            \boldsymbol{\omega}_d^{\mathcal{D}}
+        \end{bmatrix}
+        - K_p
+        \mathbf{e}_{\SE}(
+            T_{\mathcal{W}}^{\mathcal{E}} \cdot
+            T_{\mathcal{A}}^{\mathcal{C}}, 
+            T_{\mathcal{W}}^{\mathcal{D}}
+        )
+    \end{aligned}
+    \label{eqn:b_control_rigid_b}
+\end{equation}
+
+where $\tilde{J}_v$, $\tilde{J}_{\omega}$, $\dot{\tilde{J}}_v$, and 
+$\dot{\tilde{J}}_{\omega}$ are
+
+\begin{equation}
+    \begin{aligned}
+        \tilde{J}_v & = -J_{E,v} + [R_E \mathbf{r}_{AC}^{\mathcal{A}}]^{\wedge}
+        J_{E, \omega} \\
+        \tilde{J}_{\omega} & = - R_E^T J_{E, \omega} \\
+        \dot{\tilde{J}}_v & = -\dot{J}_{E, v} + 
+        \hat{\boldsymbol{\omega}}_E \hat{\mathbf{r}}_{AC} J_{E, \omega} + 
+        \hat{\mathbf{r}}_{AC} \dot{J}_{E, \omega} \\
+        \dot{\tilde{J}}_{\omega} & = - R_E^T [
+            \dot{J}_{E, \omega} - \hat{\boldsymbol{\omega}}_E J_{E, \omega}
+        ]
+    \end{aligned}
+    \label{eqn:jacobians_for_rigid_control}
+\end{equation}
