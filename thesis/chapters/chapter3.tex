@@ -5,7 +5,12 @@ This chapter will present a detailed explanation of the principles underlying th
 proposed methodology. The section \ref{sec:rigid_body_and_const} offers a concise 
 overview of rigid-body systems and constraints that can be imposed on them.
 The next section \ref{sec:udwadia_kalaba_app} introduces the Udwadia-Kalaba 
-approach and physical principles that stays behind it.
+approach and physical principles that stays behind it. Further in Section 
+\ref{sec:def_rigid_body_const}, this technique is applied to solve the discussed 
+problem. Then Section \ref{sec:control_through_udwadia} use the Udwadia-Kalaba 
+approach to construct a control law. Finally, Section 
+\ref{sec:task_prioritization} contains thoughts about prioritization constraint 
+task over control one. 
 
 \section{Rigid-body systems and constraints} 
 \label{sec:rigid_body_and_const}
@@ -177,6 +182,7 @@ rigid body constraint in computation easily. Only the problem with rigorous
 defining $A$ and $\mathbf{b}$ remains.
 
 \section{Defying rigid body constraint}
+\label{sec:def_rigid_body_const}
 
 As mentioned above the discussed coupling between physical systems is created 
 by some rigid body. This type of mathematical object can be described by the 
@@ -729,7 +735,8 @@ than $A$ and $\mathbf{b}$ can be found by the following algorithm
     \label{alg:get_a_and_b}
 \end{algorithm}
 
-\section{Control through the Udwadia-Kalaba approach}
+\section{Control through the Udwadia-Kalaba approach} 
+\label{sec:control_through_udwadia}
 
 As shown above, the Udwadia-Kalaba approach can be used to impose both holonomic and 
 non-holonomic constraints. Therefore, it can be applied for constructing controls. 
@@ -1003,14 +1010,20 @@ part to $\mathbf{b}$. It leads to
             T_{\mathcal{W}}^{\mathcal{D}}
         )
     \end{aligned}
-    \label{eqn:b_control_rigid_b}
+    \label{eqn:a_and_b_control_rigid_b}
 \end{equation}
 
-where $\tilde{J}_v$, $\tilde{J}_{\omega}$, $\dot{\tilde{J}}_v$, and 
+where $\boldsymbol{\upsilon}_d$, $\boldsymbol{\omega}_d^{\mathcal{D}}$, 
+$\tilde{J}_v$, $\tilde{J}_{\omega}$, $\dot{\tilde{J}}_v$, and 
 $\dot{\tilde{J}}_{\omega}$ are
 
 \begin{equation}
     \begin{aligned}
+        \boldsymbol{\upsilon}_d & = \boldsymbol{\upsilon}_D - 
+        \boldsymbol{\upsilon}_E - \boldsymbol{\omega}_E \times \mathbf{r}_{AC} \\
+        \boldsymbol{\omega}_d^{\mathcal{D}} & = 
+        \boldsymbol{\omega}_D^{\mathcal{D}} - 
+        \boldsymbol{\omega}_E^{\mathcal{D}}\\
         \tilde{J}_v & = -J_{E,v} + [R_E \mathbf{r}_{AC}^{\mathcal{A}}]^{\wedge}
         J_{E, \omega} \\
         \tilde{J}_{\omega} & = - R_E^T J_{E, \omega} \\
@@ -1019,7 +1032,132 @@ $\dot{\tilde{J}}_{\omega}$ are
         \hat{\mathbf{r}}_{AC} \dot{J}_{E, \omega} \\
         \dot{\tilde{J}}_{\omega} & = - R_E^T [
             \dot{J}_{E, \omega} - \hat{\boldsymbol{\omega}}_E J_{E, \omega}
-        ]
+        ] 
     \end{aligned}
     \label{eqn:jacobians_for_rigid_control}
 \end{equation}
+
+The algorithm is following 
+
+\begin{algorithm}
+    \caption{Computing $A$ and $\mathbf{b}$ for control of the connecting 
+    rigid body}
+
+    \begin{algorithmic}[1]
+        \Function{getRigidBodyControlConstraint}{
+            combined system $\mathbf{S}_c$,
+            $\mathbf{q}$, $\mathbf{v}$, 
+            $E$, $T_{\mathcal{A}}^{\mathcal{C}}$, 
+            $T_{\mathcal{W}}^{\mathcal{D}}$, 
+            $\begin{bmatrix} \boldsymbol{\upsilon}_D^T & 
+            [\boldsymbol{\omega}_D^{\mathcal{D}}]^T \end{bmatrix}^T$, 
+            $\begin{bmatrix} \mathbf{a}_D^T & 
+            [\boldsymbol{\epsilon}_D^{\mathcal{D}}]^T \end{bmatrix}^T$
+        } : 
+        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}}$ and 
+        velocities $\boldsymbol{\upsilon}_E$, $\boldsymbol{\omega}_E$ 
+        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Obtain Jacobians $J_{E,v}$, $J_{E, \omega}$ and 
+        Jacobians time derivatives $\dot{J}_{E,v}$, $\dot{J}_{E, \omega}$ 
+        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Get $\boldsymbol{\upsilon}_d$, $\boldsymbol{\omega}_d^{\mathcal{D}}$, 
+        $\tilde{J}_v$, $\tilde{J}_{\omega}$, $\dot{\tilde{J}}_v$, and 
+        $\dot{\tilde{J}}_{\omega}$ by equation 
+        (\ref{eqn:jacobians_for_rigid_control})
+        \State Calculate $A$ and $\mathbf{b}$ by equation 
+        (\ref{eqn:a_and_b_control_rigid_b})
+        \State \Return $A$, $\mathbf{b}$
+        \EndFunction
+    \end{algorithmic}
+    \label{alg:get_a_and_b_control_rigid}
+\end{algorithm}
+
+
+\section{Task prioritization}
+\label{sec:task_prioritization}
+
+After defining algorithm for obtaining $A$ and $\mathbf{b}$ it is necessary to 
+consider the prioritization problem. Let's consider the following case. The 
+combined system $\mathbf{S}_c$ has $n_v$ degree of freedom. There are $n_c$ 
+rigid body constraints and $n_u$ controls laws imposed on it. Thus, the minimal 
+requirement for problem to be solvable is
+
+\begin{equation}
+    n_v \geq 6 \cdot (n_c + n_u)
+\end{equation}
+
+Although this equation is useful for brief estimation, but it is still necessary 
+condition. The control issues can arise due to the complex topological structure 
+of joint space manifold. Hence, there are two options prove that desired 
+trajectory is out off null space, or introduce some prioritization technique.
+
+In the first case, it is enough to use combined matrices: \\
+$A = \begin{bmatrix} A_c^T & A_u^T \end{bmatrix}^T$, and 
+$\mathbf{b} = \begin{bmatrix} \mathbf{b}_c^T & \mathbf{b}_u^T \end{bmatrix}^T$ 
+with the Udwadia-Kalaba approach, where $A_c$, $A_u$, $\mathbf{b}_c$, and 
+$\mathbf{b}_u$ are 
+
+\begin{equation}
+    \begin{aligned}
+        A_c & = \begin{bmatrix}
+            A_{c_1}^T & A_{c_2}^T & \dots & A_{c_{n_c}}^T
+        \end{bmatrix}^T \\
+        A_u & = \begin{bmatrix}
+            A_{u_1}^T & A_{u_2}^T & \dots & A_{u_{n_u}}^T
+        \end{bmatrix}^T \\
+        \mathbf{b}_c &= \begin{bmatrix}
+            \mathbf{b}_{c_1}^T & \mathbf{b}_{c_2}^T & \dots & 
+            \mathbf{b}_{c_{n_c}}^T
+        \end{bmatrix}^T \\
+        \mathbf{b}_u &= \begin{bmatrix}
+            \mathbf{b}_{u_1}^T & \mathbf{b}_{u_2}^T & \dots & 
+            \mathbf{b}_{u_{n_u}}^T
+        \end{bmatrix}^T \\
+    \end{aligned}
+    \label{eqn:combined_a_and_b}
+\end{equation}
+
+However, the discussed approach is not general. It is rare to proof 
+controllability in real life cases. 
+
+The second way to figure out the problem is prioritization. The most rigorous 
+technique to achieve is utilizing null space. Generally, it is preferable to 
+strongly preserve the rigid body constraints and try to find the least square 
+solution for control task. Such method can be expressed as 
+
+\begin{equation}
+    \begin{aligned}
+        \min_{\dot{\mathbf{v}}} \quad & 
+        [A_u \dot{\mathbf{v}} - \mathbf{b}_u]^T 
+        [A_u \dot{\mathbf{v}} - \mathbf{b}_u]\\
+        \textrm{s.t.} \quad & \dot{\mathbf{v}} = A_c^{+} \mathbf{b}_c + 
+        \dot{\mathbf{v}}_u \\ 
+        \quad & \dot{\mathbf{v}}_u \in \mathcal{N}(A_c)
+    \end{aligned}
+    \label{eqn:task_prior_null_space}
+\end{equation}
+
+The above optimization prioritization is analytically solvable but solution 
+is not convenient to use in terms of equation (\ref{eqn:gauss_least_const}). 
+Therefore, it is easy to reformulate the Gauss least constraint principle and 
+include prioritization:
+
+\begin{equation}
+    \begin{aligned}
+        \min_{\dot{\mathbf{v}}} \quad &
+        [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] +
+        \omega 
+        [A_u \dot{\mathbf{v}} - \mathbf{b}_u]^T 
+        [A_u \dot{\mathbf{v}} - \mathbf{b}_u]\\
+        \textrm{s.t.} \quad &
+        A_c \dot{\mathbf{v}} = \mathbf{b}_c \\
+        &
+        \mathbf{a} = M^{-1} \mathbf{Q}
+    \end{aligned}
+    \label{eqn:gauss_least_const_prior}
+\end{equation}
+
+where $\omega > 0$ tunable parameter. Due to $M \succcurlyeq 0 $ and 
+$A_u^T A_u \succcurlyeq 0$ the optimization problem 
+(\ref{eqn:gauss_least_const_prior}) is quadratic task. Hence, it is always
+has a solution and can be solved fast by modern frameworks.
