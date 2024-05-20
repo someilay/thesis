@@ -102,9 +102,32 @@
 \usepackage[section]{algorithm}
 \usepackage{algpseudocode}
 \usepackage{tikz}
+\usepackage{listings}
 \usetikzlibrary{%
     decorations.pathreplacing,%
     decorations.pathmorphing%
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset { %
+  captionpos=b,
+  frame=tb,
+  language=C++,
+  showstringspaces=false,
+  columns=flexible,
+  % basicstyle={\small\ttfamily},
+  basicstyle={\linespread{1}\ttfamily},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
 }
 
 \pagestyle{fancyplain}
@@ -220,7 +243,7 @@
 \newpage
 
 % \include{chapters/abstract}
-\setcounter{page}{7}
+\setcounter{page}{1}
 % set manually the number, from which Chapter 1 starts!
 % Why do we put 7 in this case?
 % Title page - page 1
