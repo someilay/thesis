@@ -6,6 +6,8 @@ notes/test/
 
 src/mujoco/build
 src/mujoco/*/build
+src/mujoco/*/*.png
+src/mujoco/*/*.csv
 src/mujoco/*/MUJOCO_LOG.TXT
 
 *.html

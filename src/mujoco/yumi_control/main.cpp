@@ -67,6 +67,7 @@ struct _config {
     string urdfModelPath = "yumi/yumi.urdf";
     string startObjName = "yumi_link_7_l";
     string endObjName = "yumi_link_7_r";
+    string simDataDumpFile = "sim_data.csv";
 
     double timesSlower = 1;
     bool simPaused = false;
@@ -84,6 +85,9 @@ struct _config {
     double controlKP = 0;
     double controlKD = 0;
     double controlWeight = 1;
+    double omega = 1;
+    double radius = 0.12;
+    double phi_0 = M_PI_2;
 
     vector<double> q0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     bool bodyFrameEnabled = true;
@@ -96,6 +100,106 @@ struct _indices {
     int_idx startIdx;
     int_idx endIdx;
 } typedef Indices;
+
+struct _simData {
+    vector<double> ts;
+    vector<int> elapsedTs;
+    vector<VecXd> qs;
+    vector<VecXd> dqs;
+    vector<pin::SE3> startPoses;
+    vector<pin::SE3> endPoses;
+    vector<pin::SE3> desPoses;
+    vector<pin::Motion> startVels;
+    vector<pin::Motion> endVels;
+    vector<pin::Motion> desVels;
+    vector<Vec6d> constErrors;
+    vector<Vec6d> controlErrors;
+
+    void dumpDataToCsv(string filename) {
+        size_t rows = std::min(
+            {ts.size(),
+             elapsedTs.size(),
+             qs.size(),
+             dqs.size(),
+             startPoses.size(),
+             endPoses.size(),
+             startVels.size(),
+             endVels.size(),
+             constErrors.size(),
+             controlErrors.size(),
+             desPoses.size()}
+        );
+
+        if (rows == 0) {
+            printf("Cannot save simulation data, no rows!\n");
+            return;
+        }
+
+        std::ofstream dump(filename);
+
+        // write header
+        dump << "time;";
+        dump << "elapsed time;";
+        dump << "q;";
+        dump << "dq;";
+        dump << "start rot;";
+        dump << "end rot;";
+        dump << "desired rot;";
+        dump << "start translation;";
+        dump << "end translation;";
+        dump << "desired translation;";
+        dump << "start vel;";
+        dump << "end vel;";
+        dump << "desired vel;";
+        dump << "constraint error;";
+        dump << "control error";
+        dump << "\n";
+
+        // write data
+        for (size_t i = 0; i < rows; i++) {
+            VecXd startRotF = Eigen::Map<VecXd>(startPoses[i].rotation().data(), 9);
+            VecXd endRotF = Eigen::Map<VecXd>(endPoses[i].rotation().data(), 9);
+            VecXd desRotF = Eigen::Map<VecXd>(desPoses[i].rotation().data(), 9);
+
+            dump << ts[i] << ";";
+            dump << elapsedTs[i] << ";";
+            writeVecToFile(qs[i], dump);
+            writeVecToFile(dqs[i], dump);
+            writeVecToFile(startRotF, dump);
+            writeVecToFile(endRotF, dump);
+            writeVecToFile(desRotF, dump);
+            writeVecToFile(startPoses[i].translation(), dump);
+            writeVecToFile(endPoses[i].translation(), dump);
+            writeVecToFile(desPoses[i].translation(), dump);
+            writeVecToFile(startVels[i].toVector(), dump);
+            writeVecToFile(endVels[i].toVector(), dump);
+            writeVecToFile(desVels[i].toVector(), dump);
+            writeVecToFile(constErrors[i], dump);
+            writeVecToFile(controlErrors[i], dump, true);
+        }
+    }
+
+    template <int S> void writeVecToFile(Eigen::Matrix<double, S, 1> &v, std::ofstream &file, bool newLine = false) {
+        size_t len = v.size();
+
+        if (!len) {
+            file << "[]";
+            return;
+        }
+
+        file << "[";
+        for (size_t i = 0; i < len - 1; i++) {
+            file << v(i) << ", ";
+        }
+        file << v(len - 1) << "]";
+
+        if (newLine) {
+            file << "\n";
+        } else {
+            file << ";";
+        }
+    }
+} typedef SimData;
 
 void printVector(double *arr, int len, bool newLine = true) {
     if (len == 0) {
@@ -211,16 +315,19 @@ void initConfig(int argc, char **argv, Config &config) {
     config.camElevation =
         tryToReadField<inicpp::float_ini_t>(iniFile, "Simulation", "cam_elevation", config.camElevation);
     config.camAzimuth = tryToReadField<inicpp::float_ini_t>(iniFile, "Simulation", "cam_azimuth", config.camAzimuth);
+    config.simDataDumpFile =
+        tryToReadField<inicpp::string_ini_t>(iniFile, "Simulation", "sim_data_dump_file", config.simDataDumpFile);
 
     // control configs
     config.startObjName = tryToReadField<inicpp::string_ini_t>(iniFile, "Control", "start_obj", config.startObjName);
     config.endObjName = tryToReadField<inicpp::string_ini_t>(iniFile, "Control", "end_obj", config.endObjName);
-
     config.controlKP = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "KP", config.controlKP);
     config.controlKD = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "KD", config.controlKD);
     config.controlWeight = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "weight", config.controlWeight);
-
     config.q0 = tryToReadList<inicpp::float_ini_t>(iniFile, "Control", "q0", config.q0);
+    config.omega = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "omega", config.omega);
+    config.radius = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "radius", config.radius);
+    config.phi_0 = tryToReadField<inicpp::float_ini_t>(iniFile, "Control", "phi_0", config.phi_0);
 
     // constraints configs
     double roll = tryToReadField<inicpp::float_ini_t>(iniFile, "Constraint", "d_roll", 0);
@@ -321,8 +428,7 @@ void qAddrAlignedSame(mjModel *muj_m, pin::Model &pin_m, bool showQaddr) {
         );
 
         if (showQaddr)
-            cout << frame.name << " -> "
-                 << "qaddr = " << joint.idx_q() << ", vaddr = " << joint.idx_v() << "\n";
+            cout << frame.name << " -> " << "qaddr = " << joint.idx_q() << ", vaddr = " << joint.idx_v() << "\n";
     }
 }
 
@@ -675,19 +781,55 @@ VecXd getControlForces(
     return res;
 }
 
-pin::SE3 getDesPos(double t, double w, double r) {
-    Vec3d tr = {0.536763 - 0.1, 0.185684, 0.412661 + 0.1 + r * sin(w * t)};
+pin::SE3 getDesPos(double t, double omega, double r, double phi_0 = 0) {
+    double phi = omega * t + phi_0;
+    Vec3d tr = {0.536763 - 0.1 + r * cos(phi), 0.185684, 0.412661 + 0.1 + r * sin(phi)};
     return pin::SE3(Mat3d::Identity(), tr);
 }
 
-pin::Motion getDesVel(double t, double w, double r) {
-    Vec3d lin = {0, 0, r * w * cos(w * t)};
+pin::Motion getDesVel(double t, double omega, double r, double phi_0 = 0) {
+    double phi = omega * t + phi_0;
+    Vec3d lin = {-r * omega * sin(phi), 0, r * omega * cos(phi)};
     return pin::Motion(lin, Vec3d::Zero());
 }
 
-pin::Motion getDesAcc(double t, double w, double r) {
-    Vec3d lin = {0, 0, -r * w * w * sin(w * t)};
+pin::Motion getDesAcc(double t, double omega, double r, double phi_0 = 0) {
+    double phi = omega * t + phi_0;
+    Vec3d lin = {-r * omega * omega * cos(phi), 0, -r * omega * omega * sin(phi)};
     return pin::Motion(lin, Vec3d::Zero());
+}
+
+void updateSimData(
+    SimData &simData,
+    Config &config,
+    pin::Model &m,
+    pin::Data &d,
+    Indices &indices,
+    VecXd &q,
+    VecXd &dq,
+    pin::SE3 &tDiff,
+    double t,
+    int elapsedTime
+) {
+    pin::SE3 tStart(d.oMf[indices.startIdx]);
+    pin::SE3 tEnd(d.oMf[indices.endIdx]);
+    pin::SE3 desPos = getDesPos(t, config.omega, config.radius, config.phi_0);
+    pin::Motion desVel = getDesVel(t, config.omega, config.radius, config.phi_0);
+    Vec6d eConst = errorInSE3(tStart * tDiff, tEnd);
+    Vec6d eControl = errorInSE3(tStart, desPos);
+
+    simData.ts.push_back(t);
+    simData.elapsedTs.push_back(elapsedTime);
+    simData.qs.push_back(VecXd(q));
+    simData.dqs.push_back(VecXd(dq));
+    simData.startPoses.push_back(tStart);
+    simData.endPoses.push_back(tEnd);
+    simData.desPoses.push_back(desPos);
+    simData.startVels.push_back(getClassicVel(m, d, q, dq, indices.startIdx, false));
+    simData.endVels.push_back(getClassicVel(m, d, q, dq, indices.endIdx, false));
+    simData.desVels.push_back(desVel);
+    simData.constErrors.push_back(eConst);
+    simData.controlErrors.push_back(eControl);
 }
 
 void mainLoop(
@@ -707,7 +849,7 @@ void mainLoop(
     VecXd q(pin_m.nq);
     VecXd dq(pin_m.nv);
     // bias forces
-    VecXd q_bias(pin_m.nv);
+    VecXd qBias(pin_m.nv);
     // constraints force
     VecXd qc(pin_m.nv);
     // define QP
@@ -743,6 +885,9 @@ void mainLoop(
         cout << "PAUSED!!!\n";
     }
 
+    // create sim data
+    SimData simData;
+
     // init mujoco simulation
     mj_checkPos(muj_m, muj_d);
     mj_checkVel(muj_m, muj_d);
@@ -752,6 +897,10 @@ void mainLoop(
 
     // Main loop
     double prevStump = 0;
+    double omega = 1;
+    double radius = 0.12;
+    double phi_0 = 0;
+
     while (!glfwWindowShouldClose(window)) {
         mjtNum sim_start = muj_d->time;
 
@@ -759,18 +908,18 @@ void mainLoop(
         cntElapsed = 0;
         while (muj_d->time - sim_start < 1.0 / (60.0 * config.timesSlower) && !config.simPaused) {
             setState(muj_m, muj_d, q, dq);
-            q_bias = -pin::rnea(pin_m, pin_d, q, dq, VecXd::Zero(pin_m.nv));
+            qBias = -pin::rnea(pin_m, pin_d, q, dq, VecXd::Zero(pin_m.nv));
 
-            auto desPos = getDesPos(muj_d->time, 1, 0.12);
-            auto desVel = getDesVel(muj_d->time, 1, 0.12);
-            auto desAcc = getDesAcc(muj_d->time, 1, 0.12);
+            auto desPos = getDesPos(muj_d->time, config.omega, config.radius, config.phi_0);
+            auto desVel = getDesVel(muj_d->time, config.omega, config.radius, config.phi_0);
+            auto desAcc = getDesAcc(muj_d->time, config.omega, config.radius, config.phi_0);
 
             qc = getControlForces(
                 pin_m,
                 pin_d,
                 q,
                 dq,
-                q_bias,
+                qBias,
                 tDiff,
                 desPos,
                 desVel,
@@ -786,7 +935,7 @@ void mainLoop(
 
             meanElapsedTime += elapsedTime;
             cntElapsed += 1;
-
+            updateSimData(simData, config, pin_m, pin_d, indices, q, dq, tDiff, muj_d->time, elapsedTime);
             mj_step(muj_m, muj_d);
         }
         meanElapsedTime = (int)((double)meanElapsedTime / cntElapsed);
@@ -797,7 +946,7 @@ void mainLoop(
 
         // print telemetry
         if (muj_d->time - prevStump > config.telemetryTimeDelta) {
-            auto desPos = getDesPos(muj_d->time, 1, 0.12);
+            auto desPos = getDesPos(muj_d->time, config.omega, config.radius, config.phi_0);
 
             printf("Time: %.3f", muj_d->time);
             printf(", QP elapsed time: %d mcs", meanElapsedTime);
@@ -832,6 +981,7 @@ void mainLoop(
         // process pending GUI events, call GLFW callbacks
         glfwPollEvents();
     }
+    simData.dumpDataToCsv(config.simDataDumpFile);
 
     // close GLFW, free visualization storage
     glfwTerminate();
