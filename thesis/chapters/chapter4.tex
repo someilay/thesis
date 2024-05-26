@@ -7,7 +7,7 @@ contains information about chosen system and its properties. Then, in Section
 \ref{sec:frameworks} the discussion of used frameworks and utils is presented. 
 Consequently, these tools are used in Section \ref{sec:impl_details} to show 
 how the proposed algorithms can be implemented. Finally, Section 
-\ref{sec:sim_results} contains results of numerical experiments with their 
+\ref{sec:sim_results} contains results of numerical experiment with its 
 evaluation.
 
 \section{Dual-arm YuMi}
@@ -17,7 +17,7 @@ To prove the workability of the suggested methodology the dual-arm YuMi
 manipulator is chosen, see Fig. \ref{fig:dual_arm_yumi}. It has 18 DoF, namely: 
 7 rotation and 2 prismatic (fingers) joints per each arm. 
 
-In simulation the total DoF was reduced to 14 by fixing end-effectors' fingers. 
+In simulation the total DoF was reduced to 14 by fixing end-effectors fingers. 
 Also for demonstration purposes the joint limits and body collisions were 
 removed. Otherwise, their presence could influence on final results.
 
@@ -43,17 +43,18 @@ library for solving the Gauss least constraint principle
 
 Firstly, let's discuss chosen simulator, MuJoCo \cite{MuJoCo}. It is general 
 physical engine. In this study this framework is used to calculate system 
-behavior under given Control. Also, it provides way to visualize robot. From 
+behavior under given control. Also, it provides way to visualize robot. From 
 control point of view MuJoCo is only needed to give $\mathbf{q}$ and $\mathbf{v}$ 
-at each step. 
+at each time step. 
 
 The system state is transferred to dynamic computing tool. This paper is utilizing 
 Pinocchio \cite{Pinocchio} library. It is modern and efficient instrument for 
 calculating kinematic and dynamic for given system. Notably, this frameworks 
 supports the URDF, which is very convenient in the context of the selected system. 
-Moreover, Pinocchio provides fast computational utils. Authors of tool give 
-the following quantities, see Fig. \ref{fig:pin_speed}. For implementation this 
-library is necessary to calculate Jacobians, attitudes of frames, and velocities.
+Moreover, Pinocchio provides fast computing tools that can be further accelerated 
+by code autogeneration tools. Authors of tool give the following quantities, see 
+Fig. \ref{fig:pin_speed}. For implementation of proposed method this library is 
+necessary only for calculating Jacobians, attitudes of frames, and velocities.
 
 \begin{figure}[H]
     \centering
@@ -152,11 +153,13 @@ worth to be explained due to their triviality.
 
 All snippets above are used for experiment. They can be found in the repository 
 \cite{experimentsRepo}. However, for optimization and readability they 
-are realized not in the same order. In the provided code algorithm 
+are realized not in the same order. Also for the same purposes, auto-generation is 
+not used in this example. In the provided code algorithm 
 \ref{alg:get_a_and_b} is demonstrated in \texttt{getConstraintsAffineDesc}, 
 algorithm \ref{alg:get_a_and_b_control_fixed} is shown in \\
 \texttt{getControlAffineDesc}, the last one \ref{alg:get_a_and_b_control_rigid} 
-can be implemented by function \\ \texttt{getAffineDesc}.
+can be implemented by function \\ \texttt{getAffineDesc}. Again, see 
+\cite{experimentsRepo}.
 
 Now let's discuss the transformation of equation 
 (\ref{eqn:gauss_least_const_prior}) for ProxSuite framework. This library can 
@@ -178,7 +181,7 @@ other quantities are arbitrary.
 
 In case of the Gauss least constraint principle the last line of quadratic 
 problem (\ref{eqn:prox_qp_form}) is unnecessary. Hence, it is enough 
-to pen brackets of equation (\ref{eqn:gauss_least_const_prior}):
+to open brackets of equation (\ref{eqn:gauss_least_const_prior}):
 
 \begin{equation}
     \begin{aligned}
@@ -310,6 +313,6 @@ same as velocities.
 \end{figure}
 
 The obtained results of numerical experiment proves the workability 
-of suggested methodology. Nevertheless, results demonstrate convergence 
+of suggested methodology. Nevertheless, results does not demonstrate convergence 
 of over-damped system. Thus, finetuning of $K_p$, $K_d$ is still needs 
 further investigations.

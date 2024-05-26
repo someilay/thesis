@@ -31,7 +31,7 @@ inner stiffness can be described.
 
 Nevertheless, the mathematical tools to work with rigid-body systems was introduced 
 in \RNum{18}-th century by Newton and Euler works. Using this approach it is easy 
-to formulate a set f deferential equations that describes the system behavior.
+to formulate a set of deferential equations that describes the system behavior.
 However, in this study the another (more convenient) technique is utilized. It is 
 called the least action principle. The formulation is the following equation
 
@@ -177,7 +177,7 @@ expressed in the following manner
     \label{eqn:constraint_forces}
 \end{equation}
 
-Hence, the Udwadia-Kalaba approach is applicable for emulation a of 
+Hence, the Udwadia-Kalaba approach is applicable for emulation of 
 rigid body constraint in computation easily. Only the problem with rigorous 
 defining $A$ and $\mathbf{b}$ remains.
 
@@ -194,7 +194,8 @@ following identity for any two points
 \end{equation}
 
 From the above equation kinematic laws can be directly derived. For further 
-investigations it is necessary to introduce a point velocity of the rigid body
+investigations it is necessary to introduce a point's velocity of the rigid 
+body
 
 \begin{figure}[H]
     \centering
@@ -312,7 +313,7 @@ Now it is possible to define a holonomic constraint that emulates a coupling
 through a rigid body. Let $E_1$, $E_2$ are some \emph{fixed frames} of 
 $S_1$, $S_2$ respectively, see Fig. \ref{fig:coupling_rigid_body}; $A$, $B$ are 
 some points of the rigid body $\Sigma$. Also, let's suppose that for any $t \geq 0$, 
-$A$ and $E_1$ correspond. Thus, 
+$\mathcal{A}$ and $\mathcal{E}_1$ correspond. Thus, 
 
 \begin{equation}
     \varphi(\mathbf{q}) = \mathbf{e}_{\SE}(
@@ -339,7 +340,7 @@ $\log$ in \ref{eqn:se3error} is a matrix logarithm defined by
 inspired by \cite{OutFeedbackStabForOrbRob} and \cite{ANonlinearObserverUsingPose}. 
 
 Equation (\ref{eqn:initial_phi}) should be differentiated twice to obtain $A$ and 
-$\mathbf{b}$. However, even if matrix logarithm had a simple second derivative. 
+$\mathbf{b}$. However, even if matrix logarithm had a simple second derivative 
 the Udwadia-Kalaba approach cannot guarantee a stability. As Ferdaus Udwadia and 
 Robert Kalaba showed \cite{udwadia1996analytical} the straightforward application 
 of technique suffers from constraint drift during numerical integration. Hence, 
@@ -455,7 +456,8 @@ transforms to
         \label{eqn:stab_theorem_dif_eqn_simple}
     \end{equation}
 
-    By utilizing equation (\ref{eqn:ang_with_dot_r}) is
+    By utilizing equation (\ref{eqn:ang_with_dot_r}), $\dot{\mathbf{e}}$ can 
+    be found as 
 
     \begin{equation}
         \frac{d}{dt} \log \tilde{R} 
@@ -542,7 +544,7 @@ differential equations. The linear part is
 
 The above equation (\ref{eqn:kinematic_dif_eqn_lin}) is asymptotic stable for any 
 $K_p$ and $K_d$ such that the characteristics equation has a negative roots 
-(real part). The best convergence can be achieved if $K_p = \omega^2$ and 
+(real parts). The best convergence can be achieved if $K_p = \omega^2$ and 
 $K_d = 2 \omega$. The angular part is 
 
 \begin{equation}
@@ -585,7 +587,7 @@ Firstly, let's define a velocities
     \label{eqn:velocities_from_q}
 \end{equation}
 
-where $J_{X,v}$, $J_{X,\omega}$ are linear and angular velocity of frame 
+where $J_{X,v}$, $J_{X,\omega}$ are linear and angular Jacobians of frame 
 $\mathcal{X}$ with origin at $X$ respectively. The equation above can be simplified  
 to 
 
@@ -738,19 +740,19 @@ than $A$ and $\mathbf{b}$ can be found by the following algorithm
 \label{sec:control_through_udwadia}
 
 As shown above, the Udwadia-Kalaba approach can be used to impose both holonomic and 
-non-holonomic constraints. Therefore, it can be applied for constructing controls. 
+non-holonomic constraints. Therefore, it can be applied for constructing control too. 
 Let's consider two possible scenarios: controlling a system frame, or controlling the 
 fixed frame of a rigid body connecting systems.
 
 For both cases the desired law of motion described by the following quantities: 
-$T_{\mathcal{W}}^{\mathcal{D}}$, $\begin{bmatrix} \boldsymbol{\upsilon}_D^T & 
-[\boldsymbol{\omega}_D^{\mathcal{D}}]^T \end{bmatrix}^T$, $\begin{bmatrix} 
-\mathbf{a}_D^T & [\boldsymbol{\epsilon}_D^{\mathcal{D}}]^T \end{bmatrix}^T$ are 
-desired attitude, velocity and acceleration respectively. These values should not be 
-a contradictory for sure. 
+$T_{\mathcal{W}}^{\mathcal{D}}$, $\text{columnVec}(\boldsymbol{\upsilon}_D, \ 
+\boldsymbol{\omega}_D^{\mathcal{D}})$, $\text{columnVec}(\mathbf{a}_D, \ 
+\boldsymbol{\epsilon}_D^{\mathcal{D}})$ are desired attitude, velocity and 
+acceleration respectively. These values should not be a contradictory for 
+sure. 
 
 Now it is possible to define control for some fixed frame $\mathcal{E}$ of system. 
-The holonomic is 
+The holonomic constraint is 
 
 \begin{equation}
     \begin{bmatrix}
@@ -843,7 +845,7 @@ Hence, the $A$ and $\mathbf{b}$ are following
     \label{eqn:a_and_b_control}
 \end{equation}
 
-Thus, the common algorithm is
+Thus, the general algorithm is
 
 \begin{breakablealgorithm}
     \caption{Computing $A$ and $\mathbf{b}$ for control of fixed point}
@@ -1085,10 +1087,10 @@ requirement for problem to be solvable is
 
 Although this equation is useful for brief estimation, but it is still necessary 
 condition. The control issues can arise due to the complex topological structure 
-of joint space manifold. Hence, there are two options prove that desired 
+of cartesian space manifold. Hence, there are two options: prove that desired 
 trajectory is out off null space, or introduce some prioritization technique.
 
-In the first case, it is enough to use combined matrices: \\
+In the first case, it is enough to use combined matrices:
 $A = \begin{bmatrix} A_c^T & A_u^T \end{bmatrix}^T$, and 
 $\mathbf{b} = \begin{bmatrix} \mathbf{b}_c^T & \mathbf{b}_u^T \end{bmatrix}^T$ 
 with the Udwadia-Kalaba approach, where $A_c$, $A_u$, $\mathbf{b}_c$, and 
@@ -1114,11 +1116,11 @@ $\mathbf{b}_u$ are
     \label{eqn:combined_a_and_b}
 \end{equation}
 
-However, the discussed approach is not general. It is rare to proof 
-controllability in real life cases. 
+However, the discussed approach is not general. It is rare, when the 
+desired law can be analytically and fully included to cartesian space.
 
 The second way to figure out the problem is prioritization. The most rigorous 
-technique to achieve is utilizing null space. Generally, it is preferable to 
+technique to achieve is utilizing null spaces. Generally, it is preferable to 
 strongly preserve the rigid body constraints and try to find the least square 
 solution for control task. Such method can be expressed as 
 
@@ -1156,5 +1158,5 @@ include prioritization:
 
 where $\omega > 0$ tunable parameter. Due to $M \succcurlyeq 0 $ and 
 $A_u^T A_u \succcurlyeq 0$ the optimization problem 
-(\ref{eqn:gauss_least_const_prior}) is quadratic task. Hence, it is always
-has a solution and can be solved fast by modern frameworks.
+(\ref{eqn:gauss_least_const_prior}) is quadratic task. Therefore, there is 
+always a solution and it can be solved quickly using modern frameworks.
