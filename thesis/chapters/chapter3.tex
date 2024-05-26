@@ -334,8 +334,8 @@ where $\mathbf{e}_{\SE}: \SE \times \SE \rightarrow \mathbb{R}^6$ is defined as
     \label{eqn:se3error}
 \end{equation}
 
-$\log$ in \ref{eqn:se3error} is a matrix logarithm defined in 
-\textcolor{red}{APPENDIX REF TODO}. The choice of such non trivial function is 
+$\log$ in \ref{eqn:se3error} is a matrix logarithm defined by 
+(\ref{eqn:log_map}). The choice of such non trivial function is 
 inspired by \cite{OutFeedbackStabForOrbRob} and \cite{ANonlinearObserverUsingPose}. 
 
 Equation (\ref{eqn:initial_phi}) should be differentiated twice to obtain $A$ and 
@@ -356,7 +356,7 @@ Although the Baumgarte's stabilization is relatively simple it is also not appli
 in the context of equation (\ref{eqn:initial_phi}). Therefore, the more advance 
 method should be used. 
 
-Udwadia \textcolor{red}{REF} demonstrated that if some stable differential 
+Udwadia \cite{udwadia1996analytical} demonstrated that if some stable differential 
 equation can be converted to (\ref{eqn:affine_const}) form, then the Udwadia-Kalaba 
 approach with such constraint is stable. Thus, it is enough to find some stable 
 kinematic differential equation. Let's consider the following equation 
@@ -455,7 +455,7 @@ transforms to
         \label{eqn:stab_theorem_dif_eqn_simple}
     \end{equation}
 
-    From \textcolor{red}{REF TO APPENDIX}
+    By utilizing equation (\ref{eqn:ang_with_dot_r}) is
 
     \begin{equation}
         \frac{d}{dt} \log \tilde{R} 
@@ -463,8 +463,8 @@ transforms to
         \label{eqn:mat_log_derivative}
     \end{equation}
 
-    where $J_r^{-1}(\mathbf{e})$ and $[.]^{\vee}$ are defined in 
-    \textcolor{red}{REF TO APPENDIX}. Proof of (\ref{eqn:mat_log_derivative}) 
+    where $J_r^{-1}(\mathbf{e})$ and $[.]^{\vee}$ are defined by 
+    (\ref{eqn:vee_op}). Proof of (\ref{eqn:mat_log_derivative}) 
     can be found in Lemma 2 of \cite{ANonlinearObserverUsingPose}.
 
     Let's simplify equation (\ref{eqn:mat_log_derivative}) 
@@ -491,8 +491,8 @@ transforms to
         \label{eqn:mat_log_der_simple}
     \end{equation}
 
-    where $\hat{[.]}$ (or $[.]^{\wedge}$) is described in 
-    \textcolor{red}{REF TO APPENDIX}.
+    where $\hat{[.]}$ (or $[.]^{\wedge}$) is described by 
+    (\ref{eqn:wedge_op}).
 
     Let the Lyapunov candidate is $V = \frac{1}{2} 
     \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + 
@@ -708,24 +708,23 @@ than $A$ and $\mathbf{b}$ can be found by the following algorithm
             $\mathbf{q}$, $\mathbf{v}$, 
             $E_1$, $E_2$, $T_{\mathcal{A}}^{\mathcal{B}}$
         } : 
-        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}_1}$ and 
-        $T_{\mathcal{W}}^{\mathcal{E}_2}$ for $\mathbf{S}_c$ at state $\mathbf{q}$
-        \State Compute velocities $\boldsymbol{\upsilon}_{E_1}$, 
-        $\boldsymbol{\upsilon}_{E_2}$, $\boldsymbol{\omega}_{E_1}$, and 
-        $\boldsymbol{\omega}_{E_2}$ for $\mathbf{S}_c$ at state $\mathbf{q}$, 
-        $\mathbf{v}$
-        \State Compute Jacobians $J_{E_1, v}$, $J_{E_1, \omega}$, $J_{E_2, v}$, and 
-        $J_{E_2, \omega}$ for $\mathbf{S}_c$ at state $\mathbf{q}$
-        \State Compute Jacobians time derivatives $\dot{J}_{E_1, v}$, 
-        $\dot{J}_{E_1, \omega}$, $\dot{J}_{E_2, v}$, and $\dot{J}_{E_2, \omega}$ 
+        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}_1}$,  
+        $T_{\mathcal{W}}^{\mathcal{E}_2}$ and velocities 
+        $\boldsymbol{\upsilon}_{E_1}$, $\boldsymbol{\upsilon}_{E_2}$, 
+        $\boldsymbol{\omega}_{E_1}$, $\boldsymbol{\omega}_{E_2}$ 
         for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Get Jacobians $J_{E_1, v}$, $J_{E_1, \omega}$, 
+        $J_{E_2, v}$, $J_{E_2, \omega}$ and their time derivatives
+        $\dot{J}_{E_1, v}$, $\dot{J}_{E_1, \omega}$, $\dot{J}_{E_2, v}$, 
+        $\dot{J}_{E_2, \omega}$ for $\mathbf{S}_c$ at state $\mathbf{q}$, 
+        $\mathbf{v}$
         \State Obtain $J_{d, *} = J_{E_2, *} - J_{E_1, *}$ and 
         $\dot{J}_{d, *} = \dot{J}_{E_2, *} - \dot{J}_{E_1, *}$, where $*$ is 
         $v$ or $\omega$
-        \State Calculate $\tilde{J}_{d,v}$ and $\tilde{J}_{d, \omega}$ by equation 
-        (\ref{eqn:velocities_from_q_simple})
-        \State Calculate $\dot{\tilde{J}}_{d,v}$ and $\dot{\tilde{J}}_{d, \omega}$ by 
-        equation (\ref{eqn:jac_lin_derivatives}) and (\ref{eqn:jac_ang_derivatives}) 
+        \State Calculate $\tilde{J}_{d,v}$, $\tilde{J}_{d, \omega}$ 
+        by equation (\ref{eqn:velocities_from_q_simple}), and 
+        $\dot{\tilde{J}}_{d,v}$, $\dot{\tilde{J}}_{d, \omega}$ by equation 
+        (\ref{eqn:jac_lin_derivatives}), (\ref{eqn:jac_ang_derivatives}) 
         respectively
         \State Compute $A$ and $\mathbf{b}$ by equation (\ref{eqn:a_and_b})
         \State \Return $A$, $\mathbf{b}$
@@ -859,16 +858,14 @@ Thus, the common algorithm is
             $\begin{bmatrix} \mathbf{a}_D^T & 
             [\boldsymbol{\epsilon}_D^{\mathcal{D}}]^T \end{bmatrix}^T$
         } : 
-        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}}$ for $\mathbf{S}_c$ 
-        at state $\mathbf{q}$
-        \State Compute velocities $\boldsymbol{\upsilon}_E$ and 
-        $\boldsymbol{\omega}_E$ for $\mathbf{S}_c$ at state $\mathbf{q}$, 
-        $\mathbf{v}$
-        \State Compute Jacobians $J_{E,v}$ and $J_{E, \omega}$ for $\mathbf{S}_c$ 
-        at state $\mathbf{q}$
-        \State Compute Jacobians time derivatives $\dot{J}_{E,v}$ and 
-        $\dot{J}_{E, \omega}$ for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
-        \State Compute $A$ and $\mathbf{b}$ by equation (\ref{eqn:a_and_b_control})
+        \State Compute attitudes $T_{\mathcal{W}}^{\mathcal{E}}$ and 
+        velocities $\boldsymbol{\upsilon}_E$, $\boldsymbol{\omega}_E$ 
+        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Calculate Jacobians $J_{E,v}$, $J_{E, \omega}$ and 
+        their time derivatives $\dot{J}_{E,v}$, $\dot{J}_{E, \omega}$ 
+        for $\mathbf{S}_c$ at state $\mathbf{q}$, $\mathbf{v}$
+        \State Obtain $A$ and $\mathbf{b}$ by equation 
+        (\ref{eqn:a_and_b_control})
         \State \Return $A$, $\mathbf{b}$
         \EndFunction
     \end{algorithmic}
