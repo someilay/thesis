@@ -10,7 +10,7 @@ src/mujoco/*/*.png
 src/mujoco/*/*.csv
 src/mujoco/*/MUJOCO_LOG.TXT
 
-*.html
+src/notebooks/*/*.html
 poetry.lock
 
 # Ignore tex intermediate files
@@ -27,3 +27,6 @@ thesis/thesis.log
 thesis/thesis.out
 thesis/thesis.run.xml
 thesis/thesis.toc
+
+thesis_presentation/presentation_files/*
+!thesis_presentation/presentation_files/libs

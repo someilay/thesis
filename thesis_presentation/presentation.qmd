@@ -1,0 +1,132 @@
+---
+title: "Feedback control over constrained robotic systems through the Udwadia-Kalaba approach"
+
+# lang: ru # this will translate to russian 
+# language: _language.yml # this is custom language 
+
+callout-icon: false
+author:
+  - name: Ilia Milioshin
+    email: i.mileshin@innopolis.university
+    affiliation: 
+      - name: Innopolis University 
+        city: Innopolis
+        state: Tatarstan
+        url: [https://innopolis.university/en/]
+copyright: 
+  holder: Ilia Milioshin
+date: 'today'
+date-format: medium
+format: 
+    revealjs:
+        theme: [default, styles/inno_style.scss]
+        slide-number: true
+        chalkboard: 
+            theme: whiteboard
+            width: 3
+        hide-inactive-cursor: true
+        default-image-extension: svg
+        cap-location: bottom
+        logo: images/logos/inno.png
+highlight-style: gruvbox
+
+funding: "The author received no specific funding for this work."
+bibliography: ../thesis/ref.bib
+csl: styles/ieee.csl
+code-block-border-left: true
+
+---
+
+## Problem statement
+
+* Collaborative work with a common object is a widespread scenario in robotics
+
+![Atlas works with various cargos](images/figures/atlas_work_cargo.png){#fig-atlas-collab-work width=100%}
+
+## Problem statement (formal)
+
+::: {layout-ncol=2}
+* Rigid body systems: $\mathbf{S}_1$, $\mathbf{S}_2$; Coupling body - $\boldsymbol \Sigma$
+* $\mathcal{E}_1$, $\mathcal{E}_2$, $\mathcal{A}$, and $\mathcal{B}$ are fixed on their bodies
+* Goal: $\mathcal{E}_1 \rightarrow \mathcal{A}$ and $\mathcal{E}_2 \rightarrow \mathcal{B}$
+
+![Coupling through rigid body](images/figures/rigid_body_coupling.png){#fig-rig-coupling width=100%}
+:::
+
+## Approach 1
+
+::: {.fragment .fade-up}
+* Formulate $\varphi_c(\mathbf{q}_i) = 0$, where $\mathbf{q}_i$ is a generalized coordinates for combined system, $\mathbf{S}_c$
+:::
+
+::: {.fragment .fade-up}
+* Solve $\varphi_c(\mathbf{q}_i) = 0$ analytically, and obtain minimized set of generalized coordinates, $\mathbf{q}_m$
+:::
+
+::: {.fragment .fade-up}
+* Reformulate dynamics for $\mathbf{S}_c$ with $\mathbf{q}_m$, construct a control based on it
+:::
+
+::: {.fragment .fade-up}
+[Disadvantages:]{style="color:red;"}
+
+* $\varphi_c(\mathbf{q}_i) = 0$ may be not solvable analytically
+* It is slow on closed loop systems @BodyDynWithClosedLoop
+:::
+
+## Approach 2
+
+::: {.fragment .fade-up}
+* Use force cones for defining interaction forces, $\pmb{\lambda} = \sum_{i=1}^{N_d} \beta_i (\mathbf{n} + \mu \mathbf{d}_i)$; @OptimizationBasedLocomotionPlanning and @WholeBodyControlForm
+:::
+
+::: {.fragment .fade-up}
+* Translate forces to joint space by corresponding Jacobian, $J^T(\mathbf{q})$
+:::
+
+::: {.fragment .fade-up}
+[Disadvantages:]{style="color:red;"}
+
+* No prioritization between constraints
+* It is usually applied only for bipeds robots
+:::
+
+## Approach 3
+
+::: {.fragment .fade-up}
+* Again formulate $\varphi_c(\mathbf{q}_i) = 0$
+:::
+
+::: {.fragment .fade-up}
+* Use KKT (Karush–Kuhn–Tucker) conditions to solve constrained least action principle
+:::
+
+::: {.fragment .fade-up}
+* Enjoy new dynamics of $\mathbf{S}_c$ with constraints
+:::
+
+::: {.fragment .fade-up}
+[Disadvantages:]{style="color:red;"}
+
+* It is hard to prioritize constraints for KKT
+* Non-holonomic constraints are unsupported
+:::
+
+## Udwadia-Kalaba @UdwadiaKalabaApproach approach
+
+::: {.fragment .fade-up}
+* Mathematical model: $M \dot{\mathbf{v}} = \mathbf{Q}$
+:::
+
+::: {.fragment .fade-up}
+* Holonomic and non-holonomic constraints are converted to form: $A \dot{\mathbf{v}} = \mathbf{b}$
+:::
+
+::: {.fragment .fade-up}
+* Constraints forces: $\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})$
+:::
+
+## Bibliography
+
+::: {#refs}
+:::
