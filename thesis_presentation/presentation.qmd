@@ -1,7 +1,6 @@
 ---
 project:
   type: website
-  output-dir: docs
 
 title: "Feedback control over constrained robotic systems through the Udwadia-Kalaba approach"
 callout-icon: false
