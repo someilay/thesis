@@ -1,9 +1,9 @@
 ---
+project:
+  type: website
+  output-dir: docs
+
 title: "Feedback control over constrained robotic systems through the Udwadia-Kalaba approach"
-
-# lang: ru # this will translate to russian 
-# language: _language.yml # this is custom language 
-
 callout-icon: false
 author:
   - name: Ilia Milioshin
