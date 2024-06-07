@@ -1,0 +1,239 @@
+\appendix
+\chapter{Brief Lie theory}
+
+The Lie group, a mathematical concept dating back to the 19th century, was 
+first proposed by Sophus Lie, laying the foundation for continuous 
+transformation groups. Although it was initially abstract, over time its 
+influence has spread to various scientific and technological fields. The 
+mathematical tools discussed in this chapter are crucial for the research 
+discussed here. It inspired by this study \cite{MicroLieTheory}, and 
+contains only crucial information.
+
+\section{Groups, Algebras, and operators}
+\label{sec:group_algebra_ops}
+
+Let $\mathcal{G}$ is smooth manifold that satisfies the group axioms. For any 
+$\mathcal{X}$, $\mathcal{Y}$ and $\mathcal{Z}$ from $\mathcal{G}$ the following 
+statements are true:
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:g_axi}
+        & \mathcal{X} \circ \mathcal{Y} \in \mathcal{G} \quad && \text{(I)} \\
+        & \exists \mathcal{E}:\ \mathcal{E} \circ \mathcal{X} 
+        = \mathcal{X} \circ \mathcal{E} = \mathcal{X} \quad && \text{(II)} \\
+        & \exists \mathcal{X}^{-1}:\ \mathcal{X}^{-1} \circ \mathcal{X}
+        = \mathcal{X} \circ \mathcal{X}^{-1} = \mathcal{E} \quad && \text{(III)} \\ 
+        & (\mathcal{X} \circ \mathcal{Y}) \circ \mathcal{Z} = 
+        \mathcal{X} \circ (\mathcal{Y} \circ \mathcal{Z}) \quad && \text{(IV)}
+    \end{aligned}
+\end{equation}
+
+For such group $T_{\mathcal{E}} \mathcal{G}$ is the Lia Algebra defined at 
+$\mathcal{E}$ element. The geometric interpretation of algebra is tangent plane 
+that touches the smooth manifold (group). $\mathfrak{m} \equiv 
+T_{\mathcal{E}} \mathcal{G}$ is always a vector space.
+
+The next crucial definition is a group action
+
+\begin{equation}
+    f: \mathcal{G} \times \mathcal{V} \to \mathcal{V}
+\end{equation}
+
+where $\mathcal{V}$ is some set. The operation defined above should satisfy 
+the axioms ($v \in \mathcal{V}$; $\mathcal{X}, \mathcal{Y} \in \mathcal{G}$),
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:act_axi}
+        & \mathcal{E} \cdot v = v \quad && \text{(I)} \\
+        & (\mathcal{X} \circ \mathcal{Y}) \cdot v = 
+        \mathcal{X} \cdot (\mathcal{Y} \cdot v) \quad && \text{(II)}
+    \end{aligned}
+\end{equation}
+
+For instance, if the $\text{SO}(n)$ rotations is considered as Lie group, than the 
+transformation $R \cdot x \equiv R x$ ($x \in \mathbb{R}^n$) is a group action.
+
+The exponential map $\exp:\ \mathfrak{m} \to \mathcal{G}$ converts elements of 
+Lie algebra to corresponding group. The log map do inverse operation. 
+However, it is necessary to remember that 
+this map applicable only for "identity" algebra. However, there is a linear
+transformation between $T_{\mathcal{X}} \mathcal{G}$ and $T_{\mathcal{E}} 
+\mathcal{G}$. It is called adjoin.
+
+It is known that $\mathfrak{m}$ is isomorphic to the vector space $\mathbb{R}^m$. 
+One can write it as $\mathfrak{m} \cong \mathbb{R}^m$. Due to convenience this 
+isomorphism would be highly utilized. Moreover, in the bellow sections only 
+algebras constructed on $\mathbb{R}^m$ are considered. Thus, a mapping between 
+sets can be defined in the following manner (hat-vee notation)
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:hat_vee_not}
+        & [*]^\wedge: \ \mathbb{R}^m \to \mathfrak{m} \quad &&
+        \boldsymbol{\tau}^\wedge = \sum_{i=1}^{m} \tau_i E_i \\
+        & [*]^\vee: \mathfrak{m} \to \mathbb{R}^m \quad && 
+        \boldsymbol{\tau} = \sum_{i=1}^{m} \tau_i \mathbf{e}_i
+    \end{aligned}
+\end{equation}
+
+where $\mathbf{e}_i$ are a base of $\mathbb{R}^m$ and $E_i$ are base vectors 
+of $\mathfrak{m}$. Obviously, $\mathbf{e}_i^\wedge = E_i$. Using this mapping, the
+exponential / log map can be modified 
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:exp_log_for_r_m}
+        & \exp : \quad && \mathcal{X} = \exp(\boldsymbol{\tau}^\wedge) \\
+        & \log : \quad && \boldsymbol{\tau} = \log(\mathcal{X})^\vee
+    \end{aligned}
+\end{equation}
+
+Or, in the most convenient form
+
+\begin{equation}
+    \begin{aligned}
+        \label{eqn:big_exp_log_for_r_m}
+        & \text{Exp} : \quad && \mathcal{X} 
+        = \exp(\boldsymbol{\tau}^\wedge) 
+        = \text{Exp}(\boldsymbol{\tau})\\
+        & \text{Log} : \quad && \boldsymbol{\tau} 
+        = \log(\mathcal{X})^\vee
+        = \text{Log}(\mathcal{X})
+    \end{aligned}
+\end{equation}
+
+Through this definitions it easy to introduce plus and minus operations
+
+\begin{equation}
+    \begin{aligned}
+        & \text{right-} \oplus: &&
+        \mathcal{X} \oplus \prescript{\mathcal{X}}{}{\boldsymbol{\tau}} 
+        \equiv \mathcal{X} \circ 
+        \text{Exp}(\prescript{\mathcal{X}}{}{\boldsymbol{\tau}}) \in 
+        \mathcal{G} \\
+        & \text{right-} \ominus: &&
+        \mathcal{Y} \ominus \mathcal{X} 
+        \equiv \text{Log}(\mathcal{X}^{-1} \circ \mathcal{Y}) 
+        \in T_{\mathcal{X}}\mathcal{G} \\
+        & \text{left-} \oplus: &&
+        \prescript{\mathcal{E}}{}{\boldsymbol{\tau}} \oplus \mathcal{X}
+        \equiv \text{Exp}(\prescript{\mathcal{E}}{}{\boldsymbol{\tau}}) 
+        \circ \mathcal{X} \in \mathcal{G} \\ 
+        & \text{left-} \ominus: &&
+        \mathcal{Y} \ominus \mathcal{X} \equiv
+        \text{Log}(\mathcal{Y} \circ \mathcal{X}^{-1}) 
+        \in T_{\mathcal{E}}\mathcal{G}
+    \end{aligned}
+\end{equation}
+
+Using the above statements it is possible to define Jacobians
+
+\begin{equation}
+    \begin{aligned}
+        & J_r(\boldsymbol{\tau}): &&
+        \text{Exp}(\boldsymbol{\tau} + \delta \boldsymbol{\tau})
+        \approx
+        \text{Exp}(\boldsymbol{\tau}) \oplus 
+        [J_r(\boldsymbol{\tau}) \delta \boldsymbol{\tau}] \\ 
+        & J_r^{-1}(\boldsymbol{\tau}): &&
+        \text{Log}(\mathcal{X} \oplus \delta \boldsymbol{\tau}) 
+        \approx
+        \text{Log}(\mathcal{X}) + 
+        J_r^{-1}(\boldsymbol{\tau}) \delta \boldsymbol{\tau}
+    \end{aligned}
+\end{equation}
+
+where $\mathcal{X} = \text{Exp}(\boldsymbol{\tau})$, and $\oplus$, $\ominus$ 
+are right versions. The above definitions describe right version of 
+Jacobians. There are also left ones that based on left minus and plus 
+operators.
+
+\section{Special orthogonal group}
+
+Let's consider $\SO$ (Special orthogonal group). It consists from orthogonal 
+rotations matrices, and forms a group under multiplication. According to 
+Euler's rotation theorem any orientation can be described by rotation 
+about some single axis with precision to $2 \pi n$. Thus, $\SO$ can be 
+considered as Lie group, and $\mathbb{R}^3$ is a Lie algebra respectively.
+
+Now let's define a wedge operator $[.]^{\wedge}$:
+
+\begin{equation}
+    \hat{\mathbf{a}} = \mathbf{a}^{\wedge} = 
+    \begin{bmatrix}
+        0 & -a_3 & a_2 \\
+        a_3 & 0 & -a_1 \\
+        -a_2 & a_1 & 0 \\
+    \end{bmatrix}
+    \label{eqn:wedge_op}
+\end{equation}
+
+where $\mathbf{a} \in \mathbb{R}^3$, and vee operator ($[.]^{\vee}$) is 
+following
+
+\begin{equation}
+    A^{\vee} = \mathbf{a}, \ \text{where }
+    \hat{\mathbf{a}} = A
+    \label{eqn:vee_op}
+\end{equation}
+
+Using these definitions it is possible to connect $\dot{R}$ with classical 
+angular velocity
+
+\begin{equation}
+    \begin{aligned}
+        \hat{\boldsymbol{\omega}}^s = \dot{R} R^T & \quad
+        \hat{\boldsymbol{\omega}}^b = R^T \dot{R}
+    \end{aligned}
+    \label{eqn:ang_with_dot_r}
+\end{equation}
+
+where $b$ and $s$ subscripts denote body and spatial velocities 
+respectively.
+
+The exponential map is
+
+\begin{equation}
+    R = \text{Exp}(\boldsymbol{\theta}) \equiv
+    I + \frac{\sin \theta}{\theta} \hat{\boldsymbol{\theta}} +
+    \frac{1 - \cos \theta}{\theta^2} \hat{\boldsymbol{\theta}}^2
+    \label{eqn:exp_map}
+\end{equation}
+
+where $\boldsymbol{\theta} = \theta \mathbf{u}$, and $\mathbf{u}$ is 
+arbitrary unit vector from $\mathbb{R}^3$. Therefore, the logarithm map is
+
+\begin{equation}
+    \boldsymbol{\theta} = \text{Log}(R) \equiv 
+    \frac{\theta (R - R^T)^{\vee}}{2 \sin \theta}, \ 
+    \text{where } 
+    \theta = \cos^{-1} \frac{\text{trace}(R) - 1}{2}
+    \label{eqn:log_map}
+\end{equation}
+
+In the above statement $R - R^T$ is skew symmetric, it can be proved by 
+transposing it. 
+
+Now let's move to left and right Jacobians definitions 
+
+\begin{equation}
+    \begin{aligned}
+        J_r(\boldsymbol{\theta}) & = 
+        I - \frac{1 - \cos \theta}{\theta^2} \hat{\boldsymbol{\theta}} +
+        \frac{\theta - \sin \theta}{\theta^3} \hat{\boldsymbol{\theta}}^2 \\
+        J_r^{-1}(\boldsymbol{\theta}) & = 
+        I + \frac{1}{2} \hat{\boldsymbol{\theta}} + 
+        \biggl( \frac{1}{\theta^2} - 
+        \frac{1 + \cos \theta}{2 \theta \sin \theta} \biggr)
+        \hat{\boldsymbol{\theta}}^2 \\ 
+        J_l(\boldsymbol{\theta}) & = J_r^T(\boldsymbol{\theta}) \\
+        J_l^{-1}(\boldsymbol{\theta}) & = J_r^{-T}(\boldsymbol{\theta})
+    \end{aligned}
+    \label{eqn:l_and_r_jacobians}
+\end{equation}
+
+The all of the above definitions are reformulated from Appendix B in 
+\cite{MicroLieTheory}. The mathematical ground for them can be found 
+in \cite{LieStochModels}.

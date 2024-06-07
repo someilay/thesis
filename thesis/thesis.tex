@@ -1,0 +1,268 @@
+\documentclass[oneside,final,14pt,a4paper]{extreport}
+
+\usepackage{tempora} % Times New Roman alike font  
+\usepackage{vmargin}
+\setpapersize{A4}
+\setmarginsrb{2.5cm}{2.2cm}{2.2cm}{2.2cm}{0pt}{10mm}{0pt}{13mm}
+\usepackage{setspace}
+\setstretch{1.5}
+\usepackage{indentfirst}
+\parindent=1.25cm
+
+%%%%% ADDED TO SUPPORT TT BOLD FACES %%%%
+\DeclareFontShape{OT1}{cmtt}{bx}{n}{<5><6><7><8><9><10><10.95><12><14.4><17.28><20.74><24.88>cmttb10}{}
+\renewcommand{\ttdefault}{pcr}
+%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\usepackage{atbegshi,picture}
+\usepackage[T1,T2A]{fontenc}
+\usepackage{newtxtext}
+\usepackage[utf8]{inputenc}
+
+\usepackage[english]{babel}
+\usepackage[backend=biber,style=ieee,autocite=inline]{biblatex}
+\bibliography{ref.bib}
+\DefineBibliographyStrings{english}{%
+  bibliography = {References},}
+\usepackage{blindtext}
+
+\usepackage{pdfpages}
+\newenvironment{bottompar}{\par\vspace*{\fill}}{\clearpage}
+\usepackage{amsmath,amsfonts}
+\usepackage{url}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{remark}
+\newtheorem*{example}{Example}
+
+\usepackage{float}
+\usepackage{graphicx}
+\graphicspath{{figs/}} %path to images
+\usepackage{array}
+\usepackage{multirow,array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black}
+\usepackage{paralist}
+\usepackage{listings}
+\usepackage{zed-csp}
+\usepackage{fancyhdr}
+\usepackage{csquotes}
+\usepackage{color}
+% \usepackage{anyfontsize}
+% \usepackage{mathptmx}
+% \usepackage{t1enc}
+
+\usepackage{chngcntr}
+\usepackage{upgreek} 
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage[font=singlespacing, labelfont=bf]{caption}
+%Hints
+\newcommand\pic[1]{(Fig. \ref{#1})} %Ref on figure
+\newcommand\tab[1]{(Tab. \ref{#1})} %Ref on table
+
+\setlength{\headheight}{32.0976pt}
+\usepackage{enumitem}
+\newlist{inlinelist}{enumerate*}{1}
+\setlist*[inlinelist,1]{%
+  label=(\arabic*),
+}
+
+% \setcounter{secnumdepth}{4}
+\captionsetup[table]{labelfont={normalfont}, name={TABLE}, labelsep={newline}}
+\setlength{\parindent}{2em} 
+\DeclareCaptionLabelSeparator{figSep}{.\quad}
+\captionsetup[figure]{labelfont={normalfont}, name={Fig.}, labelsep=period}
+\counterwithin{figure}{chapter}
+
+% \usepackage{titlesec}
+% \titleformat{\section}[hang]{\fontsize{20}{24}\selectfont\filcenter}{\Roman{section}}{1em}{}
+% \titleformat{\subsection}[hang]{\itshape}{\Alph{subsection}.}{1em}{}[]
+% \titleformat{\subsubsection}[runin]{\itshape}{\arabic{subsubsection})}{1em}{}[$:$]
+% \titlespacing{\subsubsection}{1em}{1em}{1em}
+% \titleformat{\paragraph}[runin]{\itshape}{\alph{paragraph})}{1em}{}[$:$\quad]
+% \titlespacing{\paragraph}{2em}{1em}{1em}
+
+\usepackage{placeins} % for \FloatBarrier
+\usepackage{cases}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage[section]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{arydshln}
+
+\usetikzlibrary{%
+    decorations.pathreplacing,%
+    decorations.pathmorphing%
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset { %
+  captionpos=b,
+  frame=tb,
+  language=C++,
+  showstringspaces=false,
+  columns=flexible,
+  % basicstyle={\small\ttfamily},
+  basicstyle={\linespread{1}\ttfamily},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\pagestyle{fancyplain}
+
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+   \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+       {\raggedright\textbf{\fname@algorithm~\thealgorithm} ##2\par}%
+       \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+       \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+       \fi
+       \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+
+% Remember section title
+\renewcommand{\chaptermark}[1]%
+	{\markboth{\chaptername~\thechapter~--~#1}{}}
+
+% subsection number and title
+\renewcommand{\sectionmark}[1]%
+	{\markright{\thesection\ #1}}
+
+\rhead[\fancyplain{}{\bf\leftmark}]%
+      {\fancyplain{}{\bf\thepage}}
+\lhead[\fancyplain{}{\bf\thepage}]%
+      {\fancyplain{}{\bf\rightmark}}
+\cfoot{} %bfseries
+
+
+\newcommand{\dedication}[1]
+   {\thispagestyle{empty}
+     
+   \begin{flushleft}\raggedleft #1\end{flushleft}
+}
+
+% Taken from https://cremeronline.com/LaTeX/minimaltikz.pdf
+\newcommand{\base}[2]{
+  % triangle below circle
+  \draw[black, thick] (#1 - 0.3, #2 - 0.5) -- (#1 - 0.1, #2 -0.2);
+  \draw[black, thick] (#1 + 0.1, #2 - 0.2) -- (#1 + 0.3, #2 -0.5);
+
+  % base lines
+  \draw[black, thick] (#1 - 0.5, #2 - 0.5) -- (#1 + 0.5, #2 - 0.5);
+  % dashes
+  \draw[black,line width=.5pt,interface](#1 - 0.5, #2 - 0.5)--(#1 + 0.5, #2 - 0.5);
+  % circle
+  \draw [black, thick,fill=white] (#1, #2) circle [radius=0.2];
+}
+
+\newcommand{\drawpointmass}[3][0]{
+  % semitransparent circle
+  \draw [fill=#1, fill opacity=0.2, draw=#1!40] (#2, #3) circle [radius=0.4];
+  % circle
+  \draw [black, thick, fill=white] (#2, #3) circle [radius=0.2];
+}
+
+\newcommand{\drawpointmasssimple}[3][0.2]{
+  % circle
+  \draw [black, thick, fill=white] (#2, #3) circle [radius=#1];
+}
+
+\newcommand{\drawdot}[3][0.05]{
+  % circle
+  \draw [black, thick, fill=black] (#2, #3) circle [radius=#1];
+}
+
+\newcommand{\gripper}[4]{
+  % Adjoint lines
+  \draw[black, ultra thick](#1, #2) -- (#1 - #4 / 2 + #2 / 2, #2 + #3 / 2 - #1 / 2);
+  \draw[black, ultra thick](#1, #2) -- (#1 + #4 / 2 - #2 / 2, #2 - #3 / 2 + #1 / 2);
+  % Parallel lines
+  \draw[black, ultra thick]
+  (#1 - #4 / 2 + #2 / 2, #2 + #3 / 2 - #1 / 2) -- 
+  (#1 - #4 / 2 + #2 / 2 + #3 - #1, #2 + #3 / 2 - #1 / 2 + #4 - #2);
+  \draw[black, ultra thick]
+  (#1 + #4 / 2 - #2 / 2, #2 - #3 / 2 + #1 / 2) -- 
+  (#1 + #4 / 2 - #2 / 2 + #3 - #1, #2 - #3 / 2 + #1 / 2 + #4 - #2);
+}
+
+\newcommand{\rectangle}[6]{
+  \draw[black, ultra thick](#1, #2) -- (#3, #4);
+  \draw[black, ultra thick](#3, #4) -- (#5, #6);
+  \draw[black, ultra thick](#1, #2) -- (#1 + #5 - #3, #2 + #6 - #4);
+  \draw[black, ultra thick](#1 + #5 - #3, #2 + #6 - #4) -- (#5, #6);
+}
+
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+
+\newcommand{\SE}[1][3]{\text{SE}(#1)}
+
+\newcommand{\SO}[1][3]{\text{SO}(#1)}
+
+\title{Feedback control over constrained robotic systems through the Udwadia-Kalaba approach}
+\author{Ilia Milioshin}
+
+\begin{document}
+% \includepdf[pages=-]{title.pdf}
+\maketitle
+\tableofcontents
+% \listoftables
+% \listoffigures
+\newpage
+
+\include{chapters/abstract}
+\setcounter{page}{5}
+% set manually the number, from which Chapter 1 starts!
+% Why do we put 7 in this case?
+% Title page - page 1
+% Contents - page 2, page 3
+% Abstract - page 4
+% Chapter 1 - page 5
+% In your thesis the counter number can be different, please count carefully and insert the corresponding number.
+
+\include{chapters/chapter1}
+\include{chapters/chapter2}
+\include{chapters/chapter3}
+\include{chapters/chapter4}
+\include{chapters/chapter5}
+
+\include{chapters/appex}
+
+%% REFERENCES
+\printbibliography[heading=bibintoc,title={Bibliography cited}]
+\end{document}

@@ -1,0 +1,72 @@
+\chapter{Introduction}
+\label{chap:intro}
+% \chaptermark{Optional running chapter heading}
+
+The advancement of microelectronics and sensor technologies has catalyzed a 
+widespread integration of robotic systems into various domains. Manipulators, 
+delivery robots, and flying drones have become ubiquitous, presenting developers 
+and researchers with novel challenges in terms of robustness, adaptiveness, and 
+cooperation. Among these challenges, cooperation stands out as a critical 
+issue, especially given the prevalence and increasing complexity of such systems. 
+In real-world applications, collaboration of robotic systems is crucial across 
+various industries. For instance, in manufacturing assembly lines, synchronized 
+robots ensure smooth production flow and maximize throughput. Similarly, in 
+warehouse logistics, coordinated robotic systems optimize order fulfillment times 
+and improve overall productivity. Furthermore, collaborative robotics scenarios in 
+construction projects benefit from synchronized robotic systems for tasks like 
+concrete pouring and steel beam placement, improving efficiency and minimizing 
+delays. A common challenge in this realm involves effectively controlling robots 
+constrained by a shared object. This paper proposes a straightforward 
+methodology to solve such problems through the 
+Udwadia-Kalaba\cite{UdwadiaKalabaApproach} approach.
+
+This proposed methodology gains particular significance within the context 
+of modern physics simulation, derivation, and optimization libraries. These 
+tools offer substantial computational speed, enabling efficient 
+problem-solving. In this article, I relay MuJoCo\cite{MuJoCo}, 
+Pinocchio\cite{Pinocchio}, and ProxSuite\cite{ProxQP} 
+for simulation, robotic dynamics computation, and optimization, respectively. 
+Pinocchio, in particular, appears as a key tool for computing the dynamics of 
+robotic systems. However, its limitation to open-loop physics models poses 
+challenges for controlling multiple robots with cooperation tasks.
+
+Previous solutions have often involved constructing models with pre-existing 
+constraints or utilizing the KKT (Karush-Kuhn-Tucker) approach. 
+However, these methods suffer from computational complexity and issues with 
+constraint prioritization. The proposed methodology combines the strengths 
+of both approaches, integrating physical grounding from the first one and 
+simplicity of application from the second one. Notably, it allows for 
+manual fine-tuning of constraint priorities and boasts improved 
+computational speed through possible auto code generation. 
+
+The implementation of the proposed methodology demonstrates significant 
+advancements in the control and collaboration of robotic systems 
+constrained by shared objects. Through the integration of robust physics 
+simulation, precise robotic dynamics computation, and efficient 
+optimization techniques, the method achieves remarkable outcomes by 
+simulation experiment. By relying on advanced simulation, computation, 
+and optimization techniques, the method has improved levels of efficiency, 
+accuracy, and adaptability in robotic operations, laying the way for 
+further advancements in robotics technology.
+
+The Atlas robot, developed by Boston Dynamics, serves as an ideal platform 
+to demonstrate this methodology's capabilities. In a scenario where 
+multiple Atlas robots are tasked with collaboratively manipulating a large, 
+heavy object, the shared object constraint requires precise coordination 
+and control. Integrating this methodology with Atlas robots can demonstrate improved 
+collaborative capabilities. The robust simulation ensures accurate 
+interaction modeling, while precise dynamics computation allows effective 
+control. Optimization techniques facilitate optimal task prioritization, 
+significantly improving overall performance. This application validates 
+the methodology and shows its potential for advancing collaborative robotic 
+systems.
+
+In subsequent chapters, I deepen into various aspects of the proposed method. 
+Chapter \ref{chap:lr} provides an comprehensive review of recent literature, 
+highlighting the existing solutions and their limitations. 
+Chapter \ref{chap:met} clarifies the methodology underlying the proposed 
+approach, offering insights into its theoretical foundations. Implementation 
+details and code snippets are presented in Chapter \ref{chap:impl}, 
+demonstrating the practical application of the method, and commits the 
+overall analysis. Finally, Chapter \ref{chap:conclusion} summarizes findings, 
+discusses implications, and outlines directions for future research.
