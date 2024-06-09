@@ -30,3 +30,5 @@ thesis/thesis.toc
 
 thesis_presentation/presentation_files/*
 !thesis_presentation/presentation_files/libs
+
+/.quarto/

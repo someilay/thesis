@@ -122,6 +122,69 @@ code-block-border-left: true
 * Constraints forces: $\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})$
 :::
 
+::::: {.fragment .fade-up}
+:::: {.columns}
+::: {.column width="47%"}
+:::
+::: {.column width="33%"}
+$\Big \Uparrow$
+:::
+::: {.column width="20%"}
+:::
+::::
+
+:::: {.columns}
+::: {.column width="35%"}
+:::
+::: {.column width="33%"}
+$\begin{aligned}
+    \min_{\dot{\mathbf{v}}} \quad &
+    [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] \\
+    \textrm{s.t.} \quad &
+    A \dot{\mathbf{v}} = \mathbf{b} \\
+    &
+    \mathbf{a} = M^{-1} \mathbf{Q}
+\end{aligned}$
+:::
+::: {.column width="32%"}
+:::
+::::
+:::::
+
+## Applying it (Frame to frame)
+
+::: {.fragment .fade-up}
+$$
+\begin{bmatrix}
+    \dot{\boldsymbol{\upsilon}}_Y - \dot{\boldsymbol{\upsilon}}_X \\
+    \dot{\boldsymbol{\omega}}_Y^{\mathcal{Y}} - 
+    \dot{\boldsymbol{\omega}}_X^{\mathcal{Y}}
+\end{bmatrix} 
++ K_d 
+\begin{bmatrix}
+    \boldsymbol{\upsilon}_Y - \boldsymbol{\upsilon}_X \\
+    \boldsymbol{\omega}_Y^{\mathcal{Y}} - 
+    \boldsymbol{\omega}_X^{\mathcal{Y}}
+\end{bmatrix}
++ K_p
+\begin{bmatrix}
+    \mathbf{r}_Y - \mathbf{r}_X \\
+    \log (R_X^T R_Y)
+\end{bmatrix}
+= 0
+$$
+
+* Hint for proof: $V = \frac{1}{2} \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + \frac{K_p}{2} \mathbf{e}^T \mathbf{e}$, where $\tilde{\boldsymbol{\omega}} = \boldsymbol{\omega}_Y^{\mathcal{Y}} - \boldsymbol{\omega}_X^{\mathcal{Y}}$, and $\mathbf{e} = \log (R_X^T R_Y)$
+:::
+
+::: {.fragment .fade-up}
+* For simplicity in this study $\mathcal{E}_1 = \mathcal{A}$ for any $t > 0$
+:::
+
+::: {.fragment .fade-up}
+* With $\mathcal{X} = \mathcal{B}$, and $\mathcal{Y} = \mathcal{E}_2$ the equation above can be converted to desired form, $A \dot{\mathbf{v}} = \mathbf{b}$
+:::
+
 ## Bibliography
 
 ::: {#refs}
