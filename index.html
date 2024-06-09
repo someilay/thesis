@@ -366,7 +366,7 @@ Ilia Milioshin
     </div>
 </div>
 
-  <p class="date">Jun 7, 2024</p>
+  <p class="date">Jun 9, 2024</p>
 </section>
 <section id="problem-statement" class="slide level2">
 <h2>Problem statement</h2>
@@ -488,6 +488,70 @@ Figure&nbsp;2: Coupling through rigid body
 <div class="fragment fade-up">
 <ul>
 <li>Constraints forces: <span class="math inline">\(\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<div class="columns">
+<div class="column" style="width:47%;">
+
+</div><div class="column" style="width:33%;">
+<p><span class="math inline">\(\Big \Uparrow\)</span></p>
+</div><div class="column" style="width:20%;">
+
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:35%;">
+
+</div><div class="column" style="width:33%;">
+<p><span class="math inline">\(\begin{aligned}
+    \min_{\dot{\mathbf{v}}} \quad &amp;
+    [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] \\
+    \textrm{s.t.} \quad &amp;
+    A \dot{\mathbf{v}} = \mathbf{b} \\
+    &amp;
+    \mathbf{a} = M^{-1} \mathbf{Q}
+\end{aligned}\)</span></p>
+</div><div class="column" style="width:32%;">
+
+</div>
+</div>
+</div>
+</section>
+<section id="applying-it-frame-to-frame" class="slide level2">
+<h2>Applying it (Frame to frame)</h2>
+<div class="fragment fade-up">
+<p><span class="math display">\[
+\begin{bmatrix}
+    \dot{\boldsymbol{\upsilon}}_Y - \dot{\boldsymbol{\upsilon}}_X \\
+    \dot{\boldsymbol{\omega}}_Y^{\mathcal{Y}} -
+    \dot{\boldsymbol{\omega}}_X^{\mathcal{Y}}
+\end{bmatrix}
++ K_d
+\begin{bmatrix}
+    \boldsymbol{\upsilon}_Y - \boldsymbol{\upsilon}_X \\
+    \boldsymbol{\omega}_Y^{\mathcal{Y}} -
+    \boldsymbol{\omega}_X^{\mathcal{Y}}
+\end{bmatrix}
++ K_p
+\begin{bmatrix}
+    \mathbf{r}_Y - \mathbf{r}_X \\
+    \log (R_X^T R_Y)
+\end{bmatrix}
+= 0
+\]</span></p>
+<ul>
+<li>Hint for proof: <span class="math inline">\(V = \frac{1}{2} \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + \frac{K_p}{2} \mathbf{e}^T \mathbf{e}\)</span>, where <span class="math inline">\(\tilde{\boldsymbol{\omega}} = \boldsymbol{\omega}_Y^{\mathcal{Y}} - \boldsymbol{\omega}_X^{\mathcal{Y}}\)</span>, and <span class="math inline">\(\mathbf{e} = \log (R_X^T R_Y)\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li>For simplicity in this study <span class="math inline">\(\mathcal{E}_1 = \mathcal{A}\)</span> for any <span class="math inline">\(t &gt; 0\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li>With <span class="math inline">\(\mathcal{X} = \mathcal{B}\)</span>, and <span class="math inline">\(\mathcal{Y} = \mathcal{E}_2\)</span> the equation above can be converted to desired form, <span class="math inline">\(A \dot{\mathbf{v}} = \mathbf{b}\)</span></li>
 </ul>
 </div>
 </section>
