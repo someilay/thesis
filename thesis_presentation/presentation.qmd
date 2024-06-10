@@ -256,11 +256,11 @@ Will be used
 
 ## Results
 
-![Experimental position discrepancy (left), and $\mathcal{E}_2$ position (right)](images/figures/poses_history.png){#fig-pose-history width=100%}
+![Experimental position discrepancy $\mathcal{D} - \mathcal{E}_1$ (left), and $\mathcal{E}_2$ position (right)](images/figures/poses_history.png){#fig-pose-history width=100%}
 
 ## Results
 
-![Experimental $\mathbf{e}_{\SE}$, left $\mathbf{e}_c$ - constraint, right $\mathbf{e}_u$ - control](images/figures/errors_history.png){#fig-errors-history width=100%}
+![Experimental $\mathbf{e}_{\text{SE}(3)}$, left $\mathbf{e}_c$ - constraint, right $\mathbf{e}_u$ - control](images/figures/errors_history.png){#fig-errors-history width=100%}
 
 ## Conclusion
 
