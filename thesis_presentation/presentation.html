@@ -366,7 +366,7 @@ Ilia Milioshin
     </div>
 </div>
 
-  <p class="date">Jun 9, 2024</p>
+  <p class="date">Jun 10, 2024</p>
 </section>
 <section id="problem-statement" class="slide level2">
 <h2>Problem statement</h2>
@@ -557,6 +557,111 @@ Figure&nbsp;2: Coupling through rigid body
 <li>With <span class="math inline">\(\mathcal{X} = \mathcal{B}\)</span>, and <span class="math inline">\(\mathcal{Y} = \mathcal{E}_2\)</span> the equation above can be converted to desired form, <span class="math inline">\(A \dot{\mathbf{v}} = \mathbf{b}\)</span></li>
 </ul>
 </div>
+<div class="fragment fade-up">
+<ul>
+<li>Control law can be formulated in the same way</li>
+</ul>
+</div>
+</section>
+<section id="task-prioritization" class="slide level2">
+<h2>Task prioritization</h2>
+<div class="fragment fade-up">
+<p><span style="color:green;">Why?</span></p>
+<ul>
+<li>Control tasks can be unreachable</li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li>Easy to switch between tasks</li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<p><span style="color:green;">Solution:</span></p>
+<div class="columns">
+<div class="column" style="width:70%;">
+<ul>
+<li><span class="math inline">\(\begin{aligned}
+  \min_{\dot{\mathbf{v}}} \quad &amp;
+  [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] +
+  \omega
+  [A_u \dot{\mathbf{v}} - \mathbf{b}_u]^T
+  [A_u \dot{\mathbf{v}} - \mathbf{b}_u]\\
+  \textrm{s.t.} \quad &amp;
+  A_c \dot{\mathbf{v}} = \mathbf{b}_c \\
+  &amp;
+  \mathbf{a} = M^{-1} \mathbf{Q}
+\end{aligned}\)</span></li>
+</ul>
+</div><div class="column" style="width:7%;">
+<p><span class="math inline">\(\Longleftarrow\)</span></p>
+</div><div class="column" style="width:23%;">
+<p>Will be used</p>
+</div>
+</div>
+</div>
+</section>
+<section id="dual-arm-yumi" class="slide level2">
+<h2>Dual-arm YuMi</h2>
+<ul>
+<li>Initial DoFs: <span style="color:green;">18</span></li>
+<li>Reduced to <span style="color:red;">14</span></li>
+</ul>
+
+<img data-src="images/figures/yumi.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">
+Figure&nbsp;3: Dual-arm YuMi IRB 14000
+</p></section>
+<section id="ctexttt-frameworks" class="slide level2">
+<h2>C<span class="math inline">\(\texttt{++}\)</span> &amp; Frameworks</h2>
+<div class="fragment fade-up">
+<ul>
+<li><span style="color:red;">Pinocchio</span> <span class="citation" data-cites="Pinocchio"><a href="#/bibliography" role="doc-biblioref" onclick="">[5]</a></span> - fast computational tool for dynamics and kinematics</li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span style="color:green;">MuJoCo</span> <span class="citation" data-cites="MuJoCo"><a href="#/bibliography" role="doc-biblioref" onclick="">[6]</a></span> - general purpose physical engine</li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span style="color:blue;">ProxSuite</span> <span class="citation" data-cites="ProxQP"><a href="#/bibliography" role="doc-biblioref" onclick="">[7]</a></span> - the advance convex problem solver</li>
+</ul>
+</div>
+</section>
+<section id="result-video" class="slide level2">
+<h2>Result video</h2>
+<iframe data-external="1" src="https://www.youtube.com/embed/JCOUIWzbPGg" width="100%" height="85%" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+</section>
+<section id="results" class="slide level2">
+<h2>Results</h2>
+
+<img data-src="images/figures/poses_history.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">
+Figure&nbsp;4: Experimental position discrepancy (left), and <span class="math inline">\(\mathcal{E}_2\)</span> position (right)
+</p></section>
+<section id="results-1" class="slide level2">
+<h2>Results</h2>
+
+<img data-src="images/figures/errors_history.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">
+Figure&nbsp;5: Experimental <span class="math inline">\(\mathbf{e}_{\SE}\)</span>, left <span class="math inline">\(\mathbf{e}_c\)</span> - constraint, right <span class="math inline">\(\mathbf{e}_u\)</span> - control
+</p></section>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<div class="fragment fade-up">
+<p><span style="color:green;">Advantages</span></p>
+<ul>
+<li>Dynamic constraint assignment</li>
+<li>Fast computation (<span class="math inline">\(\approx 100 \mu s\)</span> in experiment)</li>
+<li>Simple prioritaization</li>
+</ul>
+<p><span style="color:red;">Disadvantages</span></p>
+</div>
+<div class="fragment fade-up">
+<p><span style="color:red;">Disadvantages</span></p>
+<ul>
+<li><span class="math inline">\(K_p, K_d\)</span> finetuning steel needs in further investigations</li>
+</ul>
+</div>
 </section>
 <section id="bibliography" class="slide level2 smaller scrollable">
 <h2>Bibliography</h2>
@@ -572,6 +677,15 @@ Figure&nbsp;2: Coupling through rigid body
 </div>
 <div id="ref-UdwadiaKalabaApproach" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[4] </div><div class="csl-right-inline">F. Udwadia and R. Kalaba, <span>“A new perspective on constrained motion,”</span> <em>Proceedings of the Royal Society of London. Series A: Mathematical and Physical Sciences</em>, vol. 439, no. 1906, pp. 407–410, Nov. 1992, doi: <a href="https://doi.org/10.1098/rspa.1992.0158">10.1098/rspa.1992.0158</a>.</div>
+</div>
+<div id="ref-Pinocchio" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">J. Carpentier <em>et al.</em>, <span>“The <span>P</span>inocchio <span>C</span>++ library – <span>A</span> fast and flexible implementation of rigid body dynamics algorithms and their analytical derivatives,”</span> <em>International Symposium on System Integration <span>SII</span></em>, Jan. 2019, doi: <a href="https://doi.org/10.1109/SII.2019.8700380">10.1109/SII.2019.8700380</a>.</div>
+</div>
+<div id="ref-MuJoCo" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[6] </div><div class="csl-right-inline">E. Todorov, T. Erez, and Y. Tassa, <span>“MuJoCo: A physics engine for model-based control,”</span> <em>2012 IEEE/RSJ International Conference on Intelligent Robots and Systems</em>, pp. 5026–5033, Oct. 2012, doi: <a href="https://doi.org/10.1109/IROS.2012.6386109">10.1109/IROS.2012.6386109</a>.</div>
+</div>
+<div id="ref-ProxQP" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[7] </div><div class="csl-right-inline">A. Bambade, S. El-Kazdadi, A. Taylor, and J. Carpentier, <span>“<span class="nocase">PROX-QP: Yet another Quadratic Programming Solver for Robotics and beyond</span>,”</span> in <em><span class="nocase">RSS 2022 - Robotics: Science and Systems</span></em>, New York, United States, Jun. 2022. Available: <a href="https://hal.inria.fr/hal-03683733">https://hal.inria.fr/hal-03683733</a></div>
 </div>
 </div>
 <div class="quarto-auto-generated-content">
