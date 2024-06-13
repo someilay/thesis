@@ -11,6 +11,7 @@
   <meta name="generator" content="quarto-1.5.41">
 
   <meta name="author" content="Ilia Milioshin">
+  <meta name="author" content="Supervisor: Simeon Nedelchev">
   <title>Feedback control over constrained robotic systems through the Udwadia-Kalaba approach</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -364,9 +365,22 @@ Ilia Milioshin
             </a>
           </p>
     </div>
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Supervisor: Simeon Nedelchev 
+</div>
+<div class="quarto-title-author-email">
+<a href="mailto:s.nedelchev@innopolis.university">s.nedelchev@innopolis.university</a>
+</div>
+        <p class="quarto-title-affiliation">
+            <a href="https://innopolis.university/en/">
+            Innopolis University
+            </a>
+          </p>
+    </div>
 </div>
 
-  <p class="date">Jun 10, 2024</p>
+  <p class="date">Jun 13, 2024</p>
 </section>
 <section id="problem-statement" class="slide level2">
 <h2>Problem statement</h2>
@@ -374,7 +388,7 @@ Ilia Milioshin
 <li>Collaborative work with a common object is a widespread scenario in robotics</li>
 </ul>
 
-<img data-src="images/figures/atlas_work_cargo.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">
+<img data-src="images/figures/atlas_work_cargo.gif" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">
 Figure&nbsp;1: Atlas works with various cargos
 </p></section>
 <section id="problem-statement-formal" class="slide level2">
@@ -447,7 +461,7 @@ Figure&nbsp;2: Coupling through rigid body
 <p><span style="color:red;">Disadvantages:</span></p>
 <ul>
 <li>No prioritization between constraints</li>
-<li>It is usually applied only for bipeds robots</li>
+<li>Unnecessary new decision variables, such as <span class="math inline">\(\pmb{\lambda}\)</span>, <span class="math inline">\(\mathbf{n}\)</span>, <span class="math inline">\(\mathbf{d}_i\)</span></li>
 </ul>
 </div>
 </section>
@@ -472,7 +486,7 @@ Figure&nbsp;2: Coupling through rigid body
 <p><span style="color:red;">Disadvantages:</span></p>
 <ul>
 <li>It is hard to prioritize constraints for KKT</li>
-<li>Non-holonomic constraints are unsupported</li>
+<li>Non-holonomic constraints are hard to define</li>
 </ul>
 </div>
 </section>
@@ -593,9 +607,9 @@ Figure&nbsp;2: Coupling through rigid body
   \mathbf{a} = M^{-1} \mathbf{Q}
 \end{aligned}\)</span></li>
 </ul>
-</div><div class="column" style="width:7%;">
+</div><div class="column" style="width:10%;">
 <p><span class="math inline">\(\Longleftarrow\)</span></p>
-</div><div class="column" style="width:23%;">
+</div><div class="column" style="width:20%;">
 <p>Will be used</p>
 </div>
 </div>
@@ -648,7 +662,7 @@ Figure&nbsp;5: Experimental <span class="math inline">\(\mathbf{e}_{\text{SE}(3)
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
 <div class="fragment fade-up">
-<p><span style="color:green;">Advantages</span></p>
+<p><span style="color:green;">Achieved</span></p>
 <ul>
 <li>Dynamic constraint assignment</li>
 <li>Fast computation (<span class="math inline">\(\approx 100 \mu s\)</span> in experiment)</li>
@@ -656,9 +670,10 @@ Figure&nbsp;5: Experimental <span class="math inline">\(\mathbf{e}_{\text{SE}(3)
 </ul>
 </div>
 <div class="fragment fade-up">
-<p><span style="color:red;">Disadvantages</span></p>
+<p><span style="color:red;">Further works</span></p>
 <ul>
 <li><span class="math inline">\(K_p, K_d\)</span> finetuning steel needs in further investigations</li>
+<li>Support of non-rigid bodies</li>
 </ul>
 </div>
 </section>
@@ -686,7 +701,36 @@ Figure&nbsp;5: Experimental <span class="math inline">\(\mathbf{e}_{\text{SE}(3)
 <div id="ref-ProxQP" class="csl-entry" role="listitem">
 <div class="csl-left-margin">[7] </div><div class="csl-right-inline">A. Bambade, S. El-Kazdadi, A. Taylor, and J. Carpentier, <span>“<span class="nocase">PROX-QP: Yet another Quadratic Programming Solver for Robotics and beyond</span>,”</span> in <em><span class="nocase">RSS 2022 - Robotics: Science and Systems</span></em>, New York, United States, Jun. 2022. Available: <a href="https://hal.inria.fr/hal-03683733">https://hal.inria.fr/hal-03683733</a></div>
 </div>
+<div id="ref-ANonlinearObserverUsingPose" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[8] </div><div class="csl-right-inline">H. Mishra, M. D. Stefano, A. M. Giordano, and C. Ott, <span>“A <span>N</span>onlinear <span>O</span>bserver for <span>F</span>ree-<span>F</span>loating <span>T</span>arget <span>M</span>otion using only <span>P</span>ose <span>M</span>easurements,”</span> <em>American <span>C</span>ontrol <span>C</span>onference (<span>ACC</span>)</em>, Jul. 2019, doi: <a href="https://doi.org/10.23919/ACC.2019.8814815">10.23919/ACC.2019.8814815</a>.</div>
 </div>
+</div>
+</section>
+<section id="appendix.-brief-lie-theory" class="slide level2">
+<h2>Appendix. Brief Lie theory</h2>
+<ul>
+<li><p>The Lie group, a mathematical concept dating back to the 19th century, was first proposed by Sophus Lie</p></li>
+<li><p><span class="math inline">\(\text{SO}(3)\)</span> - group, <span class="math inline">\(\mathbb{R}^3\)</span> - algebra</p></li>
+<li><p><span class="math inline">\(\hat{\mathbf{a}} =
+\begin{bmatrix}
+  0 &amp; -a_3 &amp; a_2 \\
+  a_3 &amp; 0 &amp; -a_1 \\
+  -a_2 &amp; a_1 &amp; 0 \\
+\end{bmatrix} = A\)</span>, and <span class="math inline">\(A^{\vee} = \mathbf{a}\)</span></p></li>
+<li><p><span class="math inline">\(\boldsymbol{\theta} = \text{Log} (R) \equiv \frac{\theta (R - R^T)^{\vee}}{2 \sin \theta}\)</span>, where <span class="math inline">\(\theta = \cos^{-1} \frac{\text{trace}(R) - 1}{2}\)</span>, and <span class="math inline">\(R = \text{Exp}(\boldsymbol{\theta}) \equiv I + \frac{\sin \theta}{\theta} \hat{\boldsymbol{\theta}} + \frac{1 - \cos \theta}{\theta^2} \hat{\boldsymbol{\theta}}^2\)</span></p></li>
+<li><p><span class="math inline">\(J_r^{-1}(\boldsymbol{\theta}) =  I + \frac{1}{2} \hat{\boldsymbol{\theta}} + \biggl( \frac{1}{\theta^2} - \frac{1 + \cos \theta}{2 \theta \sin \theta} \biggr) \hat{\boldsymbol{\theta}}^2\)</span></p></li>
+</ul>
+</section>
+<section id="appendix.-proof-of-stability" class="slide level2">
+<h2>Appendix. Proof of stability</h2>
+<ul>
+<li><p>Proposal: <span class="math inline">\((\dot{\boldsymbol{\omega}}_D^{\mathcal{D}} - \dot{\boldsymbol{\omega}}^{\mathcal{D}}) + K_d (\boldsymbol{\omega}_D^{\mathcal{D}} - \boldsymbol{\omega}^{\mathcal{D}}) + K_p \log (R^T R_d) = 0\)</span> is asymptotically stable</p></li>
+<li><p>Simplify to <span class="math inline">\(\dot{\tilde{\boldsymbol{\omega}}} + K_d \tilde{\boldsymbol{\omega}} + K_p \mathbf{e} = 0\)</span> by <span class="math inline">\(\mathbf{e} = \log R^T R_d\)</span>, and <span class="math inline">\(\tilde{\boldsymbol{\omega}} = \boldsymbol{\omega}_D^{\mathcal{D}} - \boldsymbol{\omega}^{\mathcal{D}}\)</span></p></li>
+<li><p><span class="math inline">\(\dot{\mathbf{e}} = J_r^{-1}(\mathbf{e})[(R^T R_d)^T (\dot{R}^T R_d + R^T \dot{R}_d)]^{\vee} = J_r^{-1}(\mathbf{e}) \tilde{\boldsymbol{\omega}}\)</span></p></li>
+<li><p>Let the Lyapunov candidate is <span class="math inline">\(V = \frac{1}{2} \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + \frac{K_p}{2} \mathbf{e}^T \mathbf{e}\)</span></p></li>
+<li><p><span class="math inline">\(\dot{V} = \tilde{\boldsymbol{\omega}}^T \dot{\tilde{\boldsymbol{\omega}}} + K_p \mathbf{e}^T \dot{\mathbf{e}} = -K_D \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} &lt; 0\)</span> by <span class="math inline">\(\mathbf{e}^T J_r^{-1}(\mathbf{e}) = \mathbf{e}^T\)</span>, see <span class="citation" data-cites="ANonlinearObserverUsingPose"><a href="#/bibliography" role="doc-biblioref" onclick="">[8]</a></span></p></li>
+<li><p>By applying LaSalle’s Invariance Theorem differential equation is asymptotic stable</p></li>
+</ul>
 <div class="quarto-auto-generated-content">
 <p><img src="images/logos/inno.png" class="slide-logo"></p>
 <div class="footer footer-default">

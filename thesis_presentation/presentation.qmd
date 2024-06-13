@@ -9,6 +9,13 @@ author:
         city: Innopolis
         state: Tatarstan
         url: [https://innopolis.university/en/]
+  - name: "Supervisor: Simeon Nedelchev"
+    email: s.nedelchev@innopolis.university
+    affiliation: 
+      - name: Innopolis University
+        city: Innopolis
+        state: Tatarstan
+        url: [https://innopolis.university/en/]
 copyright: 
   holder: Ilia Milioshin
 date: 'today'
@@ -37,7 +44,7 @@ code-block-border-left: true
 
 * Collaborative work with a common object is a widespread scenario in robotics
 
-![Atlas works with various cargos](images/figures/atlas_work_cargo.png){#fig-atlas-collab-work width=100%}
+![Atlas works with various cargos](images/figures/atlas_work_cargo.gif){#fig-atlas-collab-work width=100%}
 
 ## Problem statement (formal)
 
@@ -84,7 +91,7 @@ code-block-border-left: true
 [Disadvantages:]{style="color:red;"}
 
 * No prioritization between constraints
-* It is usually applied only for bipeds robots
+* Unnecessary new decision variables, such as $\pmb{\lambda}$, $\mathbf{n}$, $\mathbf{d}_i$
 :::
 
 ## Approach 3
@@ -105,7 +112,7 @@ code-block-border-left: true
 [Disadvantages:]{style="color:red;"}
 
 * It is hard to prioritize constraints for KKT
-* Non-holonomic constraints are unsupported
+* Non-holonomic constraints are hard to define
 :::
 
 ## Udwadia-Kalaba @UdwadiaKalabaApproach approach
@@ -219,11 +226,11 @@ $$
 \end{aligned}$
 :::
 
-::: {.column width="7%"}
+::: {.column width="10%"}
 $\Longleftarrow$
 :::
 
-::: {.column width="23%"}
+::: {.column width="20%"}
 Will be used
 :::
 ::::
@@ -265,7 +272,7 @@ Will be used
 ## Conclusion
 
 ::: {.fragment .fade-up}
-[Advantages]{style="color:green;"}
+[Achieved]{style="color:green;"}
 
 * Dynamic constraint assignment
 * Fast computation ($\approx 100 \mu s$ in experiment)
@@ -273,12 +280,45 @@ Will be used
 :::
 
 ::: {.fragment .fade-up}
-[Disadvantages]{style="color:red;"}
+[Further works]{style="color:red;"}
 
 * $K_p, K_d$ finetuning steel needs in further investigations
+* Support of non-rigid bodies
 :::
 
 ## Bibliography
 
 ::: {#refs}
 :::
+
+## Appendix. Brief Lie theory
+
+* The Lie group, a mathematical concept dating back to the 19th century, was first proposed by Sophus Lie
+
+* $\text{SO}(3)$ - group, $\mathbb{R}^3$ - algebra
+
+* $\hat{\mathbf{a}} = 
+\begin{bmatrix}
+    0 & -a_3 & a_2 \\
+    a_3 & 0 & -a_1 \\
+    -a_2 & a_1 & 0 \\
+\end{bmatrix} = A
+$, and $A^{\vee} = \mathbf{a}$
+
+* $\boldsymbol{\theta} = \text{Log} (R) \equiv \frac{\theta (R - R^T)^{\vee}}{2 \sin \theta}$, where $\theta = \cos^{-1} \frac{\text{trace}(R) - 1}{2}$, and $R = \text{Exp}(\boldsymbol{\theta}) \equiv I + \frac{\sin \theta}{\theta} \hat{\boldsymbol{\theta}} + \frac{1 - \cos \theta}{\theta^2} \hat{\boldsymbol{\theta}}^2$
+
+* $J_r^{-1}(\boldsymbol{\theta}) =  I + \frac{1}{2} \hat{\boldsymbol{\theta}} + \biggl( \frac{1}{\theta^2} - \frac{1 + \cos \theta}{2 \theta \sin \theta} \biggr) \hat{\boldsymbol{\theta}}^2$
+
+## Appendix. Proof of stability
+
+* Proposal: $(\dot{\boldsymbol{\omega}}_D^{\mathcal{D}} - \dot{\boldsymbol{\omega}}^{\mathcal{D}}) + K_d (\boldsymbol{\omega}_D^{\mathcal{D}} - \boldsymbol{\omega}^{\mathcal{D}}) + K_p \log (R^T R_d) = 0$ is asymptotically stable
+
+* Simplify to $\dot{\tilde{\boldsymbol{\omega}}} + K_d \tilde{\boldsymbol{\omega}} + K_p \mathbf{e} = 0$ by $\mathbf{e} = \log R^T R_d$, and $\tilde{\boldsymbol{\omega}} = \boldsymbol{\omega}_D^{\mathcal{D}} - \boldsymbol{\omega}^{\mathcal{D}}$
+
+* $\dot{\mathbf{e}} = J_r^{-1}(\mathbf{e})[(R^T R_d)^T (\dot{R}^T R_d + R^T \dot{R}_d)]^{\vee} = J_r^{-1}(\mathbf{e}) \tilde{\boldsymbol{\omega}}$
+
+* Let the Lyapunov candidate is $V = \frac{1}{2} \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + \frac{K_p}{2} \mathbf{e}^T \mathbf{e}$
+
+* $\dot{V} = \tilde{\boldsymbol{\omega}}^T \dot{\tilde{\boldsymbol{\omega}}} + K_p \mathbf{e}^T \dot{\mathbf{e}} = -K_D \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} < 0$ by $\mathbf{e}^T J_r^{-1}(\mathbf{e}) = \mathbf{e}^T$, see @ANonlinearObserverUsingPose
+
+* By applying LaSalle's Invariance Theorem differential equation is asymptotic stable 
