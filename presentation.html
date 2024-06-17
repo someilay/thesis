@@ -380,7 +380,7 @@ Supervisor: Simeon Nedelchev
     </div>
 </div>
 
-  <p class="date">Jun 13, 2024</p>
+  <p class="date">Jun 21, 2024</p>
 </section>
 <section id="problem-statement" class="slide level2">
 <h2>Problem statement</h2>
@@ -491,17 +491,17 @@ Figure&nbsp;2: Coupling through rigid body
 <h2>Udwadia-Kalaba <span class="citation" data-cites="UdwadiaKalabaApproach"><a href="#/bibliography" role="doc-biblioref" onclick="">[4]</a></span> approach</h2>
 <div class="fragment fade-up">
 <ul>
-<li>Mathematical model: <span class="math inline">\(M \dot{\mathbf{v}} = \mathbf{Q}\)</span></li>
+<li>Mathematical model: <span class="math inline">\(M(\mathbf{q})\ddot{\mathbf{q}} + C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + g(\mathbf{q}) = \boldsymbol{\tau} \Rightarrow M \dot{\mathbf{v}} = \mathbf{Q}\)</span></li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Holonomic and non-holonomic constraints are converted to form: <span class="math inline">\(A \dot{\mathbf{v}} = \mathbf{b}\)</span></li>
+<li>Holonomic and non-holonomic constraints have a form: <span class="math inline">\(A(\mathbf{q}, \mathbf{v}, t) \dot{\mathbf{v}} = \mathbf{b}(\mathbf{q}, \mathbf{v}, t)\)</span></li>
 </ul>
 </div>
 <div class="fragment fade-up">
 <ul>
-<li>Constraints forces: <span class="math inline">\(\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})\)</span></li>
+<li>Constraints forces: <span class="math inline">\(\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})\)</span>, will used as control input</li>
 </ul>
 </div>
 <div class="fragment fade-up">
@@ -534,7 +534,9 @@ Figure&nbsp;2: Coupling through rigid body
 </section>
 <section id="applying-it-frame-to-frame" class="slide level2">
 <h2>Applying it (Frame to frame)</h2>
-<div class="fragment fade-up">
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="fragment fade-up" data-fragment-index="1">
 <p><span class="math display">\[
 \begin{bmatrix}
     \dot{\boldsymbol{\upsilon}}_Y - \dot{\boldsymbol{\upsilon}}_X \\
@@ -571,6 +573,66 @@ Figure&nbsp;2: Coupling through rigid body
 <div class="fragment fade-up">
 <ul>
 <li>Control law can be formulated in the same way</li>
+</ul>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="fragment fade-up quarto-layout-panel" data-layout="[[-1], [1], [-1]]" data-fragment-index="1">
+<div class="quarto-layout-row">
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/figures/rigid_body_coupling.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-and-mathbfb-for-constraints" class="slide level2">
+<h2><span class="math inline">\(A\)</span> and <span class="math inline">\(\mathbf{b}\)</span> for constraints</h2>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(A = \begin{bmatrix} \tilde{J}_{d,v} \\ \tilde{J}_{d,\omega} \end{bmatrix}\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(b = -\begin{bmatrix} \dot{\tilde{J}}_{d,v} \\ \dot{\tilde{J}}_{d,\omega} \end{bmatrix} \mathbf{v} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{E}_2} \end{bmatrix} - K_p \color{red}{\mathbf{e}_{\text{SE}(3)}( T_{\mathcal{W}}^{\mathcal{E}_1} \cdot T_{\mathcal{A}}^{\mathcal{B}}, T_{\mathcal{W}}^{\mathcal{E}_2})}\)</span> <span class="math inline">\(\Leftarrow \color{red}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log (R_B^T R_{E_2}) \end{bmatrix}}\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(\tilde{J}_{d,*}\)</span> is the difference of Jacobians</li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(v\)</span> stands for linear part, <span class="math inline">\(\omega\)</span> stands for angular part</li>
+</ul>
+</div>
+</section>
+<section id="a-and-mathbfb-for-control" class="slide level2">
+<h2><span class="math inline">\(A\)</span> and <span class="math inline">\(\mathbf{b}\)</span> for control</h2>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(A = \begin{bmatrix} - J_{E_1, v} \\ - R_D^T J_{E_1, \omega} \end{bmatrix}\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(\mathbf{b} = \begin{bmatrix} \dot{J}_{E_1, v} \\ R_D^T [ \dot{J}_{E_1, \omega} - \hat{\boldsymbol{\omega}}_D J_{E_1, \omega}] \end{bmatrix} \mathbf{v} - \begin{bmatrix}\mathbf{a}_D^{\mathcal{D}} \\ \boldsymbol{\epsilon}_D^{\mathcal{D}} \end{bmatrix} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{D}}\end{bmatrix} - K_p \mathbf{e}_{\text{SE}(3)}(T_{\mathcal{W}}^{\mathcal{E}_1}, T_{\mathcal{W}}^{\mathcal{D}})\)</span></li>
+</ul>
+</div>
+<div class="fragment fade-up">
+<ul>
+<li><span class="math inline">\(T_{\mathcal{W}}^{\mathcal{D}}\)</span> stands for desired attitude</li>
 </ul>
 </div>
 </section>
@@ -727,6 +789,15 @@ Figure&nbsp;5: Experimental <span class="math inline">\(\mathbf{e}_{\text{SE}(3)
 <li><p>Let the Lyapunov candidate is <span class="math inline">\(V = \frac{1}{2} \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} + \frac{K_p}{2} \mathbf{e}^T \mathbf{e}\)</span></p></li>
 <li><p><span class="math inline">\(\dot{V} = \tilde{\boldsymbol{\omega}}^T \dot{\tilde{\boldsymbol{\omega}}} + K_p \mathbf{e}^T \dot{\mathbf{e}} = -K_D \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} &lt; 0\)</span> by <span class="math inline">\(\mathbf{e}^T J_r^{-1}(\mathbf{e}) = \mathbf{e}^T\)</span>, see <span class="citation" data-cites="ANonlinearObserverUsingPose"><a href="#/bibliography" role="doc-biblioref" onclick="">[8]</a></span></p></li>
 <li><p>By applying LaSalle’s Invariance Theorem differential equation is asymptotic stable</p></li>
+</ul>
+</section>
+<section id="appendix.-jacobians" class="slide level2">
+<h2>Appendix. Jacobians</h2>
+<ul>
+<li><p><span class="math inline">\(J_{d, *} = J_{E_2, *} - J_{E_1, *}\)</span></p></li>
+<li><p><span class="math inline">\(\begin{bmatrix} J_{d, v} + [R_{E_1} \mathbf{r}_{AB}^{\mathcal{A}}]^{\wedge} J_{E_1, \omega} \\ R_{E_2}^T J_{d, \omega} \end{bmatrix} = \begin{bmatrix}\tilde{J}_{d,v} \\ \tilde{J}_{d, \omega} \end{bmatrix}\)</span></p></li>
+<li><p><span class="math inline">\(\dot{\tilde{J}}_{d,v} = \dot{J}_{d,v} + \hat{\boldsymbol{\omega}}_{E_1} \hat{\mathbf{r}}_{AB} J_{E_1, \omega} + \hat{\mathbf{r}}_{AB} \dot{J}_{E_1, \omega}\)</span></p></li>
+<li><p><span class="math inline">\(\dot{\tilde{J}}_{d,\omega} = R_{E_2}^T [\dot{J}_{d, \omega} - \hat{\boldsymbol{\omega}}_{E_2} J_{d, \omega}]\)</span></p></li>
 </ul>
 <div class="quarto-auto-generated-content">
 <p><img src="images/logos/inno.png" class="slide-logo"></p>
