@@ -18,7 +18,7 @@ author:
         url: [https://innopolis.university/en/]
 copyright: 
   holder: Ilia Milioshin
-date: 'today'
+date: '06/21/2024'
 date-format: medium
 format: 
     revealjs:
@@ -118,15 +118,15 @@ code-block-border-left: true
 ## Udwadia-Kalaba @UdwadiaKalabaApproach approach
 
 ::: {.fragment .fade-up}
-* Mathematical model: $M \dot{\mathbf{v}} = \mathbf{Q}$
+* Mathematical model: $M(\mathbf{q})\ddot{\mathbf{q}} + C(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + g(\mathbf{q}) = \boldsymbol{\tau} \Rightarrow M \dot{\mathbf{v}} = \mathbf{Q}$
 :::
 
 ::: {.fragment .fade-up}
-* Holonomic and non-holonomic constraints are converted to form: $A \dot{\mathbf{v}} = \mathbf{b}$
+* Holonomic and non-holonomic constraints have a form: $A(\mathbf{q}, \mathbf{v}, t) \dot{\mathbf{v}} = \mathbf{b}(\mathbf{q}, \mathbf{v}, t)$
 :::
 
 ::: {.fragment .fade-up}
-* Constraints forces: $\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})$
+* Constraints forces: $\mathbf{Q}_c = M^{1 / 2} (A M^{-1 /2})^+(\mathbf{b} - AM^{-1} \mathbf{Q})$, will used as control input
 :::
 
 ::::: {.fragment .fade-up}
@@ -160,7 +160,9 @@ $\begin{aligned}
 
 ## Applying it (Frame to frame)
 
-::: {.fragment .fade-up}
+::::: {.columns}
+:::: {.column width="70%"}
+::: {.fragment .fade-up fragment-index=1}
 $$
 \begin{bmatrix}
     \dot{\boldsymbol{\upsilon}}_Y - \dot{\boldsymbol{\upsilon}}_X \\
@@ -194,6 +196,47 @@ $$
 
 ::: {.fragment .fade-up}
 * Control law can be formulated in the same way
+:::
+::::
+
+:::: {.column width="30%"}
+::: {layout="[[-1], [1], [-1]]" .fragment .fade-up fragment-index=1}
+![](images/figures/rigid_body_coupling.png){width=100% fig-align="center"}
+:::
+::::
+:::::
+
+## $A$ and $\mathbf{b}$ for constraints
+
+::: {.fragment .fade-up}
+* $A = \begin{bmatrix} \tilde{J}_{d,v} \\ \tilde{J}_{d,\omega} \end{bmatrix}$ 
+:::
+
+::: {.fragment .fade-up}
+* $b = -\begin{bmatrix} \dot{\tilde{J}}_{d,v} \\ \dot{\tilde{J}}_{d,\omega} \end{bmatrix} \mathbf{v} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{E}_2} \end{bmatrix} - K_p \color{red}{\mathbf{e}_{\text{SE}(3)}( T_{\mathcal{W}}^{\mathcal{E}_1} \cdot T_{\mathcal{A}}^{\mathcal{B}}, T_{\mathcal{W}}^{\mathcal{E}_2})}$
+$\Leftarrow \color{red}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log (R_B^T R_{E_2}) \end{bmatrix}}$
+:::
+
+::: {.fragment .fade-up}
+* $\tilde{J}_{d,*}$ is the difference of Jacobians
+:::
+
+::: {.fragment .fade-up}
+* $v$ stands for linear part, $\omega$ stands for angular part
+:::
+
+## $A$ and $\mathbf{b}$ for control
+
+::: {.fragment .fade-up}
+* $A = \begin{bmatrix} - J_{E_1, v} \\ - R_D^T J_{E_1, \omega} \end{bmatrix}$ 
+:::
+
+::: {.fragment .fade-up}
+* $\mathbf{b} = \begin{bmatrix} \dot{J}_{E_1, v} \\ R_D^T [ \dot{J}_{E_1, \omega} - \hat{\boldsymbol{\omega}}_D J_{E_1, \omega}] \end{bmatrix} \mathbf{v} - \begin{bmatrix}\mathbf{a}_D^{\mathcal{D}} \\ \boldsymbol{\epsilon}_D^{\mathcal{D}} \end{bmatrix} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{D}}\end{bmatrix} - K_p \mathbf{e}_{\text{SE}(3)}(T_{\mathcal{W}}^{\mathcal{E}_1}, T_{\mathcal{W}}^{\mathcal{D}})$ 
+:::
+
+::: {.fragment .fade-up}
+* $T_{\mathcal{W}}^{\mathcal{D}}$ stands for desired attitude
 :::
 
 ## Task prioritization
@@ -322,3 +365,13 @@ $, and $A^{\vee} = \mathbf{a}$
 * $\dot{V} = \tilde{\boldsymbol{\omega}}^T \dot{\tilde{\boldsymbol{\omega}}} + K_p \mathbf{e}^T \dot{\mathbf{e}} = -K_D \tilde{\boldsymbol{\omega}}^T \tilde{\boldsymbol{\omega}} < 0$ by $\mathbf{e}^T J_r^{-1}(\mathbf{e}) = \mathbf{e}^T$, see @ANonlinearObserverUsingPose
 
 * By applying LaSalle's Invariance Theorem differential equation is asymptotic stable 
+
+## Appendix. Jacobians
+
+* $J_{d, *} = J_{E_2, *} - J_{E_1, *}$
+
+* $\begin{bmatrix} J_{d, v} + [R_{E_1} \mathbf{r}_{AB}^{\mathcal{A}}]^{\wedge} J_{E_1, \omega} \\ R_{E_2}^T J_{d, \omega} \end{bmatrix} = \begin{bmatrix}\tilde{J}_{d,v} \\ \tilde{J}_{d, \omega} \end{bmatrix}$
+
+* $\dot{\tilde{J}}_{d,v} = \dot{J}_{d,v} + \hat{\boldsymbol{\omega}}_{E_1} \hat{\mathbf{r}}_{AB} J_{E_1, \omega} + \hat{\mathbf{r}}_{AB} \dot{J}_{E_1, \omega}$
+
+* $\dot{\tilde{J}}_{d,\omega} = R_{E_2}^T [\dot{J}_{d, \omega} - \hat{\boldsymbol{\omega}}_{E_2} J_{d, \omega}]$
