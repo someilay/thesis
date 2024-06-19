@@ -176,10 +176,12 @@ $$
     \boldsymbol{\omega}_X^{\mathcal{Y}}
 \end{bmatrix}
 + K_p
+\color{green}{
 \begin{bmatrix}
     \mathbf{r}_Y - \mathbf{r}_X \\
     \log (R_X^T R_Y)
 \end{bmatrix}
+}
 = 0
 $$
 
@@ -210,32 +212,22 @@ $$
 
 ::: {.fragment .fade-up}
 * $A = \begin{bmatrix} \tilde{J}_{d,v} \\ \tilde{J}_{d,\omega} \end{bmatrix}$ 
-:::
 
-::: {.fragment .fade-up}
-* $b = -\begin{bmatrix} \dot{\tilde{J}}_{d,v} \\ \dot{\tilde{J}}_{d,\omega} \end{bmatrix} \mathbf{v} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{E}_2} \end{bmatrix} - K_p \color{red}{\mathbf{e}_{\text{SE}(3)}( T_{\mathcal{W}}^{\mathcal{E}_1} \cdot T_{\mathcal{A}}^{\mathcal{B}}, T_{\mathcal{W}}^{\mathcal{E}_2})}$
-$\Leftarrow \color{red}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log (R_B^T R_{E_2}) \end{bmatrix}}$
-:::
+* $b = -\begin{bmatrix} \dot{\tilde{J}}_{d,v} \\ \dot{\tilde{J}}_{d,\omega} \end{bmatrix} \mathbf{v} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{E}_2} \end{bmatrix} - K_p \color{green}{\mathbf{e}_{\text{SE}(3)}( T_{\mathcal{W}}^{\mathcal{E}_1} \cdot T_{\mathcal{A}}^{\mathcal{B}}, T_{\mathcal{W}}^{\mathcal{E}_2})}$
+$\Leftarrow \color{green}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log (R_B^T R_{E_2}) \end{bmatrix}}$
 
-::: {.fragment .fade-up}
 * $\tilde{J}_{d,*}$ is the difference of Jacobians
-:::
 
-::: {.fragment .fade-up}
 * $v$ stands for linear part, $\omega$ stands for angular part
 :::
 
 ## $A$ and $\mathbf{b}$ for control
 
 ::: {.fragment .fade-up}
-* $A = \begin{bmatrix} - J_{E_1, v} \\ - R_D^T J_{E_1, \omega} \end{bmatrix}$ 
-:::
+* $A = \begin{bmatrix} - J_{E_1, v} \\ - R_D^T J_{E_1, \omega} \end{bmatrix}$
 
-::: {.fragment .fade-up}
-* $\mathbf{b} = \begin{bmatrix} \dot{J}_{E_1, v} \\ R_D^T [ \dot{J}_{E_1, \omega} - \hat{\boldsymbol{\omega}}_D J_{E_1, \omega}] \end{bmatrix} \mathbf{v} - \begin{bmatrix}\mathbf{a}_D^{\mathcal{D}} \\ \boldsymbol{\epsilon}_D^{\mathcal{D}} \end{bmatrix} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{D}}\end{bmatrix} - K_p \mathbf{e}_{\text{SE}(3)}(T_{\mathcal{W}}^{\mathcal{E}_1}, T_{\mathcal{W}}^{\mathcal{D}})$ 
-:::
+* $\mathbf{b} = \begin{bmatrix} \dot{J}_{E_1, v} \\ R_D^T [ \dot{J}_{E_1, \omega} - \hat{\boldsymbol{\omega}}_D J_{E_1, \omega}] \end{bmatrix} \mathbf{v} - \begin{bmatrix}\mathbf{a}_D^{\mathcal{D}} \\ \boldsymbol{\epsilon}_D^{\mathcal{D}} \end{bmatrix} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{D}}\end{bmatrix} - K_p \color{green}{\mathbf{e}_{\text{SE}(3)}(T_{\mathcal{W}}^{\mathcal{E}_1}, T_{\mathcal{W}}^{\mathcal{D}})}$ 
 
-::: {.fragment .fade-up}
 * $T_{\mathcal{W}}^{\mathcal{D}}$ stands for desired attitude
 :::
 
@@ -259,9 +251,10 @@ $\Leftarrow \color{red}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log 
 * $\begin{aligned}
     \min_{\dot{\mathbf{v}}} \quad &
     [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] +
+    \color{blue}{
     \gamma 
     [A_u \dot{\mathbf{v}} - \mathbf{b}_u]^T 
-    [A_u \dot{\mathbf{v}} - \mathbf{b}_u]\\
+    [A_u \dot{\mathbf{v}} - \mathbf{b}_u] } \\
     \textrm{s.t.} \quad &
     A_c \dot{\mathbf{v}} = \mathbf{b}_c \\
     &
@@ -310,7 +303,7 @@ Will be used
 
 ## Results
 
-![Experimental $\mathbf{e}_{\text{SE}(3)}$, left $\mathbf{e}_c$ - constraint, right $\mathbf{e}_u$ - control](images/figures/errors_history.png){#fig-errors-history width=100%}
+![Experimental $\color{green}{\mathbf{e}_{\text{SE}(3)}}$, left $\mathbf{e}_c$ - constraint, right $\mathbf{e}_u$ - control](images/figures/errors_history.png){#fig-errors-history width=100%}
 
 ## Conclusion
 
