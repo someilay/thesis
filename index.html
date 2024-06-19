@@ -550,10 +550,12 @@ Figure&nbsp;2: Coupling through rigid body
     \boldsymbol{\omega}_X^{\mathcal{Y}}
 \end{bmatrix}
 + K_p
+\color{green}{
 \begin{bmatrix}
     \mathbf{r}_Y - \mathbf{r}_X \\
     \log (R_X^T R_Y)
 \end{bmatrix}
+}
 = 0
 \]</span></p>
 <ul>
@@ -576,7 +578,7 @@ Figure&nbsp;2: Coupling through rigid body
 </ul>
 </div>
 </div><div class="column" style="width:30%;">
-<div class="fragment fade-up quarto-layout-panel" data-layout="[[-1], [1], [-1]]" data-fragment-index="1">
+<div class="fragment fade-up quarto-layout-panel" data-fragment-index="1" data-layout="[[-1], [1], [-1]]">
 <div class="quarto-layout-row">
 <div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <p>&nbsp;</p>
@@ -599,22 +601,10 @@ Figure&nbsp;2: Coupling through rigid body
 <h2><span class="math inline">\(A\)</span> and <span class="math inline">\(\mathbf{b}\)</span> for constraints</h2>
 <div class="fragment fade-up">
 <ul>
-<li><span class="math inline">\(A = \begin{bmatrix} \tilde{J}_{d,v} \\ \tilde{J}_{d,\omega} \end{bmatrix}\)</span></li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><span class="math inline">\(b = -\begin{bmatrix} \dot{\tilde{J}}_{d,v} \\ \dot{\tilde{J}}_{d,\omega} \end{bmatrix} \mathbf{v} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{E}_2} \end{bmatrix} - K_p \color{red}{\mathbf{e}_{\text{SE}(3)}( T_{\mathcal{W}}^{\mathcal{E}_1} \cdot T_{\mathcal{A}}^{\mathcal{B}}, T_{\mathcal{W}}^{\mathcal{E}_2})}\)</span> <span class="math inline">\(\Leftarrow \color{red}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log (R_B^T R_{E_2}) \end{bmatrix}}\)</span></li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><span class="math inline">\(\tilde{J}_{d,*}\)</span> is the difference of Jacobians</li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><span class="math inline">\(v\)</span> stands for linear part, <span class="math inline">\(\omega\)</span> stands for angular part</li>
+<li><p><span class="math inline">\(A = \begin{bmatrix} \tilde{J}_{d,v} \\ \tilde{J}_{d,\omega} \end{bmatrix}\)</span></p></li>
+<li><p><span class="math inline">\(b = -\begin{bmatrix} \dot{\tilde{J}}_{d,v} \\ \dot{\tilde{J}}_{d,\omega} \end{bmatrix} \mathbf{v} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{E}_2} \end{bmatrix} - K_p \color{green}{\mathbf{e}_{\text{SE}(3)}( T_{\mathcal{W}}^{\mathcal{E}_1} \cdot T_{\mathcal{A}}^{\mathcal{B}}, T_{\mathcal{W}}^{\mathcal{E}_2})}\)</span> <span class="math inline">\(\Leftarrow \color{green}{\begin{bmatrix} \mathbf{r}_{E_2} - \mathbf{r}_B \\ \log (R_B^T R_{E_2}) \end{bmatrix}}\)</span></p></li>
+<li><p><span class="math inline">\(\tilde{J}_{d,*}\)</span> is the difference of Jacobians</p></li>
+<li><p><span class="math inline">\(v\)</span> stands for linear part, <span class="math inline">\(\omega\)</span> stands for angular part</p></li>
 </ul>
 </div>
 </section>
@@ -622,17 +612,9 @@ Figure&nbsp;2: Coupling through rigid body
 <h2><span class="math inline">\(A\)</span> and <span class="math inline">\(\mathbf{b}\)</span> for control</h2>
 <div class="fragment fade-up">
 <ul>
-<li><span class="math inline">\(A = \begin{bmatrix} - J_{E_1, v} \\ - R_D^T J_{E_1, \omega} \end{bmatrix}\)</span></li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><span class="math inline">\(\mathbf{b} = \begin{bmatrix} \dot{J}_{E_1, v} \\ R_D^T [ \dot{J}_{E_1, \omega} - \hat{\boldsymbol{\omega}}_D J_{E_1, \omega}] \end{bmatrix} \mathbf{v} - \begin{bmatrix}\mathbf{a}_D^{\mathcal{D}} \\ \boldsymbol{\epsilon}_D^{\mathcal{D}} \end{bmatrix} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{D}}\end{bmatrix} - K_p \mathbf{e}_{\text{SE}(3)}(T_{\mathcal{W}}^{\mathcal{E}_1}, T_{\mathcal{W}}^{\mathcal{D}})\)</span></li>
-</ul>
-</div>
-<div class="fragment fade-up">
-<ul>
-<li><span class="math inline">\(T_{\mathcal{W}}^{\mathcal{D}}\)</span> stands for desired attitude</li>
+<li><p><span class="math inline">\(A = \begin{bmatrix} - J_{E_1, v} \\ - R_D^T J_{E_1, \omega} \end{bmatrix}\)</span></p></li>
+<li><p><span class="math inline">\(\mathbf{b} = \begin{bmatrix} \dot{J}_{E_1, v} \\ R_D^T [ \dot{J}_{E_1, \omega} - \hat{\boldsymbol{\omega}}_D J_{E_1, \omega}] \end{bmatrix} \mathbf{v} - \begin{bmatrix}\mathbf{a}_D^{\mathcal{D}} \\ \boldsymbol{\epsilon}_D^{\mathcal{D}} \end{bmatrix} - K_d \begin{bmatrix} \boldsymbol{\upsilon}_d \\ \boldsymbol{\omega}_d^{\mathcal{D}}\end{bmatrix} - K_p \color{green}{\mathbf{e}_{\text{SE}(3)}(T_{\mathcal{W}}^{\mathcal{E}_1}, T_{\mathcal{W}}^{\mathcal{D}})}\)</span></p></li>
+<li><p><span class="math inline">\(T_{\mathcal{W}}^{\mathcal{D}}\)</span> stands for desired attitude</p></li>
 </ul>
 </div>
 </section>
@@ -657,9 +639,10 @@ Figure&nbsp;2: Coupling through rigid body
 <li><span class="math inline">\(\begin{aligned}
   \min_{\dot{\mathbf{v}}} \quad &amp;
   [\dot{\mathbf{v}} - \mathbf{a}]^T M [\dot{\mathbf{v}} - \mathbf{a}] +
+  \color{blue}{
   \gamma
   [A_u \dot{\mathbf{v}} - \mathbf{b}_u]^T
-  [A_u \dot{\mathbf{v}} - \mathbf{b}_u]\\
+  [A_u \dot{\mathbf{v}} - \mathbf{b}_u] } \\
   \textrm{s.t.} \quad &amp;
   A_c \dot{\mathbf{v}} = \mathbf{b}_c \\
   &amp;
@@ -716,7 +699,7 @@ Figure&nbsp;4: Experimental position discrepancy <span class="math inline">\(\ma
 <h2>Results</h2>
 
 <img data-src="images/figures/errors_history.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption">
-Figure&nbsp;5: Experimental <span class="math inline">\(\mathbf{e}_{\text{SE}(3)}\)</span>, left <span class="math inline">\(\mathbf{e}_c\)</span> - constraint, right <span class="math inline">\(\mathbf{e}_u\)</span> - control
+Figure&nbsp;5: Experimental <span class="math inline">\(\color{green}{\mathbf{e}_{\text{SE}(3)}}\)</span>, left <span class="math inline">\(\mathbf{e}_c\)</span> - constraint, right <span class="math inline">\(\mathbf{e}_u\)</span> - control
 </p></section>
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
