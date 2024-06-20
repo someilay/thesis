@@ -293,22 +293,22 @@ Will be used
 * [ProxSuite]{style="color:blue;"} @ProxQP - the advance convex problem solver
 :::
 
-## Result video
+## Simulation video
 
 {{< video https://youtu.be/JCOUIWzbPGg width="100%" height="85%" >}}
 
-## Results
+## Plots
 
-![Experimental position discrepancy $\mathcal{D} - \mathcal{E}_1$ (left), and $\mathcal{E}_2$ position (right)](images/figures/poses_history.png){#fig-pose-history width=100%}
+![Simulation position discrepancy $\mathcal{D} - \mathcal{E}_1$ (left), and $\mathcal{E}_2$ position (right)](images/figures/poses_history.png){#fig-pose-history width=100%}
 
-## Results
+## Plots
 
-![Experimental $\color{green}{\mathbf{e}_{\text{SE}(3)}}$, left $\mathbf{e}_c$ - constraint, right $\mathbf{e}_u$ - control](images/figures/errors_history.png){#fig-errors-history width=100%}
+![Simulation $\color{green}{\mathbf{e}_{\text{SE}(3)}}$, left $\mathbf{e}_c$ - constraint, right $\mathbf{e}_u$ - control](images/figures/errors_history.png){#fig-errors-history width=100%}
 
 ## Conclusion
 
 ::: {.fragment .fade-up}
-[Achieved]{style="color:green;"}
+[Achieved results]{style="color:green;"}
 
 * Dynamic constraint assignment
 * Fast computation ($\approx 100 \mu s$ in experiment)
